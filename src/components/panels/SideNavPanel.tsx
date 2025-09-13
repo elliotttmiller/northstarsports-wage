@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@/context/NavigationContext';
+import { useNavigate } from 'react-router-dom';
 import { Sport } from '@/types';
 import { getSports } from '@/services/mockApi';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -8,7 +9,8 @@ import { VirtualScrollContainer, SmoothScrollContainer } from '@/components/Virt
 import { motion } from 'framer-motion';
 
 export const SideNavPanel = () => {
-  const { navigation, selectSport, selectLeague } = useNavigation();
+  const { navigation, selectSport, selectLeague, setMobilePanel } = useNavigation();
+  const navigate = useNavigate();
   const [sports, setSports] = useState<Sport[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,35 +29,69 @@ export const SideNavPanel = () => {
     loadSports();
   }, []);
 
+  const handleSportClick = (sportId: string) => {
+    selectSport(sportId);
+    // On mobile, navigate to games page smoothly
+    if (window.innerWidth < 1024) {
+      setMobilePanel(null);
+      setTimeout(() => {
+        navigate('/games');
+      }, 100);
+    }
+  };
+
+  const handleLeagueClick = (leagueId: string) => {
+    selectLeague(leagueId);
+    // On mobile, navigate to games page smoothly
+    if (window.innerWidth < 1024) {
+      setMobilePanel(null);
+      setTimeout(() => {
+        navigate('/games');
+      }, 150);
+    }
+  };
+
   const renderSportItem = (sport: Sport, index: number) => (
     <AccordionItem key={sport.id} value={sport.id} className="border-border">
       <AccordionTrigger
         className="text-left hover:no-underline px-2"
-        onClick={() => selectSport(sport.id)}
+        onClick={() => handleSportClick(sport.id)}
       >
-        <div className="flex items-center space-x-3">
+        <motion.div 
+          className="flex items-center space-x-3"
+          whileHover={{ x: 2 }}
+        >
           <span className="text-xl">{sport.icon}</span>
           <span className="font-medium text-card-foreground">{sport.name}</span>
-        </div>
+        </motion.div>
       </AccordionTrigger>
       <AccordionContent className="pb-2">
         <div className="ml-8 space-y-1">
           {sport.leagues.map((league) => (
             <motion.button
               key={league.id}
-              onClick={() => selectLeague(league.id)}
-              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200 ${
+              onClick={() => handleLeagueClick(league.id)}
+              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-300 ${
                 navigation.selectedLeague === league.id
-                  ? 'bg-accent text-accent-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-card-foreground hover:bg-muted'
+                  ? 'bg-accent text-accent-foreground shadow-sm scale-105'
+                  : 'text-muted-foreground hover:text-card-foreground hover:bg-muted hover:scale-102'
               }`}
-              whileHover={{ x: 2 }}
+              whileHover={{ x: 4 }}
               whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ 
+                duration: 0.2, 
+                delay: sport.leagues.indexOf(league) * 0.05,
+                ease: [0.4, 0.0, 0.2, 1]
+              }}
             >
-              {league.name}
-              <span className="ml-2 text-xs opacity-70">
-                ({league.games.length} games)
-              </span>
+              <div className="flex items-center justify-between">
+                <span>{league.name}</span>
+                <span className="text-xs opacity-70">
+                  {league.games.length} games
+                </span>
+              </div>
             </motion.button>
           ))}
         </div>
@@ -111,6 +147,7 @@ export const SideNavPanel = () => {
                   delay: index * 0.1,
                   ease: [0.4, 0.0, 0.2, 1]
                 }}
+                whileHover={{ scale: 1.01 }}
               >
                 {renderSportItem(sport, index)}
               </motion.div>

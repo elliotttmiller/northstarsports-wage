@@ -3,7 +3,7 @@ import { useBetSlip } from '@/context/BetSlipContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { SmoothScrollContainer } from '@/components/VirtualScrolling'
 import { User, TrendUp, Trophy, ChartBar, Calendar, CurrencyDollar } from '@phosphor-icons/react'
@@ -58,8 +58,9 @@ const trendingGames = [
 ]
 
 export function HomePage() {
-  const { navigation } = useNavigation()
+  const { navigation, selectSport } = useNavigation()
   const { betSlip } = useBetSlip()
+  const navigate = useNavigate()
   const [activeBetsCount, setActiveBetsCount] = useState(0)
 
   useEffect(() => {
@@ -70,74 +71,55 @@ export function HomePage() {
     <div className="h-full flex flex-col overflow-hidden bg-background">
       <SmoothScrollContainer className="flex-1" showScrollbar={false}>
         <div className="p-4 space-y-6">
-          {/* Top Navigation Bar - Elegant Balance */}
+          {/* Top Navigation Bar - Clean & Elegant */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
             className="flex items-center justify-between py-2"
           >
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="relative"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <Button
                   variant="outline"
                   size="sm"
                   asChild
-                  className="flex items-center space-x-2 border-accent/20 hover:border-accent/40 transition-all duration-200"
+                  className="flex items-center space-x-2 border-accent/20 hover:border-accent/40 transition-all duration-300"
                 >
                   <Link to="/my-bets">
                     <ChartBar size={16} />
-                    <span>Active Bets</span>
+                    <span>My Bets</span>
                     {activeBetsCount > 0 && (
-                      <Badge 
-                        variant="secondary" 
-                        className="bg-accent text-accent-foreground px-1.5 py-0.5 text-xs h-5"
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
                       >
-                        {activeBetsCount}
-                      </Badge>
+                        <Badge 
+                          variant="secondary" 
+                          className="bg-accent text-accent-foreground px-1.5 py-0.5 text-xs h-5"
+                        >
+                          {activeBetsCount}
+                        </Badge>
+                      </motion.div>
                     )}
                   </Link>
                 </Button>
               </motion.div>
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center">
+              {/* Account navigation is handled by Header on desktop and mobile icon on mobile */}
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="text-sm text-muted-foreground"
               >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  asChild
-                  className="flex items-center space-x-2 border-primary/20 hover:border-primary/40 transition-all duration-200"
-                >
-                  <Link to="/my-bets">
-                    <Trophy size={16} />
-                    <span className="hidden sm:inline">Bets</span>
-                  </Link>
-                </Button>
-              </motion.div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  asChild
-                  className="flex items-center space-x-2 hover:bg-accent/10 transition-all duration-200"
-                >
-                  <Link to="/account">
-                    <User size={18} />
-                    <span className="hidden sm:inline">Account</span>
-                  </Link>
-                </Button>
+                Welcome to NSS
               </motion.div>
             </div>
           </motion.div>
@@ -192,13 +174,17 @@ export function HomePage() {
             
             <div className="space-y-3">
               {trendingGames.map((game, index) => (
-                <motion.div
+                <motion.button
                   key={game.id}
+                  onClick={() => {
+                    navigate('/games');
+                  }}
+                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-4 hover:bg-card/70 transition-all duration-300 cursor-pointer text-left w-full"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-                  whileHover={{ scale: 1.01, y: -1 }}
-                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-4 hover:bg-card/70 transition-all duration-200 cursor-pointer"
+                  whileHover={{ scale: 1.01, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
@@ -218,17 +204,17 @@ export function HomePage() {
                           <p className="text-sm font-medium">{game.awayTeam} @ {game.homeTeam}</p>
                         </div>
                         <div className="flex space-x-3">
-                          <Button variant="outline" size="sm" className="text-xs px-3">
+                          <Button variant="outline" size="sm" className="text-xs px-3" onClick={(e) => e.stopPropagation()}>
                             {game.awayOdds}
                           </Button>
-                          <Button variant="outline" size="sm" className="text-xs px-3">
+                          <Button variant="outline" size="sm" className="text-xs px-3" onClick={(e) => e.stopPropagation()}>
                             {game.homeOdds}
                           </Button>
                         </div>
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </motion.button>
               ))}
             </div>
           </motion.div>
@@ -269,24 +255,28 @@ export function HomePage() {
             <h3 className="text-lg font-semibold mb-4 text-foreground">Featured Markets</h3>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { name: 'NFL', games: '12 Games Today', icon: '🏈' },
-                { name: 'NBA', games: '8 Games Tonight', icon: '🏀' },
-                { name: 'MLB', games: '6 Games Today', icon: '⚾' },
-                { name: 'NHL', games: '4 Games Tonight', icon: '🏒' }
+                { name: 'NFL', games: '12 Games Today', icon: '🏈', sportId: 'football' },
+                { name: 'NBA', games: '8 Games Tonight', icon: '🏀', sportId: 'basketball' },
+                { name: 'MLB', games: '6 Games Today', icon: '⚾', sportId: 'baseball' },
+                { name: 'NHL', games: '4 Games Tonight', icon: '🏒', sportId: 'hockey' }
               ].map((market, index) => (
-                <motion.div
+                <motion.button
                   key={market.name}
-                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-4 hover:bg-card/70 transition-all duration-200 cursor-pointer text-center"
+                  onClick={() => {
+                    selectSport(market.sportId);
+                    navigate('/games');
+                  }}
+                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-4 hover:bg-card/70 transition-all duration-300 cursor-pointer text-center w-full"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileHover={{ scale: 1.05, y: -4 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <div className="text-2xl mb-2">{market.icon}</div>
                   <div className="text-lg font-semibold text-foreground">{market.name}</div>
                   <div className="text-sm text-muted-foreground">{market.games}</div>
-                </motion.div>
+                </motion.button>
               ))}
             </div>
           </motion.div>
