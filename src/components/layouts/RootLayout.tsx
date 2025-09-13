@@ -51,7 +51,7 @@ function LayoutContent() {
 
         {/* Side Navigation Panel */}
         <AnimatePresence mode="wait" key="sidenav-presence">
-          {(isMobile || navigation.sideNavOpen) && (
+          {((isMobile && navigation.mobilePanel === 'navigation') || (!isMobile && navigation.sideNavOpen)) && (
             <motion.div
               key="sidenav"
               initial={isMobile ? { x: '-100%' } : { width: 0, opacity: 0 }}
@@ -76,9 +76,7 @@ function LayoutContent() {
               }}
               className={`
                 ${isMobile 
-                  ? `fixed inset-0 top-16 z-40 ${
-                      navigation.mobilePanel === 'navigation' ? 'block' : 'hidden'
-                    } bg-card`
+                  ? 'fixed inset-0 top-16 z-40 bg-card'
                   : 'border-r border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition'
                 }
               `}
