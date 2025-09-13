@@ -1,138 +1,135 @@
 @import 'tailwindcss';
 
-@layer base {
-  * {
+    @apply bo
+
     @apply border-border;
   }
 
   html, body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    overflow: hidden; /* Prevent body scroll */
-  }
-
-  #root {
-    height: 100vh;
-    overflow: hidden;
-    transition: background-color 0.2s ease;
     background-color: oklch(0.06 0.02 225);
-  }
 
-  /* Custom scrollbar styles - completely hidden */
-  .virtual-scrollbar,
-  .scrollbar-hide,
-  .seamless-scroll {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    scrollbar-color: transparent transparent;
-  }
+  .
 
-  .virtual-scrollbar::-webkit-scrollbar,
-  .scrollbar-hide::-webkit-scrollbar,
+    scrol
+  }
+  .virtual-scrollbar:
   .seamless-scroll::-webkit-scrollbar {
-    width: 0px !important;
     height: 0px !important;
-    display: none !important;
-    background: transparent !important;
-  }
+   
 
-  .virtual-scrollbar::-webkit-scrollbar-track,
-  .scrollbar-hide::-webkit-scrollbar-track,
-  .seamless-scroll::-webkit-scrollbar-track {
-    display: none !important;
-  }
+  .scrollbar-hide::-webkit-scro
+    display: none !imp
 
-  .virtual-scrollbar::-webkit-scrollbar-thumb,
-  .scrollbar-hide::-webkit-scrollbar-thumb,
-  .seamless-scroll::-webkit-scrollbar-thumb {
+  .scrollbar-hide::-webkit-sc
     display: none !important;
-  }
 
-  /* Smooth scrolling */
-  .smooth-scroll {
-    scroll-behavior: smooth;
-  }
+  .
 
   /* Panel transitions */
-  .panel-transition {
-    transition: all 350ms cubic-bezier(0.4, 0, 0.2, 1);
-    backface-visibility: hidden;
-    will-change: transform, width, opacity;
-    transform-origin: center;
+    transition: al
+    will-chan
   }
+  .
 
-  .panel-enter-active {
-    opacity: 1;
-    transform: translateX(0);
-  }
 
-  .panel-exit-active {
     opacity: 0;
-    transform: translateX(-100%);
   }
-
   /* Sidebar transitions */
-  .sidebar-transition {
-    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, width, opacity;
-    transform-origin: center;
-  }
-}
+    transition: all 300ms 
+   
 
 :root {
-  /* Core backgrounds and foregrounds */
-  --background: oklch(0.05 0.01 270); /* Deep charcoal black */
-  --foreground: oklch(0.95 0.005 270); /* Soft white */
+  --background: oklch(0.05 0.01 270); /
 
-  --card: oklch(0.08 0.01 270); /* Subtle dark grey */
-  --card-foreground: oklch(0.92 0.005 270); /* Soft light grey */
+  --card-foregroun
+  -
 
-  --popover: oklch(0.09 0.01 270); /* Dark card background */
-  --popover-foreground: oklch(0.92 0.005 270); /* Soft light text */
+  --primary: oklch(0.55 
 
-  /* Action colors - More subtle and modern */
-  --primary: oklch(0.55 0.08 240); /* Subtle blue-grey */
-  --primary-foreground: oklch(0.95 0.005 270); /* Clean white */
+  --secondary-foreground: ok
+  -
 
-  --secondary: oklch(0.16 0.015 270); /* Medium dark grey */
-  --secondary-foreground: oklch(0.85 0.01 270); /* Light grey text */
+  --destructive-foregroun
+  /* Supporting UI co
+  --muted-foreground: oklch(0.60 0.015 270); /* Muted t
+  --border: oklch(0.18 0.015 270
+  --ring: oklch(0.55 0.08 240); /* Focus ri
+  /* Custom colors for bettin
+  -
 
-  --accent: oklch(0.62 0.10 200); /* Soft teal accent */
-  --accent-foreground: oklch(0.95 0.005 270); /* Clean white */
-
-  --destructive: oklch(0.58 0.12 15); /* Muted red */
-  --destructive-foreground: oklch(0.95 0.005 270); /* Clean white */
-
-  /* Supporting UI colors */
-  --muted: oklch(0.12 0.01 270); /* Subtle muted background */
-  --muted-foreground: oklch(0.60 0.015 270); /* Muted text */
-
-  --border: oklch(0.18 0.015 270); /* Subtle border */
-  --input: oklch(0.18 0.015 270); /* Input border */
-  --ring: oklch(0.55 0.08 240); /* Focus ring matches primary */
-
-  /* Custom colors for betting */
-  --color-win: oklch(0.58 0.10 150); /* Subtle green */
-  --color-loss: oklch(0.58 0.12 15); /* Subtle red */
-  --color-info: oklch(0.60 0.10 240); /* Subtle blue */
-
-  /* Border radius */
   --radius: 0.5rem;
+
+  --color-background: var(--b
+  -
+
+  --color-primary: var
+  --color-secon
+  --color-muted: var(--muted);
+  -
+
+  --color-border: var(--bor
+  --color-ring: var(--r
+  /* Custom colors */
+  --color-loss: var(--color-loss);
+
+  -
+ 
+
 }
 
-@theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
