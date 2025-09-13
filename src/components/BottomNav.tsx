@@ -1,20 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { House, Receipt, GameController, DotsThree } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 
+// Custom hook for mobile detection
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return isMobile;
+};
+
 export const BottomNav = () => {
   const { navigation, setMobilePanel } = useNavigation();
   const { betSlip } = useBetSlip();
   const location = useLocation();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const handleSportsClick = () => {
-    // Smooth navigation to games page
-    setMobilePanel(null);
-    navigate('/games');
+    // On mobile, show navigation panel to select sports/leagues
+    if (isMobile) {
+      if (navigation.mobilePanel === 'navigation') {
+        setMobilePanel(null);
+      } else {
+        setMobilePanel('navigation');
+      }
+    } else {
+      // Desktop: navigate to games page
+      setMobilePanel(null);
+      navigate('/games');
+    }
   };
 
   const handleBetsClick = () => {
@@ -63,14 +87,14 @@ export const BottomNav = () => {
       <motion.button
         onClick={handleSportsClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          location.pathname === '/games'
+          (location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation'
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
         }`}
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <GameController size={20} weight={location.pathname === '/games' ? 'fill' : 'regular'} />
+        <GameController size={20} weight={(location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation' ? 'fill' : 'regular'} />
         <span className="text-xs font-medium">Sports</span>
       </motion.button>
 

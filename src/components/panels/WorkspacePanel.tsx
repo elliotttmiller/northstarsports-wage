@@ -13,9 +13,24 @@ import { toast } from 'sonner';
 import { CaretUp } from '@phosphor-icons/react';
 import { InfiniteScrollContainer, SmoothScrollContainer } from '@/components/VirtualScrolling';
 
+// Custom hook for mobile detection
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return isMobile;
+};
+
 export const WorkspacePanel = () => {
-  const { navigation } = useNavigation();
+  const { navigation, setMobilePanel } = useNavigation();
   const { addBet } = useBetSlip();
+  const isMobile = useIsMobile();
   const [games, setGames] = useState<Game[]>([]);
   const [pagination, setPagination] = useState<PaginatedResponse<Game>['pagination'] | null>(null);
   const [loading, setLoading] = useState(false);
@@ -301,13 +316,28 @@ export const WorkspacePanel = () => {
     return (
       <div className="h-full flex items-center justify-center bg-background">
         <motion.div 
-          className="text-center"
+          className="text-center px-4"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
           <h3 className="text-lg font-medium text-foreground mb-2">Select a League</h3>
-          <p className="text-muted-foreground">Choose a sport and league from the navigation panel to view games and place bets.</p>
+          <p className="text-muted-foreground mb-4">Choose a sport and league to view games and place bets.</p>
+          
+          {/* Mobile-only: Show button to open sports navigation */}
+          {isMobile && (
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Button 
+                onClick={() => setMobilePanel('navigation')}
+                className="bg-accent text-accent-foreground hover:bg-accent/90"
+              >
+                Browse Sports & Leagues
+              </Button>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     );
