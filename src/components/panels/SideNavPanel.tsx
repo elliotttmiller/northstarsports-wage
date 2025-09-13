@@ -82,7 +82,13 @@ export const SideNavPanel = () => {
   };
 
   const handleLeagueClick = (leagueId: string) => {
+    // Find which sport this league belongs to
+    const sport = sports.find(s => s.leagues.some(l => l.id === leagueId));
+    if (sport) {
+      selectSport(sport.id);
+    }
     selectLeague(leagueId);
+    
     // Navigate to games page on both desktop and mobile
     setTimeout(() => {
       navigate('/games');
@@ -111,58 +117,72 @@ export const SideNavPanel = () => {
     }
   };
 
-  const renderSportItem = (sport: Sport, index: number) => (
-    <AccordionItem key={sport.id} value={sport.id} className="border-border">
-      <AccordionTrigger
-        className="text-left hover:no-underline px-2"
-      >
-        <motion.div 
-          className="flex items-center space-x-3 cursor-pointer"
-          whileHover={{ x: 2 }}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleSportClick(sport.id);
-          }}
+  const renderSportItem = (sport: Sport, index: number) => {
+    const isExpanded = navigation.selectedSport === sport.id;
+    
+    return (
+      <AccordionItem key={sport.id} value={sport.id} className="border-border">
+        <AccordionTrigger
+          className={`text-left hover:no-underline px-2 transition-all duration-200 ${
+            isExpanded ? 'bg-muted/50' : 'hover:bg-muted/30'
+          }`}
         >
-          <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 bg-primary rounded-full" />
+          <motion.div 
+            className="flex items-center space-x-3 w-full"
+            whileHover={{ x: 2 }}
+          >
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors duration-200 ${
+              isExpanded ? 'bg-primary/20' : 'bg-primary/10'
+            }`}>
+              <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                isExpanded ? 'bg-primary' : 'bg-primary/70'
+              }`} />
+            </div>
+            <span className={`font-medium transition-colors duration-200 ${
+              isExpanded ? 'text-card-foreground' : 'text-card-foreground/80'
+            }`}>
+              {sport.name}
+            </span>
+            <div className="flex-1" />
+            <span className="text-xs text-muted-foreground">
+              {sport.leagues.length} leagues
+            </span>
+          </motion.div>
+        </AccordionTrigger>
+        <AccordionContent className="pb-2">
+          <div className="ml-8 space-y-1">
+            {sport.leagues.map((league, leagueIndex) => (
+              <motion.button
+                key={league.id}
+                onClick={() => handleLeagueClick(league.id)}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-300 ${
+                  navigation.selectedLeague === league.id
+                    ? 'bg-accent text-accent-foreground shadow-sm scale-105'
+                    : 'text-muted-foreground hover:text-card-foreground hover:bg-muted hover:scale-102'
+                }`}
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ 
+                  duration: 0.2, 
+                  delay: leagueIndex * 0.05,
+                  ease: [0.4, 0.0, 0.2, 1]
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{league.name}</span>
+                  <span className="text-xs opacity-70">
+                    {league.games.length} games
+                  </span>
+                </div>
+              </motion.button>
+            ))}
           </div>
-          <span className="font-medium text-card-foreground">{sport.name}</span>
-        </motion.div>
-      </AccordionTrigger>
-      <AccordionContent className="pb-2">
-        <div className="ml-8 space-y-1">
-          {sport.leagues.map((league) => (
-            <motion.button
-              key={league.id}
-              onClick={() => handleLeagueClick(league.id)}
-              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-300 ${
-                navigation.selectedLeague === league.id
-                  ? 'bg-accent text-accent-foreground shadow-sm scale-105'
-                  : 'text-muted-foreground hover:text-card-foreground hover:bg-muted hover:scale-102'
-              }`}
-              whileHover={{ x: 4 }}
-              whileTap={{ scale: 0.98 }}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ 
-                duration: 0.2, 
-                delay: sport.leagues.indexOf(league) * 0.05,
-                ease: [0.4, 0.0, 0.2, 1]
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <span>{league.name}</span>
-                <span className="text-xs opacity-70">
-                  {league.games.length} games
-                </span>
-              </div>
-            </motion.button>
-          ))}
-        </div>
-      </AccordionContent>
-    </AccordionItem>
-  );
+        </AccordionContent>
+      </AccordionItem>
+    );
+  };
 
   if (loading) {
     return (
@@ -230,7 +250,16 @@ export const SideNavPanel = () => {
         >
           {activeSection === 'sports' && (
             <div className="space-y-2">
-              <Accordion type="single" collapsible value={navigation.selectedSport || undefined}>
+              <Accordion 
+                type="single" 
+                collapsible 
+                value={navigation.selectedSport || undefined}
+                onValueChange={(value) => {
+                  if (value) {
+                    selectSport(value);
+                  }
+                }}
+              >
                 {sports.map((sport, index) => (
                   <motion.div
                     key={sport.id}

@@ -21,6 +21,7 @@ export const FloatingBetSlipButton = () => {
   const [savedPosition, setSavedPosition] = useKV<Corner>('floating-button-position', 'bottom-right');
   
   const [isDragging, setIsDragging] = useState(false);
+  const [dragStartPos, setDragStartPos] = useState<{ x: number; y: number } | null>(null);
   const [currentCorner, setCurrentCorner] = useState<Corner>(savedPosition || 'bottom-right');
   
   const x = useMotionValue(0);
@@ -65,31 +66,58 @@ export const FloatingBetSlipButton = () => {
     y.set(position.y);
   }, [currentCorner, getCornerPosition, x, y]);
 
-  const handleDragStart = () => {
-    setIsDragging(true);
+  const handleDragStart = (event: MouseEvent | TouchEvent | PointerEvent) => {
+    // Record starting position
+    const startX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+    const startY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+    setDragStartPos({ x: startX, y: startY });
+    setIsDragging(false); // Will be set to true only if significant movement
   };
 
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const wasDragging = isDragging;
     setIsDragging(false);
+    setDragStartPos(null);
     
-    const currentX = x.get();
-    const currentY = y.get();
-    
-    const nearestCorner = findNearestCorner(currentX, currentY);
-    const targetPosition = getCornerPosition(nearestCorner);
-    
-    // Animate to nearest corner
-    x.set(targetPosition.x);
-    y.set(targetPosition.y);
-    
-    // Update state and persist
-    setCurrentCorner(nearestCorner);
-    setSavedPosition(nearestCorner);
+    // Only animate to corner if actually dragged a significant distance
+    if (wasDragging && (Math.abs(info.offset.x) > 20 || Math.abs(info.offset.y) > 20)) {
+      const currentX = x.get();
+      const currentY = y.get();
+      
+      const nearestCorner = findNearestCorner(currentX, currentY);
+      const targetPosition = getCornerPosition(nearestCorner);
+      
+      // Animate to nearest corner
+      x.set(targetPosition.x);
+      y.set(targetPosition.y);
+      
+      // Update state and persist
+      setCurrentCorner(nearestCorner);
+      setSavedPosition(nearestCorner);
+    }
   };
 
-  const handleClick = () => {
-    if (!isDragging) {
+  const handleClick = (event: React.MouseEvent) => {
+    // Only open panel if not dragging
+    if (!isDragging && dragStartPos) {
+      // Calculate total movement from start to click
+      const moveX = Math.abs(event.clientX - dragStartPos.x);
+      const moveY = Math.abs(event.clientY - dragStartPos.y);
+      
+      // Only open if movement was minimal (< 5px)
+      if (moveX < 5 && moveY < 5) {
+        setMobilePanel('betslip');
+      }
+    } else if (!isDragging && !dragStartPos) {
+      // Fallback for tap without drag start
       setMobilePanel('betslip');
+    }
+  };
+
+  const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    // If user has moved significantly, mark as dragging
+    if (!isDragging && (Math.abs(info.offset.x) > 10 || Math.abs(info.offset.y) > 10)) {
+      setIsDragging(true);
     }
   };
 
@@ -117,6 +145,7 @@ export const FloatingBetSlipButton = () => {
         dragElastic={0.1}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
+        onDrag={handleDrag}
         onClick={handleClick}
         whileHover={{ 
           scale: isDragging ? 1.1 : 1.05,
