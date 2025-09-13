@@ -1,66 +1,47 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { NavigationState } from '@/types';
+import { createContext, useContext, useState, ReactNode } from 'react'
+
+type MobilePanel = 'navigation' | 'workspace' | 'betslip' | null
 
 interface NavigationContextType {
-  navigation: NavigationState;
-  selectSport: (sportId: string | null) => void;
-  selectLeague: (leagueId: string | null) => void;
-  setMobilePanel: (panel: 'navigation' | 'workspace' | 'betslip' | null) => void;
-}
-
-const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
-
-export const useNavigation = () => {
-  const context = useContext(NavigationContext);
-  if (context === undefined) {
-    throw new Error('useNavigation must be used within a NavigationProvider');
+  navigation: {
+    mobilePanel: MobilePanel
+    selectedSport: string | null
+    selectedLeague: string | null
   }
-  return context;
-};
-
-interface NavigationProviderProps {
-  children: ReactNode;
+  setMobilePanel: (panel: MobilePanel) => void
+  selectSport: (sport: string) => void
+  selectLeague: (league: string) => void
 }
 
-export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => {
-  const [navigation, setNavigation] = useState<NavigationState>({
-    selectedSport: null,
-    selectedLeague: null,
-    mobilePanel: null
-  });
+const NavigationContext = createContext<NavigationContextType | undefined>(undefined)
 
-  const selectSport = (sportId: string | null) => {
-    setNavigation(prev => ({
-      ...prev,
-      selectedSport: sportId,
-      selectedLeague: null // Reset league when sport changes
-    }));
-  };
-
-  const selectLeague = (leagueId: string | null) => {
-    setNavigation(prev => ({
-      ...prev,
-      selectedLeague: leagueId
-    }));
-  };
-
-  const setMobilePanel = (panel: 'navigation' | 'workspace' | 'betslip' | null) => {
-    setNavigation(prev => ({
-      ...prev,
-      mobilePanel: panel
-    }));
-  };
-
-  const value: NavigationContextType = {
-    navigation,
-    selectSport,
-    selectLeague,
-    setMobilePanel
-  };
+export function NavigationProvider({ children }: { children: ReactNode }) {
+  const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null)
+  const [selectedSport, setSelectedSport] = useState<string | null>('football')
+  const [selectedLeague, setSelectedLeague] = useState<string | null>('nfl')
 
   return (
-    <NavigationContext.Provider value={value}>
+    <NavigationContext.Provider
+      value={{
+        navigation: { 
+          mobilePanel, 
+          selectedSport,
+          selectedLeague 
+        },
+        setMobilePanel,
+        selectSport: setSelectedSport,
+        selectLeague: setSelectedLeague
+      }}
+    >
       {children}
     </NavigationContext.Provider>
-  );
-};
+  )
+}
+
+export function useNavigation() {
+  const context = useContext(NavigationContext)
+  if (!context) {
+    throw new Error('useNavigation must be used within NavigationProvider')
+  }
+  return context
+}
