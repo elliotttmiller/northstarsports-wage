@@ -221,3 +221,148 @@ export const getGamesPaginated = async (
     }
   };
 };
+
+// Get game by ID - enhanced version that works with extended games
+export const getGameById = async (gameId: string): Promise<Game | null> => {
+  await new Promise(resolve => setTimeout(resolve, 200));
+  
+  // First try to find in base games
+  for (const sport of mockSports) {
+    for (const league of sport.leagues) {
+      const game = league.games.find(g => g.id === gameId);
+      if (game) return game;
+    }
+  }
+  
+  // If not found, might be an extended game - reconstruct it
+  if (gameId.includes('-extended-')) {
+    const [baseId, , indexStr] = gameId.split('-extended-');
+    const index = parseInt(indexStr);
+    
+    for (const sport of mockSports) {
+      for (const league of sport.leagues) {
+        const baseGame = league.games.find(g => g.id.startsWith(baseId));
+        if (baseGame) {
+          const gameDate = new Date();
+          gameDate.setDate(gameDate.getDate() + Math.floor(index / league.games.length));
+          
+          return {
+            ...baseGame,
+            id: gameId,
+            startTime: gameDate,
+            status: index < 10 ? 'finished' : index < 15 ? 'live' : 'upcoming'
+          };
+        }
+      }
+    }
+  }
+  
+  return null;
+};
+
+// Player props interface
+export interface PlayerProp {
+  id: string;
+  playerId: string;
+  playerName: string;
+  position: string;
+  category: 'passing' | 'rushing' | 'receiving' | 'scoring' | 'defense';
+  statType: string;
+  line: number;
+  overOdds: number;
+  underOdds: number;
+  team: 'home' | 'away';
+}
+
+// Generate mock player props
+const generatePlayerProps = (gameId: string): PlayerProp[] => {
+  const props: PlayerProp[] = [];
+  
+  // Mock players and their stats
+  const mockPlayers = [
+    { name: 'Patrick Mahomes', position: 'QB', team: 'home', categories: ['passing', 'rushing'] },
+    { name: 'Josh Allen', position: 'QB', team: 'away', categories: ['passing', 'rushing'] },
+    { name: 'Travis Kelce', position: 'TE', team: 'home', categories: ['receiving'] },
+    { name: 'Stefon Diggs', position: 'WR', team: 'away', categories: ['receiving'] },
+    { name: 'Clyde Edwards-Helaire', position: 'RB', team: 'home', categories: ['rushing', 'receiving'] },
+    { name: 'James Cook', position: 'RB', team: 'away', categories: ['rushing', 'receiving'] }
+  ];
+
+  const passingStats = ['Passing Yards', 'TD Passes', 'Completions', 'Attempts'];
+  const rushingStats = ['Rushing Yards', 'Rushing TDs', 'Rush Attempts'];
+  const receivingStats = ['Receiving Yards', 'Receptions', 'Receiving TDs'];
+
+  mockPlayers.forEach((player, playerIndex) => {
+    player.categories.forEach(category => {
+      let stats: string[] = [];
+      switch (category) {
+        case 'passing':
+          stats = passingStats;
+          break;
+        case 'rushing':
+          stats = rushingStats;
+          break;
+        case 'receiving':
+          stats = receivingStats;
+          break;
+      }
+
+      stats.forEach((stat, statIndex) => {
+        let line = 0;
+        switch (stat) {
+          case 'Passing Yards':
+            line = 250 + Math.floor(Math.random() * 100);
+            break;
+          case 'TD Passes':
+            line = 1.5 + Math.floor(Math.random() * 2);
+            break;
+          case 'Completions':
+            line = 20.5 + Math.floor(Math.random() * 10);
+            break;
+          case 'Attempts':
+            line = 30.5 + Math.floor(Math.random() * 15);
+            break;
+          case 'Rushing Yards':
+            line = player.position === 'QB' ? 35.5 + Math.floor(Math.random() * 20) : 75.5 + Math.floor(Math.random() * 40);
+            break;
+          case 'Rushing TDs':
+            line = 0.5;
+            break;
+          case 'Rush Attempts':
+            line = player.position === 'QB' ? 5.5 + Math.floor(Math.random() * 3) : 15.5 + Math.floor(Math.random() * 8);
+            break;
+          case 'Receiving Yards':
+            line = 65.5 + Math.floor(Math.random() * 60);
+            break;
+          case 'Receptions':
+            line = 5.5 + Math.floor(Math.random() * 4);
+            break;
+          case 'Receiving TDs':
+            line = 0.5;
+            break;
+        }
+
+        props.push({
+          id: `${gameId}-prop-${playerIndex}-${statIndex}`,
+          playerId: `player-${playerIndex}`,
+          playerName: player.name,
+          position: player.position,
+          category: category as any,
+          statType: stat,
+          line,
+          overOdds: -110 + Math.floor(Math.random() * 20) - 10,
+          underOdds: -110 + Math.floor(Math.random() * 20) - 10,
+          team: player.team as 'home' | 'away'
+        });
+      });
+    });
+  });
+
+  return props;
+};
+
+// Get player props for a game
+export const getPlayerProps = async (gameId: string): Promise<PlayerProp[]> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  return generatePlayerProps(gameId);
+};

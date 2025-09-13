@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { Game } from '@/types';
@@ -10,7 +11,7 @@ import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CaretUp } from '@phosphor-icons/react';
+import { CaretUp, CaretRight } from '@phosphor-icons/react';
 import { InfiniteScrollContainer, SmoothScrollContainer } from '@/components/VirtualScrolling';
 
 // Custom hook for mobile detection
@@ -30,6 +31,7 @@ const useIsMobile = () => {
 export const WorkspacePanel = () => {
   const { navigation, setMobilePanel } = useNavigation();
   const { addBet } = useBetSlip();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [games, setGames] = useState<Game[]>([]);
   const [pagination, setPagination] = useState<PaginatedResponse<Game>['pagination'] | null>(null);
@@ -174,7 +176,7 @@ export const WorkspacePanel = () => {
 
           {/* Betting Options */}
           <div className="p-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               {/* Spread */}
               <div className="space-y-2">
                 <h4 className="text-sm font-medium text-card-foreground">Spread</h4>
@@ -187,11 +189,14 @@ export const WorkspacePanel = () => {
                       variant="outline"
                       size="sm"
                       className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={() => handleBetClick(
-                        game, 'spread', 'away', 
-                        game.odds.spread.away.odds, 
-                        game.odds.spread.away.line
-                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBetClick(
+                          game, 'spread', 'away', 
+                          game.odds.spread.away.odds, 
+                          game.odds.spread.away.line
+                        );
+                      }}
                     >
                       <span>{game.awayTeam.shortName} {game.odds.spread.away.line}</span>
                       <span>{formatOdds(game.odds.spread.away.odds)}</span>
@@ -205,11 +210,14 @@ export const WorkspacePanel = () => {
                       variant="outline"
                       size="sm"
                       className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={() => handleBetClick(
-                        game, 'spread', 'home', 
-                        game.odds.spread.home.odds, 
-                        game.odds.spread.home.line
-                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBetClick(
+                          game, 'spread', 'home', 
+                          game.odds.spread.home.odds, 
+                          game.odds.spread.home.line
+                        );
+                      }}
                     >
                       <span>{game.homeTeam.shortName} {game.odds.spread.home.line}</span>
                       <span>{formatOdds(game.odds.spread.home.odds)}</span>
@@ -230,10 +238,13 @@ export const WorkspacePanel = () => {
                       variant="outline"
                       size="sm"
                       className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={() => handleBetClick(
-                        game, 'moneyline', 'away', 
-                        game.odds.moneyline.away.odds
-                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBetClick(
+                          game, 'moneyline', 'away', 
+                          game.odds.moneyline.away.odds
+                        );
+                      }}
                     >
                       <span>{game.awayTeam.shortName}</span>
                       <span>{formatOdds(game.odds.moneyline.away.odds)}</span>
@@ -247,10 +258,13 @@ export const WorkspacePanel = () => {
                       variant="outline"
                       size="sm"
                       className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={() => handleBetClick(
-                        game, 'moneyline', 'home', 
-                        game.odds.moneyline.home.odds
-                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBetClick(
+                          game, 'moneyline', 'home', 
+                          game.odds.moneyline.home.odds
+                        );
+                      }}
                     >
                       <span>{game.homeTeam.shortName}</span>
                       <span>{formatOdds(game.odds.moneyline.home.odds)}</span>
@@ -271,11 +285,14 @@ export const WorkspacePanel = () => {
                       variant="outline"
                       size="sm"
                       className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={() => handleBetClick(
-                        game, 'total', 'over', 
-                        game.odds.total.over?.odds || -110, 
-                        game.odds.total.over?.line
-                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBetClick(
+                          game, 'total', 'over', 
+                          game.odds.total.over?.odds || -110, 
+                          game.odds.total.over?.line
+                        );
+                      }}
                     >
                       <span>Over {formatTotalLine(game.odds.total.over?.line || 45.5)}</span>
                       <span>{formatOdds(game.odds.total.over?.odds || -110)}</span>
@@ -289,11 +306,14 @@ export const WorkspacePanel = () => {
                       variant="outline"
                       size="sm"
                       className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={() => handleBetClick(
-                        game, 'total', 'under', 
-                        game.odds.total.under?.odds || -110, 
-                        game.odds.total.under?.line
-                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBetClick(
+                          game, 'total', 'under', 
+                          game.odds.total.under?.odds || -110, 
+                          game.odds.total.under?.line
+                        );
+                      }}
                     >
                       <span>Under {formatTotalLine(game.odds.total.under?.line || 45.5)}</span>
                       <span>{formatOdds(game.odds.total.under?.odds || -110)}</span>
@@ -302,6 +322,23 @@ export const WorkspacePanel = () => {
                 </div>
               </div>
             </div>
+
+            {/* View All Bets Button */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="border-t border-border pt-4"
+            >
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-center hover:bg-secondary transition-colors"
+                onClick={() => navigate(`/games/${game.id}`)}
+              >
+                <span className="mr-2">View All Bets & Player Props</span>
+                <CaretRight className="w-4 h-4" />
+              </Button>
+            </motion.div>
           </div>
         </CardContent>
       </Card>

@@ -1,4 +1,5 @@
 export { HomePage } from './HomePage'
 export { GamePage } from './GamePage'
+export { GameDetailPage } from './GameDetailPage'
 export { MyBetsPage } from './MyBetsPage'
 export { AccountPage } from './AccountPage'
