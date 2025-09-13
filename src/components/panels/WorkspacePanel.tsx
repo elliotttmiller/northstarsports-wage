@@ -1,40 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
-import { Game, League } from '@/types';
-import { getLeague, formatOdds } from '@/services/mockApi';
+import { Game } from '@/types';
+import { getGamesPaginated, formatOdds, PaginatedResponse } from '@/services/mockApi';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
+import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { CaretUp } from '@phosphor-icons/react';
 
 export const WorkspacePanel = () => {
   const { navigation } = useNavigation();
   const { addBet } = useBetSlip();
-  const [league, setLeague] = useState<League | null>(null);
+  const [games, setGames] = useState<Game[]>([]);
+  const [pagination, setPagination] = useState<PaginatedResponse<Game>['pagination'] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [scrollContainerRef, setScrollContainerRef] = useState<HTMLDivElement | null>(null);
+  const { scrollToTop } = useSmoothScroll();
+
+  const loadMoreRef = useInfiniteScroll({
+    hasNextPage: pagination?.hasNextPage ?? false,
+    isFetchingNextPage: loading,
+    fetchNextPage: () => loadNextPage()
+  });
+
+  const loadGames = useCallback(async (page = 1, reset = false) => {
+    if (!navigation.selectedLeague) return;
+
+    if (reset) {
+      setInitialLoading(true);
+      setGames([]);
+    } else {
+      setLoading(true);
+    }
+
+    try {
+      const response = await getGamesPaginated(navigation.selectedLeague, page, 5);
+      
+      if (reset) {
+        setGames(response.data);
+        setCurrentPage(1);
+      } else {
+        setGames(prevGames => [...prevGames, ...response.data]);
+        setCurrentPage(page);
+      }
+      
+      setPagination(response.pagination);
+    } catch (error) {
+      console.error('Failed to load games:', error);
+      toast.error('Failed to load games');
+    } finally {
+      setLoading(false);
+      setInitialLoading(false);
+    }
+  }, [navigation.selectedLeague]);
+
+  const loadNextPage = useCallback(() => {
+    if (pagination?.hasNextPage && !loading) {
+      loadGames(currentPage + 1, false);
+    }
+  }, [pagination?.hasNextPage, loading, currentPage, loadGames]);
 
   useEffect(() => {
-    const loadLeague = async () => {
-      if (!navigation.selectedLeague) {
-        setLeague(null);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const leagueData = await getLeague(navigation.selectedLeague);
-        setLeague(leagueData || null);
-      } catch (error) {
-        console.error('Failed to load league:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadLeague();
-  }, [navigation.selectedLeague]);
+    if (navigation.selectedLeague) {
+      loadGames(1, true);
+    } else {
+      setGames([]);
+      setPagination(null);
+    }
+  }, [navigation.selectedLeague, loadGames]);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -60,11 +98,17 @@ export const WorkspacePanel = () => {
     });
   };
 
-  if (loading) {
+  const handleScrollToTop = () => {
+    if (scrollContainerRef) {
+      scrollToTop(scrollContainerRef);
+    }
+  };
+
+  if (initialLoading) {
     return <SkeletonLoader type="games" count={4} />;
   }
 
-  if (!navigation.selectedLeague || !league) {
+  if (!navigation.selectedLeague || games.length === 0) {
     return (
       <div className="h-full flex items-center justify-center bg-background">
         <div className="text-center">
@@ -76,24 +120,43 @@ export const WorkspacePanel = () => {
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-background">
-      <div className="p-4 border-b border-border bg-card">
-        <h2 className="text-xl font-bold text-card-foreground">{league.name}</h2>
-        <p className="text-sm text-muted-foreground">{league.games.length} games available</p>
-      </div>
-
+    <div className="h-full flex flex-col overflow-hidden bg-background relative">
       <motion.div 
-        className="p-4 space-y-4"
-        initial={{ opacity: 0, y: 20 }}
+        className="p-4 border-b border-border bg-card flex-shrink-0"
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        {league.games.map((game, index) => (
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-card-foreground">Games</h2>
+            <p className="text-sm text-muted-foreground">
+              {pagination ? `${pagination.total} games available` : 'Loading games...'}
+            </p>
+          </div>
+          {games.length > 0 && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleScrollToTop}
+              className="opacity-70 hover:opacity-100"
+            >
+              <CaretUp size={16} />
+            </Button>
+          )}
+        </div>
+      </motion.div>
+
+      <div 
+        ref={setScrollContainerRef}
+        className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4"
+      >
+        {games.map((game, index) => (
           <motion.div
             key={game.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
+            transition={{ duration: 0.3, delay: Math.min(index * 0.1, 0.5) }}
           >
             <Card className="overflow-hidden hover:shadow-md transition-shadow">
               <CardContent className="p-0">
@@ -240,7 +303,26 @@ export const WorkspacePanel = () => {
             </Card>
           </motion.div>
         ))}
-      </motion.div>
+
+        {/* Loading indicator for pagination */}
+        {loading && (
+          <div className="py-4">
+            <SkeletonLoader type="games" count={2} />
+          </div>
+        )}
+
+        {/* Infinite scroll trigger */}
+        <div ref={loadMoreRef} className="h-4" />
+
+        {/* End of results indicator */}
+        {pagination && !pagination.hasNextPage && games.length > 0 && (
+          <div className="text-center py-8">
+            <div className="text-sm text-muted-foreground">
+              You've reached the end of the games list
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

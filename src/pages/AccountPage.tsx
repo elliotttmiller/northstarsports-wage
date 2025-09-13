@@ -7,13 +7,13 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export function AccountPage() {
   return (
-    <div className="h-full overflow-y-auto bg-background">
-      <div className="p-4 border-b border-border bg-card">
+    <div className="h-full flex flex-col overflow-hidden bg-background">
+      <div className="p-4 border-b border-border bg-card flex-shrink-0">
         <h2 className="text-xl font-bold text-card-foreground">Account Settings</h2>
         <p className="text-sm text-muted-foreground">Manage your profile and preferences</p>
       </div>
 
-      <div className="p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Profile Information</CardTitle>

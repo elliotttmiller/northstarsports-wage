@@ -21,19 +21,19 @@ function LayoutContent() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="h-screen bg-background text-foreground flex flex-col overflow-hidden">
       {/* Header - Always visible */}
       <Header />
       
-      {/* Main Layout */}
-      <div className="flex flex-col lg:grid lg:grid-cols-[300px_1fr_350px] lg:h-[calc(100vh-4rem)]">
+      {/* Main Layout - Takes remaining height */}
+      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[300px_1fr_350px] overflow-hidden">
         {/* Side Navigation Panel */}
         <div className={`
           ${isMobile 
             ? `fixed inset-0 top-16 z-50 transform transition-transform duration-300 ${
                 navigation.mobilePanel === 'navigation' ? 'translate-x-0' : '-translate-x-full'
-              }`
-            : 'border-r border-border'
+              } bg-card`
+            : 'border-r border-border overflow-hidden'
           }
         `}>
           <SideNavPanel />
@@ -41,7 +41,7 @@ function LayoutContent() {
 
         {/* Main Workspace Panel - Contains routed content */}
         <div className={`
-          flex-1
+          flex-1 overflow-hidden
           ${isMobile 
             ? `${navigation.mobilePanel === 'workspace' || !navigation.mobilePanel ? 'block' : 'hidden'}`
             : 'block'
@@ -55,8 +55,8 @@ function LayoutContent() {
           ${isMobile 
             ? `fixed inset-0 top-16 z-50 transform transition-transform duration-300 ${
                 navigation.mobilePanel === 'betslip' ? 'translate-x-0' : 'translate-x-full'
-              }`
-            : 'border-l border-border'
+              } bg-card`
+            : 'border-l border-border overflow-hidden'
           }
         `}>
           <ActionHubPanel />

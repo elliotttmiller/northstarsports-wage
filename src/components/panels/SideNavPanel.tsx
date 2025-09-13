@@ -27,24 +27,26 @@ export const SideNavPanel = () => {
 
   if (loading) {
     return (
-      <div className="h-full bg-card">
-        <div className="p-4 border-b border-border">
+      <div className="h-full bg-card flex flex-col overflow-hidden">
+        <div className="p-4 border-b border-border flex-shrink-0">
           <h2 className="text-lg font-semibold text-card-foreground">Sports</h2>
           <p className="text-sm text-muted-foreground">Select a sport to view games</p>
         </div>
-        <SkeletonLoader type="navigation" count={3} />
+        <div className="flex-1">
+          <SkeletonLoader type="navigation" count={3} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full bg-card overflow-y-auto">
-      <div className="p-4 border-b border-border">
+    <div className="h-full bg-card flex flex-col overflow-hidden">
+      <div className="p-4 border-b border-border flex-shrink-0">
         <h2 className="text-lg font-semibold text-card-foreground">Sports</h2>
         <p className="text-sm text-muted-foreground">Select a sport to view games</p>
       </div>
 
-      <div className="p-2">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-2">
         <Accordion type="single" collapsible value={navigation.selectedSport || undefined}>
           {sports.map((sport) => (
             <AccordionItem key={sport.id} value={sport.id} className="border-border">

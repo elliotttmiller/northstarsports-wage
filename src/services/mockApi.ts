@@ -153,3 +153,76 @@ export const calculatePayout = (stake: number, odds: number): number => {
 export const formatOdds = (odds: number): string => {
   return odds > 0 ? `+${odds}` : `${odds}`;
 };
+
+// Pagination interface
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+}
+
+// Paginate games for infinite scroll
+export const getGamesPaginated = async (
+  leagueId: string,
+  page = 1,
+  pageSize = 5
+): Promise<PaginatedResponse<Game>> => {
+  await new Promise(resolve => setTimeout(resolve, 300)); // Simulate network delay
+  
+  const league = await getLeague(leagueId);
+  if (!league) {
+    return {
+      data: [],
+      pagination: {
+        page,
+        pageSize,
+        total: 0,
+        totalPages: 0,
+        hasNextPage: false,
+        hasPreviousPage: false
+      }
+    };
+  }
+
+  // Simulate more games by duplicating and modifying existing games
+  const baseGames = league.games;
+  const extendedGames: Game[] = [];
+  
+  // Create 50 total games by cycling through base games
+  for (let i = 0; i < 50; i++) {
+    const baseGame = baseGames[i % baseGames.length];
+    const gameDate = new Date();
+    gameDate.setDate(gameDate.getDate() + Math.floor(i / baseGames.length));
+    
+    extendedGames.push({
+      ...baseGame,
+      id: `${baseGame.id}-extended-${i}`,
+      startTime: gameDate,
+      status: i < 10 ? 'finished' : i < 15 ? 'live' : 'upcoming'
+    });
+  }
+
+  const total = extendedGames.length;
+  const totalPages = Math.ceil(total / pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, total);
+  const data = extendedGames.slice(startIndex, endIndex);
+
+  return {
+    data,
+    pagination: {
+      page,
+      pageSize,
+      total,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1
+    }
+  };
+};

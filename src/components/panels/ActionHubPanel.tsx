@@ -64,8 +64,8 @@ export const ActionHubPanel = () => {
 
   if (betSlip.bets.length === 0) {
     return (
-      <div className="h-full bg-card flex flex-col">
-        <div className="p-4 border-b border-border">
+      <div className="h-full bg-card flex flex-col overflow-hidden">
+        <div className="p-4 border-b border-border flex-shrink-0">
           <h2 className="text-lg font-semibold text-card-foreground">Bet Slip</h2>
         </div>
         
@@ -85,8 +85,8 @@ export const ActionHubPanel = () => {
   }
 
   return (
-    <div className="h-full bg-card flex flex-col">
-      <div className="p-4 border-b border-border">
+    <div className="h-full bg-card flex flex-col overflow-hidden">
+      <div className="p-4 border-b border-border flex-shrink-0">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-card-foreground">Bet Slip</h2>
           <Button
@@ -100,7 +100,7 @@ export const ActionHubPanel = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
         <div className="p-4">
           <Tabs value={betSlip.betType} onValueChange={(value) => setBetType(value as 'single' | 'parlay')}>
             <TabsList className="grid w-full grid-cols-2">
@@ -224,8 +224,8 @@ export const ActionHubPanel = () => {
         </div>
       </div>
 
-      {/* Bet Slip Summary */}
-      <div className="border-t border-border p-4 bg-card">
+      {/* Bet Slip Summary - Fixed at bottom */}
+      <div className="border-t border-border p-4 bg-card flex-shrink-0">
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Total Stake:</span>

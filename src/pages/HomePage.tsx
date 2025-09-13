@@ -8,19 +8,18 @@ export function HomePage() {
   const { navigation } = useNavigation()
 
   return (
-    <motion.div 
-      className="h-full overflow-y-auto bg-background"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="p-4 border-b border-border bg-card">
+    <div className="h-full flex flex-col overflow-hidden bg-background">
+      <motion.div 
+        className="p-4 border-b border-border bg-card flex-shrink-0"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <h2 className="text-xl font-bold text-card-foreground">NorthStar Sports</h2>
         <p className="text-sm text-muted-foreground">Professional Wagering Studio</p>
-      </div>
+      </motion.div>
 
-      <div className="p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -95,6 +94,6 @@ export function HomePage() {
           </Card>
         </motion.div>
       </div>
-    </motion.div>
+    </div>
   )
 }
