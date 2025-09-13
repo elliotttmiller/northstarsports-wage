@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Trash } from '@phosphor-icons/react';
+import { Trash, X } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
@@ -97,46 +97,48 @@ export const BetSlipModal = () => {
   );
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <SheetContent 
-        side="right" 
-        className="w-full max-w-md h-full p-0 flex flex-col"
-        onInteractOutside={(e) => {
-          // Allow closing when clicking outside
-          e.preventDefault();
-          handleClose();
-        }}
-      >
-        <SheetHeader className="p-4 border-b border-border flex-shrink-0">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="max-w-md max-h-[85vh] p-0 flex flex-col gap-0 border-border/50 shadow-2xl [&>button]:hidden">
+        <DialogHeader className="p-4 pb-3 border-b border-border flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <SheetTitle className="text-lg font-semibold">Bet Slip</SheetTitle>
-              <SheetDescription className="text-sm text-muted-foreground">
+              <DialogTitle className="text-lg font-semibold">Bet Slip</DialogTitle>
+              <DialogDescription className="text-sm text-muted-foreground">
                 {betSlip.bets.length > 0 
                   ? `${betSlip.bets.length} selection${betSlip.bets.length > 1 ? 's' : ''}`
                   : 'No selections yet'
                 }
-              </SheetDescription>
+              </DialogDescription>
             </div>
-            {betSlip.bets.length > 0 && (
+            <div className="flex items-center space-x-2">
+              {betSlip.bets.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearBetSlip}
+                  className="text-destructive hover:text-destructive h-8 px-2"
+                >
+                  Clear All
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={clearBetSlip}
-                className="text-destructive hover:text-destructive"
+                onClick={handleClose}
+                className="h-8 w-8 p-0"
               >
-                Clear All
+                <X size={16} />
               </Button>
-            )}
+            </div>
           </div>
-        </SheetHeader>
+        </DialogHeader>
 
         {betSlip.bets.length === 0 ? (
           <EmptyBetSlip />
         ) : (
           <>
-            <ScrollArea className="flex-1 px-4">
-              <div className="py-4">
+            <ScrollArea className="flex-1 max-h-[50vh]">
+              <div className="px-4 py-3">
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -316,7 +318,7 @@ export const BetSlipModal = () => {
             </motion.div>
           </>
         )}
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 };
