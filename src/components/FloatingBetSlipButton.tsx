@@ -14,7 +14,7 @@ interface Position {
 
 export const FloatingBetSlipButton = () => {
   const { betSlip } = useBetSlip();
-  const { setMobilePanel } = useNavigation();
+  const { navigation, setMobilePanel } = useNavigation();
   const controls = useAnimation();
   
   // Persist button position across sessions
@@ -30,6 +30,9 @@ export const FloatingBetSlipButton = () => {
   
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+
+  // Hide button when bet slip modal is open
+  const isModalOpen = navigation.mobilePanel === 'betslip';
 
   // Calculate corner positions based on viewport
   const getCornerPosition = useCallback((corner: Corner): Position => {
@@ -170,7 +173,7 @@ export const FloatingBetSlipButton = () => {
 
   return (
     <motion.button
-      className={`absolute w-16 h-16 rounded-full shadow-lg backdrop-blur-sm border-2 flex items-center justify-center transition-all duration-200 z-50 touch-none select-none ${
+      className={`absolute w-16 h-16 rounded-full shadow-lg backdrop-blur-sm border-2 flex items-center justify-center transition-all duration-200 z-50 pointer-events-auto ${
         isDragging 
           ? 'bg-accent/90 border-accent-foreground/30 shadow-2xl cursor-grabbing' 
           : betSlip.bets.length > 0
@@ -182,10 +185,12 @@ export const FloatingBetSlipButton = () => {
         y,
         userSelect: 'none',
         WebkitUserSelect: 'none',
-        touchAction: 'none'
+        touchAction: 'none',
+        visibility: isModalOpen ? 'hidden' : 'visible',
+        opacity: isModalOpen ? 0 : 1
       }}
       animate={controls}
-      drag
+      drag={!isModalOpen}
       dragMomentum={false}
       dragElastic={0}
       dragPropagation={false}
@@ -199,12 +204,12 @@ export const FloatingBetSlipButton = () => {
       onDrag={handleDrag}
       onDragEnd={handleDragEnd}
       onClick={handleClick}
-      whileHover={!isDragging ? { 
+      whileHover={!isDragging && !isModalOpen ? { 
         scale: 1.05,
         y: -2,
         transition: { duration: 0.2 }
       } : {}}
-      whileTap={!isDragging ? { 
+      whileTap={!isDragging && !isModalOpen ? { 
         scale: 0.95,
         transition: { duration: 0.1 }
       } : {}}

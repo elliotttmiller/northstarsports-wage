@@ -6,6 +6,7 @@ import { SideNavPanel } from '../panels/SideNavPanel'
 import { ActionHubPanel } from '../panels/ActionHubPanel'
 import { BuilderPanel } from '../panels/BuilderPanel'
 import { FloatingBetSlipButton } from '../FloatingBetSlipButton'
+import { BetSlipModal } from '../BetSlipModal'
 import { NavigationProvider } from '../../context/NavigationContext'
 import { BetSlipProvider } from '../../context/BetSlipContext'
 import { useNavigation } from '../../context/NavigationContext'
@@ -98,22 +99,14 @@ function LayoutContent() {
           <Outlet />
         </div>
 
-        {/* Action Hub Panel (Bet Slip) */}
+        {/* Action Hub Panel (Bet Slip) - Desktop only since mobile uses modal */}
         <AnimatePresence mode="wait" key="actionhub-presence">
-          {(isMobile || navigation.actionHubOpen) && (
+          {!isMobile && navigation.actionHubOpen && (
             <motion.div
               key="actionhub"
-              initial={isMobile ? { x: '100%' } : { width: 0, opacity: 0 }}
-              animate={
-                isMobile 
-                  ? { x: 0 }
-                  : { width: 350, opacity: 1 }
-              }
-              exit={
-                isMobile 
-                  ? { x: '100%' }
-                  : { width: 0, opacity: 0 }
-              }
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 350, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
               transition={{ 
                 duration: 0.35, 
                 ease: [0.23, 1, 0.32, 1],
@@ -123,14 +116,7 @@ function LayoutContent() {
               style={{
                 willChange: 'transform, width, opacity'
               }}
-              className={`
-                ${isMobile 
-                  ? `fixed inset-0 top-16 z-40 ${
-                      navigation.mobilePanel === 'betslip' ? 'block' : 'hidden'
-                    } bg-card`
-                  : 'border-l border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition'
-                }
-              `}
+              className="border-l border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition"
             >
               <ActionHubPanel />
             </motion.div>
@@ -176,9 +162,12 @@ function LayoutContent() {
         </div>
       )}
 
-      {/* Mobile overlay backdrop */}
+      {/* Bet Slip Modal - Mobile only */}
+      {isMobile && <BetSlipModal />}
+
+      {/* Mobile overlay backdrop - excluding betslip since modal handles its own */}
       <AnimatePresence>
-        {isMobile && navigation.mobilePanel && navigation.mobilePanel !== 'workspace' && (
+        {isMobile && navigation.mobilePanel && navigation.mobilePanel !== 'workspace' && navigation.mobilePanel !== 'betslip' && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
