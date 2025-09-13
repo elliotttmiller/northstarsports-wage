@@ -4,7 +4,7 @@ import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { Game } from '@/types';
 import { getGamesPaginated, PaginatedResponse } from '@/services/mockApi';
-import { formatOdds, formatTotalLine } from '@/lib/formatters';
+import { formatOdds, formatTotalLine, formatDate } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
@@ -92,17 +92,6 @@ export const WorkspacePanel = () => {
       setPagination(null);
     }
   }, [navigation.selectedLeague, loadGames]);
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    }).format(date);
-  };
 
   const handleBetClick = (
     game: Game, 

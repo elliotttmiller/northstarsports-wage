@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { Game } from '@/types';
 import { getGameById, getPlayerProps, PlayerProp } from '@/services/mockApi';
-import { formatOdds, formatTotalLine } from '@/lib/formatters';
+import { formatOdds, formatTotalLine, formatDateDetailed } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -67,18 +67,6 @@ export function GameDetailPage() {
     toast.success(`${prop.playerName} ${prop.statType} ${selection} ${prop.line} added to slip!`, {
       duration: 2000,
     });
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    }).format(date);
   };
 
   const getStatIcon = (category: string) => {
@@ -165,7 +153,7 @@ export function GameDetailPage() {
             <div className="text-center">
               <div className="text-sm text-muted-foreground mb-2">vs</div>
               <div className="text-sm font-medium text-foreground">
-                {formatDate(game.startTime)}
+                {formatDateDetailed(game.startTime)}
               </div>
             </div>
 

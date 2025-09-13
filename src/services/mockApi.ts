@@ -23,49 +23,69 @@ const teams: Record<string, Team> = {
 
 // Generate mock games
 const generateGames = (leagueId: string, teamIds: string[]): Game[] => {
-  const games: Game[] = [];
-  const now = new Date();
-  
-  for (let i = 0; i < 8; i++) {
-    const gameDate = new Date(now.getTime() + (i - 2) * 24 * 60 * 60 * 1000);
-    const homeTeamId = teamIds[Math.floor(Math.random() * teamIds.length)];
-    let awayTeamId = teamIds[Math.floor(Math.random() * teamIds.length)];
-    while (awayTeamId === homeTeamId) {
-      awayTeamId = teamIds[Math.floor(Math.random() * teamIds.length)];
+  try {
+    const games: Game[] = [];
+    const now = new Date();
+    
+    // Ensure we have a valid date
+    if (isNaN(now.getTime())) {
+      console.error('Invalid date in generateGames');
+      return [];
     }
     
-    const status = i < 2 ? 'finished' : i === 2 ? 'live' : 'upcoming';
-    
-    games.push({
-      id: `${leagueId}-game-${i}`,
-      leagueId,
-      homeTeam: teams[homeTeamId],
-      awayTeam: teams[awayTeamId],
-      startTime: gameDate,
-      status,
-      odds: {
-        spread: {
-          home: { odds: -110, line: Math.random() > 0.5 ? -3.5 : 3.5, lastUpdated: new Date() },
-          away: { odds: -110, line: Math.random() > 0.5 ? 3.5 : -3.5, lastUpdated: new Date() }
-        },
-        moneyline: {
-          home: { odds: Math.floor(Math.random() * 200) - 200, lastUpdated: new Date() },
-          away: { odds: Math.floor(Math.random() * 200) + 100, lastUpdated: new Date() }
-        },
-        total: {
-          home: { odds: -110, lastUpdated: new Date() },
-          away: { odds: -110, lastUpdated: new Date() },
-          over: { odds: -110, line: Math.floor(45 + Math.random() * 15) + 0.5, lastUpdated: new Date() },
-          under: { odds: -110, line: Math.floor(45 + Math.random() * 15) + 0.5, lastUpdated: new Date() }
-        }
+    for (let i = 0; i < 8; i++) {
+      const gameDate = new Date(now.getTime() + (i - 2) * 24 * 60 * 60 * 1000);
+      
+      // Validate the generated date
+      if (isNaN(gameDate.getTime())) {
+        console.error('Invalid game date generated for index', i);
+        continue;
       }
-    });
+      
+      const homeTeamId = teamIds[Math.floor(Math.random() * teamIds.length)];
+      let awayTeamId = teamIds[Math.floor(Math.random() * teamIds.length)];
+      while (awayTeamId === homeTeamId) {
+        awayTeamId = teamIds[Math.floor(Math.random() * teamIds.length)];
+      }
+      
+      const status = i < 2 ? 'finished' : i === 2 ? 'live' : 'upcoming';
+      
+      const currentTime = new Date();
+      
+      games.push({
+        id: `${leagueId}-game-${i}`,
+        leagueId,
+        homeTeam: teams[homeTeamId],
+        awayTeam: teams[awayTeamId],
+        startTime: gameDate,
+        status,
+        odds: {
+          spread: {
+            home: { odds: -110, line: Math.random() > 0.5 ? -3.5 : 3.5, lastUpdated: currentTime },
+            away: { odds: -110, line: Math.random() > 0.5 ? 3.5 : -3.5, lastUpdated: currentTime }
+          },
+          moneyline: {
+            home: { odds: Math.floor(Math.random() * 200) - 200, lastUpdated: currentTime },
+            away: { odds: Math.floor(Math.random() * 200) + 100, lastUpdated: currentTime }
+          },
+          total: {
+            home: { odds: -110, lastUpdated: currentTime },
+            away: { odds: -110, lastUpdated: currentTime },
+            over: { odds: -110, line: Math.floor(45 + Math.random() * 15) + 0.5, lastUpdated: currentTime },
+            under: { odds: -110, line: Math.floor(45 + Math.random() * 15) + 0.5, lastUpdated: currentTime }
+          }
+        }
+      });
+    }
+    
+    return games;
+  } catch (error) {
+    console.error('Error generating games:', error);
+    return [];
   }
-  
-  return games;
 };
 
-// Mock sports data
+// Mock sports data with error handling for dates
 export const mockSports: Sport[] = [
   {
     id: 'nfl',
@@ -106,7 +126,13 @@ export const mockSports: Sport[] = [
       }
     ]
   }
-];
+].map(sport => ({
+  ...sport,
+  leagues: sport.leagues.map(league => ({
+    ...league,
+    games: league.games.filter(game => game && game.startTime instanceof Date && !isNaN(game.startTime.getTime()))
+  }))
+}));
 
 // API simulation functions
 export const getSports = async (): Promise<Sport[]> => {
@@ -193,7 +219,20 @@ export const getGamesPaginated = async (
   for (let i = 0; i < 50; i++) {
     const baseGame = baseGames[i % baseGames.length];
     const gameDate = new Date();
+    
+    // Validate base date
+    if (isNaN(gameDate.getTime())) {
+      console.error('Invalid base date in pagination');
+      continue;
+    }
+    
     gameDate.setDate(gameDate.getDate() + Math.floor(i / baseGames.length));
+    
+    // Validate modified date
+    if (isNaN(gameDate.getTime())) {
+      console.error('Invalid modified date in pagination for index', i);
+      continue;
+    }
     
     extendedGames.push({
       ...baseGame,
@@ -244,7 +283,20 @@ export const getGameById = async (gameId: string): Promise<Game | null> => {
         const baseGame = league.games.find(g => g.id.startsWith(baseId));
         if (baseGame) {
           const gameDate = new Date();
+          
+          // Validate base date
+          if (isNaN(gameDate.getTime())) {
+            console.error('Invalid base date in game reconstruction');
+            return null;
+          }
+          
           gameDate.setDate(gameDate.getDate() + Math.floor(index / league.games.length));
+          
+          // Validate modified date
+          if (isNaN(gameDate.getTime())) {
+            console.error('Invalid modified date in game reconstruction');
+            return null;
+          }
           
           return {
             ...baseGame,
