@@ -16,7 +16,7 @@ const BetSlipContext = createContext<BetSlipContextType | undefined>(undefined);
 
 export const useBetSlip = () => {
   const context = useContext(BetSlipContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useBetSlip must be used within a BetSlipProvider');
   }
   return context;

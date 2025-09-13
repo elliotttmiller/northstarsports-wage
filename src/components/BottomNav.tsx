@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { List, ChartLine, Receipt } from '@phosphor-icons/react';

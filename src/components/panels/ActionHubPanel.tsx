@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { formatOdds } from '@/services/mockApi';
 import { Button } from '@/components/ui/button';

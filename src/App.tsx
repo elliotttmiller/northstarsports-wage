@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationProvider } from '@/context/NavigationContext';
 import { BetSlipProvider } from '@/context/BetSlipContext';
 import { useNavigation } from '@/context/NavigationContext';
