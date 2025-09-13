@@ -255,10 +255,10 @@ export function HomePage() {
             <h3 className="text-lg font-semibold mb-4 text-foreground">Featured Markets</h3>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { name: 'NFL', games: '12 Games Today', icon: '🏈', sportId: 'football' },
-                { name: 'NBA', games: '8 Games Tonight', icon: '🏀', sportId: 'basketball' },
-                { name: 'MLB', games: '6 Games Today', icon: '⚾', sportId: 'baseball' },
-                { name: 'NHL', games: '4 Games Tonight', icon: '🏒', sportId: 'hockey' }
+                { name: 'NFL', games: '12 Games Today', sportId: 'football', icon: Trophy },
+                { name: 'NBA', games: '8 Games Tonight', sportId: 'basketball', icon: ChartBar },
+                { name: 'MLB', games: '6 Games Today', sportId: 'baseball', icon: TrendUp },
+                { name: 'NHL', games: '4 Games Tonight', sportId: 'hockey', icon: Calendar }
               ].map((market, index) => (
                 <motion.button
                   key={market.name}
@@ -273,7 +273,9 @@ export function HomePage() {
                   whileHover={{ scale: 1.05, y: -4 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <div className="text-2xl mb-2">{market.icon}</div>
+                  <div className="flex justify-center mb-2">
+                    <market.icon size={24} className="text-accent" />
+                  </div>
                   <div className="text-lg font-semibold text-foreground">{market.name}</div>
                   <div className="text-sm text-muted-foreground">{market.games}</div>
                 </motion.button>

@@ -62,12 +62,14 @@ export const SideNavPanel = () => {
 
   const handleSportClick = (sportId: string) => {
     selectSport(sportId);
-    // On mobile, navigate to games page smoothly
+    // Navigate to games page on both desktop and mobile
+    setTimeout(() => {
+      navigate('/games');
+    }, 100);
+    
+    // Close mobile panel if mobile
     if (window.innerWidth < 1024) {
       setMobilePanel(null);
-      setTimeout(() => {
-        navigate('/games');
-      }, 100);
     }
   };
 
@@ -81,12 +83,14 @@ export const SideNavPanel = () => {
 
   const handleLeagueClick = (leagueId: string) => {
     selectLeague(leagueId);
-    // On mobile, navigate to games page smoothly
+    // Navigate to games page on both desktop and mobile
+    setTimeout(() => {
+      navigate('/games');
+    }, 150);
+    
+    // Close mobile panel if mobile
     if (window.innerWidth < 1024) {
       setMobilePanel(null);
-      setTimeout(() => {
-        navigate('/games');
-      }, 150);
     }
   };
 
@@ -111,11 +115,14 @@ export const SideNavPanel = () => {
     <AccordionItem key={sport.id} value={sport.id} className="border-border">
       <AccordionTrigger
         className="text-left hover:no-underline px-2"
-        onClick={() => handleSportClick(sport.id)}
       >
         <motion.div 
-          className="flex items-center space-x-3"
+          className="flex items-center space-x-3 cursor-pointer"
           whileHover={{ x: 2 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSportClick(sport.id);
+          }}
         >
           <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
             <div className="w-2 h-2 bg-primary rounded-full" />
