@@ -8,9 +8,11 @@ import { NavigationProvider } from '../../context/NavigationContext'
 import { BetSlipProvider } from '../../context/BetSlipContext'
 import { useNavigation } from '../../context/NavigationContext'
 import { Toaster } from '@/components/ui/sonner'
+import { SidebarToggle } from '../SidebarToggle'
+import { motion, AnimatePresence } from 'framer-motion'
 
 function LayoutContent() {
-  const { navigation, setMobilePanel } = useNavigation()
+  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub } = useNavigation()
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -26,22 +28,63 @@ function LayoutContent() {
       <Header />
       
       {/* Main Layout - Takes remaining height */}
-      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[300px_1fr_350px] overflow-hidden">
+      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[auto_1fr_auto] overflow-hidden relative">
+        
+        {/* Desktop Sidebar Toggles */}
+        {!isMobile && (
+          <>
+            <SidebarToggle
+              side="left"
+              isOpen={navigation.sideNavOpen}
+              onToggle={toggleSideNav}
+            />
+            <SidebarToggle
+              side="right"
+              isOpen={navigation.actionHubOpen}
+              onToggle={toggleActionHub}
+            />
+          </>
+        )}
+
         {/* Side Navigation Panel */}
-        <div className={`
-          ${isMobile 
-            ? `fixed inset-0 top-16 z-50 transform transition-transform duration-300 ${
-                navigation.mobilePanel === 'navigation' ? 'translate-x-0' : '-translate-x-full'
-              } bg-card`
-            : 'border-r border-border overflow-hidden'
-          }
-        `}>
-          <SideNavPanel />
-        </div>
+        <AnimatePresence mode="wait">
+          {(isMobile || navigation.sideNavOpen) && (
+            <motion.div
+              key="sidenav"
+              initial={isMobile ? { x: '-100%', opacity: 0 } : { width: 0, opacity: 0 }}
+              animate={
+                isMobile 
+                  ? { x: 0, opacity: 1 }
+                  : { width: 300, opacity: 1 }
+              }
+              exit={
+                isMobile 
+                  ? { x: '-100%', opacity: 0 }
+                  : { width: 0, opacity: 0 }
+              }
+              transition={{ 
+                duration: 0.3, 
+                ease: [0.4, 0.0, 0.2, 1],
+                width: { duration: 0.3 }
+              }}
+              className={`
+                ${isMobile 
+                  ? `fixed inset-0 top-16 z-50 ${
+                      navigation.mobilePanel === 'navigation' ? 'block' : 'hidden'
+                    } bg-card`
+                  : 'border-r border-border overflow-hidden'
+                }
+              `}
+              style={!isMobile ? { flexShrink: 0 } : {}}
+            >
+              <SideNavPanel />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Main Workspace Panel - Contains routed content */}
         <div className={`
-          flex-1 overflow-hidden
+          flex-1 overflow-hidden min-w-0
           ${isMobile 
             ? `${navigation.mobilePanel === 'workspace' || !navigation.mobilePanel ? 'block' : 'hidden'}`
             : 'block'
@@ -51,28 +94,58 @@ function LayoutContent() {
         </div>
 
         {/* Action Hub Panel (Bet Slip) */}
-        <div className={`
-          ${isMobile 
-            ? `fixed inset-0 top-16 z-50 transform transition-transform duration-300 ${
-                navigation.mobilePanel === 'betslip' ? 'translate-x-0' : 'translate-x-full'
-              } bg-card`
-            : 'border-l border-border overflow-hidden'
-          }
-        `}>
-          <ActionHubPanel />
-        </div>
+        <AnimatePresence mode="wait">
+          {(isMobile || navigation.actionHubOpen) && (
+            <motion.div
+              key="actionhub"
+              initial={isMobile ? { x: '100%', opacity: 0 } : { width: 0, opacity: 0 }}
+              animate={
+                isMobile 
+                  ? { x: 0, opacity: 1 }
+                  : { width: 350, opacity: 1 }
+              }
+              exit={
+                isMobile 
+                  ? { x: '100%', opacity: 0 }
+                  : { width: 0, opacity: 0 }
+              }
+              transition={{ 
+                duration: 0.3, 
+                ease: [0.4, 0.0, 0.2, 1],
+                width: { duration: 0.3 }
+              }}
+              className={`
+                ${isMobile 
+                  ? `fixed inset-0 top-16 z-50 ${
+                      navigation.mobilePanel === 'betslip' ? 'block' : 'hidden'
+                    } bg-card`
+                  : 'border-l border-border overflow-hidden'
+                }
+              `}
+              style={!isMobile ? { flexShrink: 0 } : {}}
+            >
+              <ActionHubPanel />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Bottom Navigation - Mobile only */}
       {isMobile && <BottomNav />}
 
       {/* Mobile overlay backdrop */}
-      {isMobile && navigation.mobilePanel && navigation.mobilePanel !== 'workspace' && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40"
-          onClick={() => setMobilePanel(null)}
-        />
-      )}
+      <AnimatePresence>
+        {isMobile && navigation.mobilePanel && navigation.mobilePanel !== 'workspace' && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setMobilePanel(null)}
+          />
+        )}
+      </AnimatePresence>
       
       {/* Toast notifications */}
       <Toaster />

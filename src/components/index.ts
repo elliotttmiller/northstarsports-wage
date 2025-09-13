@@ -12,3 +12,7 @@ export { ActionHubPanel } from './panels/ActionHubPanel'
 export { GameCard } from './GameCard'
 export { OddsButton } from './OddsButton'
 export { BetSlipItem } from './BetSlipItem'
+
+// UI Enhancement Components
+export { SidebarToggle } from './SidebarToggle'
+export { VirtualScrollContainer, SmoothScrollContainer, InfiniteScrollContainer } from './VirtualScrolling'

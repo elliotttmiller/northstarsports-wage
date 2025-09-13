@@ -7,10 +7,16 @@ interface NavigationContextType {
     mobilePanel: MobilePanel
     selectedSport: string | null
     selectedLeague: string | null
+    sideNavOpen: boolean
+    actionHubOpen: boolean
   }
   setMobilePanel: (panel: MobilePanel) => void
   selectSport: (sport: string) => void
   selectLeague: (league: string) => void
+  toggleSideNav: () => void
+  toggleActionHub: () => void
+  setSideNavOpen: (open: boolean) => void
+  setActionHubOpen: (open: boolean) => void
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined)
@@ -19,6 +25,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null)
   const [selectedSport, setSelectedSport] = useState<string | null>('football')
   const [selectedLeague, setSelectedLeague] = useState<string | null>('nfl')
+  const [sideNavOpen, setSideNavOpen] = useState(true)
+  const [actionHubOpen, setActionHubOpen] = useState(true)
+
+  const toggleSideNav = () => setSideNavOpen(!sideNavOpen)
+  const toggleActionHub = () => setActionHubOpen(!actionHubOpen)
 
   return (
     <NavigationContext.Provider
@@ -26,11 +37,17 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
         navigation: { 
           mobilePanel, 
           selectedSport,
-          selectedLeague 
+          selectedLeague,
+          sideNavOpen,
+          actionHubOpen
         },
         setMobilePanel,
         selectSport: setSelectedSport,
-        selectLeague: setSelectedLeague
+        selectLeague: setSelectedLeague,
+        toggleSideNav,
+        toggleActionHub,
+        setSideNavOpen,
+        setActionHubOpen
       }}
     >
       {children}
