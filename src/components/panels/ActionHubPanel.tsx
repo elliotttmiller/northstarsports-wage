@@ -120,7 +120,7 @@ export const ActionHubPanel = () => {
         </div>
       </motion.div>
 
-      <SmoothScrollContainer className="flex-1">
+      <SmoothScrollContainer className="flex-1" showScrollbar={false}>
         <div className="p-4">
           <motion.div
             initial={{ opacity: 0 }}

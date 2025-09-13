@@ -320,7 +320,7 @@ export const WorkspacePanel = () => {
         loadMore={loadNextPage}
         hasMore={pagination?.hasNextPage ?? false}
         loading={loading}
-        className="flex-1 p-4"
+        className="flex-1 p-4 seamless-scroll"
         threshold={200}
       />
 

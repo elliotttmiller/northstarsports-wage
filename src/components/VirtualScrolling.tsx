@@ -35,7 +35,7 @@ export function VirtualScrollContainer({
     <div
       ref={parentRef}
       className={cn(
-        'overflow-auto virtual-scrollbar smooth-scroll',
+        'overflow-auto seamless-scroll',
         className
       )}
       style={{
@@ -89,17 +89,17 @@ export function SmoothScrollContainer({
   children,
   className,
   maxHeight = '100%',
-  showScrollbar = true
+  showScrollbar = false
 }: SmoothScrollContainerProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const scrollbarClass = showScrollbar ? 'virtual-scrollbar' : 'scrollbar-hide'
+  const scrollbarClass = showScrollbar ? 'virtual-scrollbar' : 'seamless-scroll'
 
   return (
     <div
       ref={scrollRef}
       className={cn(
-        'overflow-auto smooth-scroll',
+        'overflow-auto',
         scrollbarClass,
         className
       )}
@@ -158,7 +158,7 @@ export function InfiniteScrollContainer({
       ref={scrollRef}
       onScroll={handleScroll}
       className={cn(
-        'overflow-auto virtual-scrollbar smooth-scroll',
+        'overflow-auto seamless-scroll',
         className
       )}
       style={{ 

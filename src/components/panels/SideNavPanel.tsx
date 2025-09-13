@@ -94,7 +94,7 @@ export const SideNavPanel = () => {
         <p className="text-sm text-muted-foreground">Select a sport to view games</p>
       </motion.div>
 
-      <SmoothScrollContainer className="flex-1 p-2">
+      <SmoothScrollContainer className="flex-1 p-2" showScrollbar={false}>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

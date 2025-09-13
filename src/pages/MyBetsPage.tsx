@@ -25,7 +25,7 @@ export function MyBetsPage() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-background">
-      <SmoothScrollContainer className="flex-1 p-4">
+      <SmoothScrollContainer className="flex-1 p-4" showScrollbar={false}>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
