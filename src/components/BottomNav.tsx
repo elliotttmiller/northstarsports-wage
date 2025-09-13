@@ -56,7 +56,7 @@ export const BottomNav = () => {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-around z-30 px-2">
+    <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-around px-2 w-full">
       {/* Sports - Left */}
       <motion.button
         onClick={handleSportsClick}

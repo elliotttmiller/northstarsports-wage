@@ -48,6 +48,13 @@ html, body {
   will-change: transform, width;
 }
 
+/* Mobile bottom navigation spacing */
+@media (max-width: 1023px) {
+  .layout-container {
+    padding-bottom: 5rem; /* 80px - space for bottom nav */
+  }
+}
+
 /* Focus states */
 .focus-ring:focus {
   outline: none;

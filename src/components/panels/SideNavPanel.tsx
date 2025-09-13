@@ -61,16 +61,8 @@ export const SideNavPanel = () => {
   }, []);
 
   const handleSportClick = (sportId: string) => {
-    selectSport(sportId);
-    // Navigate to games page on both desktop and mobile
-    setTimeout(() => {
-      navigate('/games');
-    }, 100);
-    
-    // Close mobile panel if mobile
-    if (window.innerWidth < 1024) {
-      setMobilePanel(null);
-    }
+    // Only expand/collapse the accordion, don't navigate
+    selectSport(navigation.selectedSport === sportId ? '' : sportId);
   };
 
   const handleBetTypeClick = (betTypeId: string) => {

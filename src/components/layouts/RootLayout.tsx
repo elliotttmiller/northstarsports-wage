@@ -75,7 +75,7 @@ function LayoutContent() {
               }}
               className={`
                 ${isMobile 
-                  ? `fixed inset-0 top-16 z-50 ${
+                  ? `fixed inset-0 top-16 z-40 ${
                       navigation.mobilePanel === 'navigation' ? 'block' : 'hidden'
                     } bg-card`
                   : 'border-r border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition'
@@ -125,7 +125,7 @@ function LayoutContent() {
               }}
               className={`
                 ${isMobile 
-                  ? `fixed inset-0 top-16 z-50 ${
+                  ? `fixed inset-0 top-16 z-40 ${
                       navigation.mobilePanel === 'betslip' ? 'block' : 'hidden'
                     } bg-card`
                   : 'border-l border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition'
@@ -153,7 +153,7 @@ function LayoutContent() {
                 style={{
                   willChange: 'transform'
                 }}
-                className="fixed inset-0 top-16 z-50 bg-card"
+                className="fixed inset-0 top-16 z-40 bg-card"
               >
                 <BuilderPanel />
               </motion.div>
@@ -162,11 +162,19 @@ function LayoutContent() {
         )}
       </div>
 
-      {/* Bottom Navigation - Mobile only */}
-      {isMobile && <BottomNav />}
+      {/* Bottom Navigation - Mobile only, always visible */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 z-40">
+          <BottomNav />
+        </div>
+      )}
       
-      {/* Floating Bet Slip Button - Mobile only */}
-      {isMobile && <FloatingBetSlipButton />}
+      {/* Floating Bet Slip Button - Mobile only, highest z-index */}
+      {isMobile && (
+        <div className="fixed inset-0 pointer-events-none z-50">
+          <FloatingBetSlipButton />
+        </div>
+      )}
 
       {/* Mobile overlay backdrop */}
       <AnimatePresence>
@@ -176,7 +184,7 @@ function LayoutContent() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-            className="fixed inset-0 bg-black/50 z-40"
+            className="fixed inset-0 bg-black/50 z-30"
             onClick={() => setMobilePanel(null)}
           />
         )}
