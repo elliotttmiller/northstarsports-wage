@@ -99,8 +99,8 @@ export const BetSlipModal = () => {
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <SheetContent 
-        side="bottom" 
-        className="h-[85vh] p-0 flex flex-col"
+        side="right" 
+        className="w-full max-w-md h-full p-0 flex flex-col"
         onInteractOutside={(e) => {
           // Allow closing when clicking outside
           e.preventDefault();

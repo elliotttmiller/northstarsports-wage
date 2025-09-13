@@ -5,8 +5,6 @@ import { useBetSlip } from '@/context/BetSlipContext';
 import { useNavigation } from '@/context/NavigationContext';
 import { useKV } from '@github/spark/hooks';
 
-type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-
 interface Position {
   x: number;
   y: number;
@@ -17,11 +15,11 @@ export const FloatingBetSlipButton = () => {
   const { navigation, setMobilePanel } = useNavigation();
   const controls = useAnimation();
   
-  // Persist button position across sessions
-  const [savedPosition, setSavedPosition] = useKV<Corner>('floating-button-position', 'bottom-right');
+  // Persist button position across sessions - now saves actual coordinates
+  const [savedPosition, setSavedPosition] = useKV<Position | undefined>('floating-button-position', undefined);
   
   const [isDragging, setIsDragging] = useState(false);
-  const [currentCorner, setCurrentCorner] = useState<Corner>(savedPosition || 'bottom-right');
+  const [isInitialized, setIsInitialized] = useState(false);
   
   // Track drag state more precisely
   const dragStartTime = useRef<number>(0);
@@ -34,58 +32,55 @@ export const FloatingBetSlipButton = () => {
   // Hide button when bet slip modal is open
   const isModalOpen = navigation.mobilePanel === 'betslip';
 
-  // Calculate corner positions based on viewport
-  const getCornerPosition = useCallback((corner: Corner): Position => {
-    const margin = 20; // Distance from screen edges
-    const buttonSize = 64; // Button size including padding
-    
-    switch (corner) {
-      case 'top-left':
-        return { x: margin, y: margin };
-      case 'top-right':
-        return { x: window.innerWidth - buttonSize - margin, y: margin };
-      case 'bottom-left':
-        return { x: margin, y: window.innerHeight - buttonSize - margin - 80 }; // 80px for bottom nav
-      case 'bottom-right':
-      default:
-        return { x: window.innerWidth - buttonSize - margin, y: window.innerHeight - buttonSize - margin - 80 };
-    }
+  // Get default position
+  const getDefaultPosition = useCallback((): Position => {
+    const buttonSize = 56;
+    const margin = 20;
+    return {
+      x: window.innerWidth - buttonSize - margin,
+      y: window.innerHeight - buttonSize - margin - 80 // Account for bottom nav
+    };
   }, []);
 
-  // Find nearest corner based on current position
-  const findNearestCorner = useCallback((currentX: number, currentY: number): Corner => {
-    const centerX = window.innerWidth / 2;
-    const centerY = (window.innerHeight - 80) / 2; // Account for bottom nav
-    
-    if (currentX < centerX && currentY < centerY) return 'top-left';
-    if (currentX >= centerX && currentY < centerY) return 'top-right';
-    if (currentX < centerX && currentY >= centerY) return 'bottom-left';
-    return 'bottom-right';
-  }, []);
-
-  // Initialize position based on saved corner
+  // Initialize position from saved coordinates or default
   useEffect(() => {
-    const position = getCornerPosition(currentCorner);
-    x.set(position.x);
-    y.set(position.y);
-  }, [currentCorner, getCornerPosition, x, y]);
+    const initPosition = savedPosition || getDefaultPosition();
+    x.set(initPosition.x);
+    y.set(initPosition.y);
+    setIsInitialized(true);
+  }, [savedPosition, x, y, getDefaultPosition]);
 
-  // Handle window resize to maintain corner positioning
+  // Handle window resize to keep button within bounds
   useEffect(() => {
     const handleResize = () => {
-      const position = getCornerPosition(currentCorner);
-      controls.start({
-        x: position.x,
-        y: position.y,
-        transition: { duration: 0.3, ease: "easeOut" }
-      });
+      const currentX = x.get();
+      const currentY = y.get();
+      const buttonSize = 56; // Updated smaller button size
+      const margin = 20;
+      
+      // Ensure button stays within new viewport bounds
+      const maxX = window.innerWidth - buttonSize - margin;
+      const maxY = window.innerHeight - buttonSize - margin - 80; // Account for bottom nav
+      
+      const newX = Math.min(Math.max(margin, currentX), maxX);
+      const newY = Math.min(Math.max(margin, currentY), maxY);
+      
+      if (newX !== currentX || newY !== currentY) {
+        controls.start({
+          x: newX,
+          y: newY,
+          transition: { duration: 0.3, ease: "easeOut" }
+        });
+        setSavedPosition({ x: newX, y: newY });
+      }
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [currentCorner, getCornerPosition, controls]);
+  }, [controls, x, y, setSavedPosition]);
 
   const handleDragStart = () => {
+    if (!isInitialized) return;
     dragStartTime.current = Date.now();
     hasMoved.current = false;
     totalDragDistance.current = 0;
@@ -93,64 +88,35 @@ export const FloatingBetSlipButton = () => {
   };
 
   const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (!isInitialized) return;
     const dragDistance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
     totalDragDistance.current = dragDistance;
     
     // Only start visual dragging state after significant movement
-    if (dragDistance > 15 && !hasMoved.current) {
+    if (dragDistance > 10 && !hasMoved.current) {
       hasMoved.current = true;
       setIsDragging(true);
     }
   };
 
   const handleDragEnd = async (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (!isInitialized) return;
     const dragDuration = Date.now() - dragStartTime.current;
     const totalDistance = totalDragDistance.current;
     
     // Determine if this was an intentional drag or just a tap
-    const wasIntentionalDrag = totalDistance > 20 || (dragDuration > 200 && totalDistance > 10);
+    const wasIntentionalDrag = totalDistance > 15 || (dragDuration > 150 && totalDistance > 8);
     
     if (wasIntentionalDrag && hasMoved.current) {
-      // Handle drag - snap to nearest corner
+      // Handle drag - save new position
       const currentX = x.get();
       const currentY = y.get();
       
-      const nearestCorner = findNearestCorner(currentX, currentY);
-      const targetPosition = getCornerPosition(nearestCorner);
-      
-      // Animate to nearest corner
-      await controls.start({
-        x: targetPosition.x,
-        y: targetPosition.y,
-        transition: {
-          type: "spring",
-          stiffness: 400,
-          damping: 30,
-          duration: 0.5
-        }
-      });
-      
-      // Update state and persist
-      setCurrentCorner(nearestCorner);
-      setSavedPosition(nearestCorner);
+      // Save the new position
+      setSavedPosition({ x: currentX, y: currentY });
     } else {
       // Handle tap - open bet slip
       setMobilePanel('betslip');
-      
-      // Ensure button stays in current corner position
-      const targetPosition = getCornerPosition(currentCorner);
-      if (totalDistance > 5) {
-        await controls.start({
-          x: targetPosition.x,
-          y: targetPosition.y,
-          transition: {
-            type: "spring",
-            stiffness: 600,
-            damping: 40,
-            duration: 0.3
-          }
-        });
-      }
     }
     
     // Reset all states
@@ -160,8 +126,10 @@ export const FloatingBetSlipButton = () => {
   };
 
   const handleClick = (e: React.MouseEvent) => {
+    if (!isInitialized) return;
+    
     // Prevent click if we've been dragging
-    if (hasMoved.current || totalDragDistance.current > 5) {
+    if (hasMoved.current || totalDragDistance.current > 8) {
       e.preventDefault();
       e.stopPropagation();
       return;
@@ -173,12 +141,12 @@ export const FloatingBetSlipButton = () => {
 
   return (
     <motion.button
-      className={`absolute w-16 h-16 rounded-full shadow-lg backdrop-blur-sm border-2 flex items-center justify-center transition-all duration-200 z-50 pointer-events-auto ${
+      className={`absolute w-14 h-14 rounded-full shadow-lg backdrop-blur-md border flex items-center justify-center transition-all duration-200 z-50 pointer-events-auto ${
         isDragging 
-          ? 'bg-accent/90 border-accent-foreground/30 shadow-2xl cursor-grabbing' 
+          ? 'bg-accent/40 border-accent-foreground/20 shadow-2xl cursor-grabbing scale-105' 
           : betSlip.bets.length > 0
-            ? 'bg-accent/80 border-accent-foreground/20 hover:bg-accent/90 hover:shadow-xl active:scale-95 cursor-pointer'
-            : 'bg-muted/80 border-muted-foreground/20 hover:bg-muted/90 hover:shadow-xl active:scale-95 cursor-pointer'
+            ? 'bg-accent/30 border-accent-foreground/15 hover:bg-accent/40 hover:shadow-xl active:scale-95 cursor-pointer'
+            : 'bg-muted/25 border-muted-foreground/10 hover:bg-muted/35 hover:shadow-xl active:scale-95 cursor-pointer'
       }`}
       style={{
         x,
@@ -186,49 +154,59 @@ export const FloatingBetSlipButton = () => {
         userSelect: 'none',
         WebkitUserSelect: 'none',
         touchAction: 'none',
-        visibility: isModalOpen ? 'hidden' : 'visible',
-        opacity: isModalOpen ? 0 : 1
+        visibility: (isModalOpen || !isInitialized) ? 'hidden' : 'visible',
+        opacity: (isModalOpen || !isInitialized) ? 0 : 1
       }}
-      animate={controls}
-      drag={!isModalOpen}
+      animate={{
+        scale: (isModalOpen || !isInitialized) ? 0 : 1, 
+        opacity: (isModalOpen || !isInitialized) ? 0 : 1,
+        ...controls
+      }}
+      drag={!isModalOpen && isInitialized}
       dragMomentum={false}
       dragElastic={0}
       dragPropagation={false}
-      dragConstraints={{
+      dragConstraints={isInitialized ? {
         left: 10,
-        right: window.innerWidth - 74,
+        right: window.innerWidth - 66, // Updated for smaller button
         top: 10,
-        bottom: window.innerHeight - 154
+        bottom: window.innerHeight - 146 // Updated for smaller button + bottom nav
+      } : {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0
       }}
       onDragStart={handleDragStart}
       onDrag={handleDrag}
       onDragEnd={handleDragEnd}
       onClick={handleClick}
-      whileHover={!isDragging && !isModalOpen ? { 
+      whileHover={!isDragging && !isModalOpen && isInitialized ? { 
         scale: 1.05,
-        y: -2,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.2, ease: "easeOut" }
       } : {}}
-      whileTap={!isDragging && !isModalOpen ? { 
+      whileTap={!isDragging && !isModalOpen && isInitialized ? { 
         scale: 0.95,
         transition: { duration: 0.1 }
       } : {}}
-      transition={{
-        type: "spring",
-        stiffness: 500,
-        damping: 30
+      initial={{ scale: 0, opacity: 0 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 300, 
+        damping: 25,
+        duration: 0.4 
       }}
     >
       <div className="relative pointer-events-none">
         {betSlip.bets.length > 0 ? (
           <Receipt 
-            size={24} 
+            size={20} 
             weight="fill" 
             className="text-accent-foreground"
           />
         ) : (
           <Plus 
-            size={24} 
+            size={20} 
             weight="bold" 
             className="text-muted-foreground"
           />
@@ -237,28 +215,27 @@ export const FloatingBetSlipButton = () => {
         {/* Bet count badge - only show when there are bets */}
         {betSlip.bets.length > 0 && (
           <motion.div 
-            className="absolute -top-2 -right-2 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold border-2 border-accent-foreground/20"
+            className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold border border-accent-foreground/10"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
             key={betSlip.bets.length}
           >
             {betSlip.bets.length}
           </motion.div>
         )}
 
-        {/* Drag indicator */}
+        {/* Subtle drag indicator */}
         {isDragging && (
           <motion.div
-            className="absolute inset-0 rounded-full bg-accent/30 border-2 border-dashed border-accent-foreground/40"
-            initial={{ scale: 1, opacity: 0.5 }}
+            className="absolute inset-0 rounded-full bg-accent/20 border border-dashed border-accent-foreground/30"
+            initial={{ scale: 1, opacity: 0.3 }}
             animate={{ 
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 360],
-              opacity: [0.5, 0.8, 0.5]
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.6, 0.3]
             }}
             transition={{
-              duration: 1.5,
+              duration: 2,
               repeat: Infinity,
               ease: "easeInOut"
             }}
