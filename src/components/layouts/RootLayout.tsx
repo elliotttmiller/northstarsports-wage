@@ -4,6 +4,8 @@ import { Header } from '../Header'
 import { BottomNav } from '../BottomNav'
 import { SideNavPanel } from '../panels/SideNavPanel'
 import { ActionHubPanel } from '../panels/ActionHubPanel'
+import { BuilderPanel } from '../panels/BuilderPanel'
+import { FloatingBetSlipButton } from '../FloatingBetSlipButton'
 import { NavigationProvider } from '../../context/NavigationContext'
 import { BetSlipProvider } from '../../context/BetSlipContext'
 import { useNavigation } from '../../context/NavigationContext'
@@ -134,10 +136,37 @@ function LayoutContent() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Builder Panel - Mobile only */}
+        {isMobile && (
+          <AnimatePresence mode="wait" key="builder-presence">
+            {navigation.mobilePanel === 'builder' && (
+              <motion.div
+                key="builder"
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ 
+                  duration: 0.35, 
+                  ease: [0.23, 1, 0.32, 1]
+                }}
+                style={{
+                  willChange: 'transform'
+                }}
+                className="fixed inset-0 top-16 z-50 bg-card"
+              >
+                <BuilderPanel />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
       </div>
 
       {/* Bottom Navigation - Mobile only */}
       {isMobile && <BottomNav />}
+      
+      {/* Floating Bet Slip Button - Mobile only */}
+      {isMobile && <FloatingBetSlipButton />}
 
       {/* Mobile overlay backdrop */}
       <AnimatePresence>

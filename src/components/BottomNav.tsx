@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
-import { House, Receipt, GameController, DotsThree } from '@phosphor-icons/react';
+import { House, Receipt, GameController, DotsThree, Wrench } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 
 // Custom hook for mobile detection
@@ -41,11 +41,12 @@ export const BottomNav = () => {
     }
   };
 
-  const handleBetsClick = () => {
-    if (navigation.mobilePanel === 'betslip') {
+  const handleBuilderClick = () => {
+    // Builder will open the unified bet builder modal/panel
+    if (navigation.mobilePanel === 'builder') {
       setMobilePanel(null);
     } else {
-      setMobilePanel('betslip');
+      setMobilePanel('builder');
     }
   };
 
@@ -56,34 +57,7 @@ export const BottomNav = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-around z-30 px-2">
-      {/* Bets - Left */}
-      <motion.button
-        onClick={handleBetsClick}
-        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          navigation.mobilePanel === 'betslip'
-            ? 'bg-accent text-accent-foreground scale-105' 
-            : 'text-muted-foreground hover:text-foreground'
-        }`}
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <div className="relative">
-          <Receipt size={20} weight={navigation.mobilePanel === 'betslip' ? 'fill' : 'regular'} />
-          {betSlip.bets.length > 0 && (
-            <motion.div 
-              className="absolute -top-2 -right-2 w-5 h-5 bg-accent text-accent-foreground rounded-full flex items-center justify-center text-xs font-semibold"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            >
-              {betSlip.bets.length}
-            </motion.div>
-          )}
-        </div>
-        <span className="text-xs font-medium">Bets</span>
-      </motion.button>
-
-      {/* Sports - Left Center */}
+      {/* Sports - Left */}
       <motion.button
         onClick={handleSportsClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
@@ -96,6 +70,21 @@ export const BottomNav = () => {
       >
         <GameController size={20} weight={(location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation' ? 'fill' : 'regular'} />
         <span className="text-xs font-medium">Sports</span>
+      </motion.button>
+
+      {/* Builder - Left Center */}
+      <motion.button
+        onClick={handleBuilderClick}
+        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
+          navigation.mobilePanel === 'builder'
+            ? 'bg-accent text-accent-foreground scale-105' 
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        whileHover={{ scale: 1.05, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Wrench size={20} weight={navigation.mobilePanel === 'builder' ? 'fill' : 'regular'} />
+        <span className="text-xs font-medium">Builder</span>
       </motion.button>
 
       {/* Home - Center button */}
