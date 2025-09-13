@@ -3,22 +3,22 @@ import { Sport, League, Game, Team } from '@/types';
 // Mock team data
 const teams: Record<string, Team> = {
   // NFL Teams
-  'chiefs': { id: 'chiefs', name: 'Kansas City Chiefs', shortName: 'KC', logo: '🏈', record: '11-1' },
-  'bills': { id: 'bills', name: 'Buffalo Bills', shortName: 'BUF', logo: '🏈', record: '10-2' },
-  'dolphins': { id: 'dolphins', name: 'Miami Dolphins', shortName: 'MIA', logo: '🏈', record: '8-4' },
-  'ravens': { id: 'ravens', name: 'Baltimore Ravens', shortName: 'BAL', logo: '🏈', record: '9-3' },
+  'chiefs': { id: 'chiefs', name: 'Kansas City Chiefs', shortName: 'KC', logo: '', record: '11-1' },
+  'bills': { id: 'bills', name: 'Buffalo Bills', shortName: 'BUF', logo: '', record: '10-2' },
+  'dolphins': { id: 'dolphins', name: 'Miami Dolphins', shortName: 'MIA', logo: '', record: '8-4' },
+  'ravens': { id: 'ravens', name: 'Baltimore Ravens', shortName: 'BAL', logo: '', record: '9-3' },
   
   // NBA Teams
-  'lakers': { id: 'lakers', name: 'Los Angeles Lakers', shortName: 'LAL', logo: '🏀', record: '15-10' },
-  'celtics': { id: 'celtics', name: 'Boston Celtics', shortName: 'BOS', logo: '🏀', record: '18-7' },
-  'warriors': { id: 'warriors', name: 'Golden State Warriors', shortName: 'GSW', logo: '🏀', record: '12-13' },
-  'nuggets': { id: 'nuggets', name: 'Denver Nuggets', shortName: 'DEN', logo: '🏀', record: '14-11' },
+  'lakers': { id: 'lakers', name: 'Los Angeles Lakers', shortName: 'LAL', logo: '', record: '15-10' },
+  'celtics': { id: 'celtics', name: 'Boston Celtics', shortName: 'BOS', logo: '', record: '18-7' },
+  'warriors': { id: 'warriors', name: 'Golden State Warriors', shortName: 'GSW', logo: '', record: '12-13' },
+  'nuggets': { id: 'nuggets', name: 'Denver Nuggets', shortName: 'DEN', logo: '', record: '14-11' },
   
   // NHL Teams
-  'rangers': { id: 'rangers', name: 'New York Rangers', shortName: 'NYR', logo: '🏒', record: '15-8-1' },
-  'bruins': { id: 'bruins', name: 'Boston Bruins', shortName: 'BOS', logo: '🏒', record: '13-10-3' },
-  'panthers': { id: 'panthers', name: 'Florida Panthers', shortName: 'FLA', logo: '🏒', record: '16-9-1' },
-  'oilers': { id: 'oilers', name: 'Edmonton Oilers', shortName: 'EDM', logo: '🏒', record: '16-10-2' }
+  'rangers': { id: 'rangers', name: 'New York Rangers', shortName: 'NYR', logo: '', record: '15-8-1' },
+  'bruins': { id: 'bruins', name: 'Boston Bruins', shortName: 'BOS', logo: '', record: '13-10-3' },
+  'panthers': { id: 'panthers', name: 'Florida Panthers', shortName: 'FLA', logo: '', record: '16-9-1' },
+  'oilers': { id: 'oilers', name: 'Edmonton Oilers', shortName: 'EDM', logo: '', record: '16-10-2' }
 };
 
 // Generate mock games
@@ -70,7 +70,7 @@ export const mockSports: Sport[] = [
   {
     id: 'nfl',
     name: 'NFL',
-    icon: '🏈',
+    icon: '',
     leagues: [
       {
         id: 'nfl-regular',
@@ -83,7 +83,7 @@ export const mockSports: Sport[] = [
   {
     id: 'nba',
     name: 'NBA',
-    icon: '🏀',
+    icon: '',
     leagues: [
       {
         id: 'nba-regular',
@@ -96,7 +96,7 @@ export const mockSports: Sport[] = [
   {
     id: 'nhl',
     name: 'NHL',
-    icon: '🏒',
+    icon: '',
     leagues: [
       {
         id: 'nhl-regular',

@@ -32,12 +32,14 @@
   }
 
   /* Hide scrollbar utility */
-  .scrollbar-hide {
+  .scrollbar-hide,
+  .seamless-scroll {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
 
-  .scrollbar-hide::-webkit-scrollbar {
+  .scrollbar-hide::-webkit-scrollbar,
+  .seamless-scroll::-webkit-scrollbar {
     width: 0;
     display: none;
   }
@@ -85,13 +87,13 @@
   --popover-foreground: oklch(0.93 0.01 225); /* slate-50 */
 
   /* Action colors */
-  --primary: oklch(0.37 0.05 225); /* slate-700 */
+  --primary: oklch(0.58 0.16 142); /* green-600 */
   --primary-foreground: oklch(0.93 0.01 225); /* slate-50 */
 
   --secondary: oklch(0.20 0.03 225); /* slate-800 */
   --secondary-foreground: oklch(0.80 0.01 225); /* slate-200 */
 
-  --accent: oklch(0.26 0.03 225); /* slate-700 */
+  --accent: oklch(0.65 0.18 142); /* green-500 */
   --accent-foreground: oklch(0.93 0.01 225); /* slate-50 */
 
   --destructive: oklch(0.62 0.20 25); /* red-600 */
@@ -103,7 +105,7 @@
 
   --border: oklch(0.20 0.03 225); /* slate-800 */
   --input: oklch(0.20 0.03 225); /* slate-800 */
-  --ring: oklch(0.37 0.05 225); /* slate-700 */
+  --ring: oklch(0.58 0.16 142); /* green-600 */
 
   /* Custom colors for betting */
   --color-win: oklch(0.58 0.16 142); /* green-600 */
