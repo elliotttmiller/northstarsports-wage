@@ -16,10 +16,14 @@ export function SidebarToggle({ side, isOpen, onToggle, className }: SidebarTogg
   return (
     <motion.div
       className={cn(
-        'fixed top-1/2 -translate-y-1/2 z-40 transition-all duration-300',
+        'fixed top-1/2 -translate-y-1/2 z-40',
         isLeft 
-          ? `left-2 ${isOpen ? 'lg:left-[308px]' : 'lg:left-2'}` 
-          : `right-2 ${isOpen ? 'lg:right-[358px]' : 'lg:right-2'}`,
+          ? `transition-all duration-[350ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
+              isOpen ? 'left-[308px]' : 'left-2'
+            }` 
+          : `transition-all duration-[350ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
+              isOpen ? 'right-[358px]' : 'right-2'
+            }`,
         className
       )}
       initial={{ opacity: 0, scale: 0.8 }}

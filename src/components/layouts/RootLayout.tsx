@@ -28,7 +28,7 @@ function LayoutContent() {
       <Header />
       
       {/* Main Layout - Takes remaining height */}
-      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[auto_1fr_auto] overflow-hidden relative">
+      <div className="flex-1 flex overflow-hidden relative">
         
         {/* Desktop Sidebar Toggles */}
         {!isMobile && (
@@ -47,35 +47,34 @@ function LayoutContent() {
         )}
 
         {/* Side Navigation Panel */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" key="sidenav-presence">
           {(isMobile || navigation.sideNavOpen) && (
             <motion.div
               key="sidenav"
-              initial={isMobile ? { x: '-100%', opacity: 0 } : { width: 0, opacity: 0 }}
+              initial={isMobile ? { x: '-100%' } : { width: 0, opacity: 0 }}
               animate={
                 isMobile 
-                  ? { x: 0, opacity: 1 }
+                  ? { x: 0 }
                   : { width: 300, opacity: 1 }
               }
               exit={
                 isMobile 
-                  ? { x: '-100%', opacity: 0 }
+                  ? { x: '-100%' }
                   : { width: 0, opacity: 0 }
               }
               transition={{ 
-                duration: 0.3, 
-                ease: [0.4, 0.0, 0.2, 1],
-                width: { duration: 0.3 }
+                duration: 0.35, 
+                ease: [0.23, 1, 0.32, 1],
+                opacity: { duration: 0.2 }
               }}
               className={`
                 ${isMobile 
                   ? `fixed inset-0 top-16 z-50 ${
                       navigation.mobilePanel === 'navigation' ? 'block' : 'hidden'
                     } bg-card`
-                  : 'border-r border-border overflow-hidden'
+                  : 'border-r border-border overflow-hidden flex-shrink-0 animate-optimized'
                 }
               `}
-              style={!isMobile ? { flexShrink: 0 } : {}}
             >
               <SideNavPanel />
             </motion.div>
@@ -84,7 +83,7 @@ function LayoutContent() {
 
         {/* Main Workspace Panel - Contains routed content */}
         <div className={`
-          flex-1 overflow-hidden min-w-0
+          flex-1 overflow-hidden min-w-0 layout-container
           ${isMobile 
             ? `${navigation.mobilePanel === 'workspace' || !navigation.mobilePanel ? 'block' : 'hidden'}`
             : 'block'
@@ -94,35 +93,34 @@ function LayoutContent() {
         </div>
 
         {/* Action Hub Panel (Bet Slip) */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" key="actionhub-presence">
           {(isMobile || navigation.actionHubOpen) && (
             <motion.div
               key="actionhub"
-              initial={isMobile ? { x: '100%', opacity: 0 } : { width: 0, opacity: 0 }}
+              initial={isMobile ? { x: '100%' } : { width: 0, opacity: 0 }}
               animate={
                 isMobile 
-                  ? { x: 0, opacity: 1 }
+                  ? { x: 0 }
                   : { width: 350, opacity: 1 }
               }
               exit={
                 isMobile 
-                  ? { x: '100%', opacity: 0 }
+                  ? { x: '100%' }
                   : { width: 0, opacity: 0 }
               }
               transition={{ 
-                duration: 0.3, 
-                ease: [0.4, 0.0, 0.2, 1],
-                width: { duration: 0.3 }
+                duration: 0.35, 
+                ease: [0.23, 1, 0.32, 1],
+                opacity: { duration: 0.2 }
               }}
               className={`
                 ${isMobile 
                   ? `fixed inset-0 top-16 z-50 ${
                       navigation.mobilePanel === 'betslip' ? 'block' : 'hidden'
                     } bg-card`
-                  : 'border-l border-border overflow-hidden'
+                  : 'border-l border-border overflow-hidden flex-shrink-0 animate-optimized'
                 }
               `}
-              style={!isMobile ? { flexShrink: 0 } : {}}
             >
               <ActionHubPanel />
             </motion.div>
@@ -140,7 +138,7 @@ function LayoutContent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
             className="fixed inset-0 bg-black/50 z-40"
             onClick={() => setMobilePanel(null)}
           />
