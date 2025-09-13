@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { Game } from '@/types';
-import { getGamesPaginated, formatOdds, PaginatedResponse } from '@/services/mockApi';
+import { getGamesPaginated, PaginatedResponse } from '@/services/mockApi';
+import { formatOdds, formatTotalLine } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
@@ -261,7 +262,7 @@ export const WorkspacePanel = () => {
                         game.odds.total.over?.line
                       )}
                     >
-                      <span>Over {game.odds.total.over?.line}</span>
+                      <span>Over {formatTotalLine(game.odds.total.over?.line || 45.5)}</span>
                       <span>{formatOdds(game.odds.total.over?.odds || -110)}</span>
                     </Button>
                   </motion.div>
@@ -279,7 +280,7 @@ export const WorkspacePanel = () => {
                         game.odds.total.under?.line
                       )}
                     >
-                      <span>Under {game.odds.total.under?.line}</span>
+                      <span>Under {formatTotalLine(game.odds.total.under?.line || 45.5)}</span>
                       <span>{formatOdds(game.odds.total.under?.odds || -110)}</span>
                     </Button>
                   </motion.div>

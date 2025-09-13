@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useBetSlip } from '@/context/BetSlipContext';
-import { formatOdds } from '@/services/mockApi';
+import { formatOdds } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

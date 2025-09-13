@@ -55,8 +55,8 @@ const generateGames = (leagueId: string, teamIds: string[]): Game[] => {
         total: {
           home: { odds: -110, lastUpdated: new Date() },
           away: { odds: -110, lastUpdated: new Date() },
-          over: { odds: -110, line: 45.5 + Math.random() * 10, lastUpdated: new Date() },
-          under: { odds: -110, line: 45.5 + Math.random() * 10, lastUpdated: new Date() }
+          over: { odds: -110, line: Math.floor(45 + Math.random() * 15) + 0.5, lastUpdated: new Date() },
+          under: { odds: -110, line: Math.floor(45 + Math.random() * 15) + 0.5, lastUpdated: new Date() }
         }
       }
     });
@@ -147,11 +147,6 @@ export const calculatePayout = (stake: number, odds: number): number => {
   } else {
     return stake * (100 / Math.abs(odds));
   }
-};
-
-// Helper function to format odds display
-export const formatOdds = (odds: number): string => {
-  return odds > 0 ? `+${odds}` : `${odds}`;
 };
 
 // Pagination interface

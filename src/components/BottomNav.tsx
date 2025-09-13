@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
-import { House, Receipt, GameController, ChartLineUp } from '@phosphor-icons/react';
+import { House, Receipt, GameController, DotsThree } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 
 export const BottomNav = () => {
@@ -23,6 +23,11 @@ export const BottomNav = () => {
     } else {
       setMobilePanel('betslip');
     }
+  };
+
+  const handleOtherClick = () => {
+    setMobilePanel(null);
+    navigate('/other');
   };
 
   return (
@@ -102,31 +107,24 @@ export const BottomNav = () => {
           }`}
           onClick={() => setMobilePanel(null)}
         >
-          <ChartLineUp size={20} weight={location.pathname === '/my-bets' ? 'fill' : 'regular'} />
-          <span className="text-xs font-medium">Analytics</span>
+          <Receipt size={20} weight={location.pathname === '/my-bets' ? 'fill' : 'regular'} />
+          <span className="text-xs font-medium">My Bets</span>
         </Link>
       </motion.div>
 
-      {/* Live - Right */}
+      {/* Other - Right */}
       <motion.button
-        onClick={() => setMobilePanel(navigation.mobilePanel === 'workspace' ? null : 'workspace')}
+        onClick={handleOtherClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          navigation.mobilePanel === 'workspace'
+          location.pathname === '/other'
             ? 'bg-accent text-accent-foreground scale-105'
             : 'text-muted-foreground hover:text-foreground'
         }`}
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <div className="relative">
-          <ChartLineUp size={20} weight={navigation.mobilePanel === 'workspace' ? 'fill' : 'regular'} />
-          <motion.div 
-            className="absolute -top-1 -right-1 w-2 h-2 bg-accent rounded-full"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-        </div>
-        <span className="text-xs font-medium">Live</span>
+        <DotsThree size={20} weight={location.pathname === '/other' ? 'fill' : 'regular'} />
+        <span className="text-xs font-medium">Other</span>
       </motion.button>
     </nav>
   );
