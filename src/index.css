@@ -17,10 +17,12 @@
     overflow: hidden;
   }
   
-  /* Custom scrollbar styling */
+  /* Enhanced custom scrollbar styling with momentum */
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: oklch(0.26 0.03 225) transparent;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
   }
   
   .custom-scrollbar::-webkit-scrollbar {
@@ -41,21 +43,53 @@
     background-color: oklch(0.37 0.05 225);
   }
   
+  /* Enhanced smooth scrollbar for virtual scrolling */
+  .virtual-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.26 0.03 225) transparent;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; /* Prevent overscroll effects */
+  }
+  
+  .virtual-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .virtual-scrollbar::-webkit-scrollbar-track {
+    background: oklch(0.13 0.02 225);
+    border-radius: 4px;
+  }
+  
+  .virtual-scrollbar::-webkit-scrollbar-thumb {
+    background-color: oklch(0.26 0.03 225);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .virtual-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.37 0.05 225);
+    width: 10px;
+  }
+
   /* Hide scrollbar utility */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  
-  /* Smooth scrolling behavior */
+
+  /* Enhanced smooth scrolling behavior */
   .smooth-scroll {
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
-  
+
   /* Panel transitions - Enhanced smooth animations */
   .panel-enter {
     transform: translateX(-100%);
@@ -79,9 +113,10 @@
     transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1);
   }
   
-  /* Smooth width transitions for sidebars */
+  /* Enhanced smooth width transitions for sidebars */
   .sidebar-transition {
     transition: all 350ms cubic-bezier(0.23, 1, 0.32, 1);
+    transform-origin: center;
   }
   
   /* Prevent layout shift during animations */
@@ -93,6 +128,16 @@
   .animate-optimized {
     will-change: transform, width, opacity;
     transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Mobile-specific optimizations */
+  @media (max-width: 1023px) {
+    .custom-scrollbar,
+    .virtual-scrollbar {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+    }
   }
 }
 

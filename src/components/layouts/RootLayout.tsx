@@ -65,14 +65,18 @@ function LayoutContent() {
               transition={{ 
                 duration: 0.35, 
                 ease: [0.23, 1, 0.32, 1],
-                opacity: { duration: 0.2 }
+                width: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
+                opacity: { duration: 0.25, ease: [0.23, 1, 0.32, 1] }
+              }}
+              style={{
+                willChange: 'transform, width, opacity'
               }}
               className={`
                 ${isMobile 
                   ? `fixed inset-0 top-16 z-50 ${
                       navigation.mobilePanel === 'navigation' ? 'block' : 'hidden'
                     } bg-card`
-                  : 'border-r border-border overflow-hidden flex-shrink-0 animate-optimized'
+                  : 'border-r border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition'
                 }
               `}
             >
@@ -111,14 +115,18 @@ function LayoutContent() {
               transition={{ 
                 duration: 0.35, 
                 ease: [0.23, 1, 0.32, 1],
-                opacity: { duration: 0.2 }
+                width: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
+                opacity: { duration: 0.25, ease: [0.23, 1, 0.32, 1] }
+              }}
+              style={{
+                willChange: 'transform, width, opacity'
               }}
               className={`
                 ${isMobile 
                   ? `fixed inset-0 top-16 z-50 ${
                       navigation.mobilePanel === 'betslip' ? 'block' : 'hidden'
                     } bg-card`
-                  : 'border-l border-border overflow-hidden flex-shrink-0 animate-optimized'
+                  : 'border-l border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition'
                 }
               `}
             >

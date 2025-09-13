@@ -10,16 +10,6 @@ export function HomePage() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-background">
-      <motion.div 
-        className="p-4 border-b border-border bg-card flex-shrink-0"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <h2 className="text-xl font-bold text-card-foreground">NorthStar Sports</h2>
-        <p className="text-sm text-muted-foreground">Professional Wagering Studio</p>
-      </motion.div>
-
       <SmoothScrollContainer className="flex-1 p-4">
         <div className="space-y-4">
           <motion.div

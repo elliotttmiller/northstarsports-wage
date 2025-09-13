@@ -11,7 +11,7 @@ export const Header = () => {
       <div className="flex items-center space-x-3">
         <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
           <Trophy size={24} weight="fill" className="text-accent" />
-          <h1 className="text-xl font-bold text-foreground">NorthStar Sports</h1>
+          <h1 className="text-xl font-bold text-foreground">NSSPORTSCLUB</h1>
         </Link>
       </div>
       
@@ -51,9 +51,19 @@ export const Header = () => {
         </nav>
       </div>
       
-      <div className="flex items-center space-x-4">
-        <div className="text-sm text-muted-foreground">
-          Live Odds • Real-Time
+      {/* Mobile account icon - top right */}
+      <div className="flex items-center">
+        <div className="md:hidden">
+          <Button 
+            variant="ghost"
+            size="sm"
+            asChild
+            className="p-2"
+          >
+            <Link to="/account">
+              <User size={20} className="text-muted-foreground hover:text-foreground transition-colors" />
+            </Link>
+          </Button>
         </div>
       </div>
     </header>

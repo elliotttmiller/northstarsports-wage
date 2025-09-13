@@ -314,37 +314,6 @@ export const WorkspacePanel = () => {
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-background relative">
-      <motion.div 
-        className="p-4 border-b border-border bg-card flex-shrink-0"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-card-foreground">Games</h2>
-            <p className="text-sm text-muted-foreground">
-              {pagination ? `${pagination.total} games available` : 'Loading games...'}
-            </p>
-          </div>
-          {games.length > 0 && (
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleScrollToTop}
-                className="opacity-70 hover:opacity-100"
-              >
-                <CaretUp size={16} />
-              </Button>
-            </motion.div>
-          )}
-        </div>
-      </motion.div>
-
       <InfiniteScrollContainer
         items={games}
         renderItem={renderGameCard}
@@ -354,6 +323,30 @@ export const WorkspacePanel = () => {
         className="flex-1 p-4"
         threshold={200}
       />
+
+      {/* Scroll to top button */}
+      {games.length > 0 && (
+        <motion.div
+          className="absolute top-4 right-4 z-10"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              onClick={handleScrollToTop}
+              className="opacity-70 hover:opacity-100 shadow-lg"
+            >
+              <CaretUp size={16} />
+            </Button>
+          </motion.div>
+        </motion.div>
+      )}
 
       {/* End of results indicator */}
       {pagination && !pagination.hasNextPage && games.length > 0 && (

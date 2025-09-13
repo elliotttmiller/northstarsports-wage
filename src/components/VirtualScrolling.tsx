@@ -35,11 +35,13 @@ export function VirtualScrollContainer({
     <div
       ref={parentRef}
       className={cn(
-        'overflow-auto custom-scrollbar',
+        'overflow-auto virtual-scrollbar smooth-scroll',
         className
       )}
       style={{
-        scrollBehavior
+        scrollBehavior,
+        WebkitOverflowScrolling: 'touch',
+        overscrollBehavior: 'contain'
       }}
     >
       <div
@@ -91,21 +93,21 @@ export function SmoothScrollContainer({
 }: SmoothScrollContainerProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const scrollbarClass = showScrollbar ? 'custom-scrollbar' : 'scrollbar-hide'
+  const scrollbarClass = showScrollbar ? 'virtual-scrollbar' : 'scrollbar-hide'
 
   return (
     <div
       ref={scrollRef}
       className={cn(
-        'overflow-auto',
+        'overflow-auto smooth-scroll',
         scrollbarClass,
         className
       )}
       style={{
         maxHeight,
         scrollBehavior: 'smooth',
-        scrollbarWidth: showScrollbar ? 'thin' : 'none',
-        msOverflowStyle: showScrollbar ? 'auto' : 'none',
+        WebkitOverflowScrolling: 'touch',
+        overscrollBehavior: 'contain'
       }}
     >
       <motion.div
@@ -156,10 +158,14 @@ export function InfiniteScrollContainer({
       ref={scrollRef}
       onScroll={handleScroll}
       className={cn(
-        'overflow-auto custom-scrollbar',
+        'overflow-auto virtual-scrollbar smooth-scroll',
         className
       )}
-      style={{ scrollBehavior: 'smooth' }}
+      style={{ 
+        scrollBehavior: 'smooth',
+        WebkitOverflowScrolling: 'touch',
+        overscrollBehavior: 'contain'
+      }}
     >
       <div className="space-y-2">
         {items.map((item, index) => (
