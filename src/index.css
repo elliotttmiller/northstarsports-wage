@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
-    @apply bo
-
+@layer base {
+  * {
     @apply border-border;
   }
 
@@ -94,48 +94,47 @@
   --accent: var(--color-accent-9);
   --accent-foreground: var(--color-accent-contrast);
   
-  --muted-foreground: var(--color-fg-
+  --muted: var(--color-neutral-12);
+  --muted-foreground: var(--color-fg-secondary);
   --border: var(--color-neutral-11);
+  --input: var(--color-neutral-11);
+  --ring: var(--color-focus-ring);
   
-  --color-win: var(--color-accent-s
+  --destructive: oklch(0.55 0.15 0);
+  --destructive-foreground: var(--color-accent-contrast);
+  
+  --color-win: var(--color-accent-secondary-9);
+  --color-lose: oklch(0.55 0.15 0);
   --color-info: var(--color-accent-9);
   
+  --radius: 0.5rem;
 }
+
 @theme {
-  --color-foreground: var(--foregr
-  
-  --color-popover-foreground: var(--popover-for
-  --color-primary-foreground: var(--
-  --color-secondary-foreground: var(--
-  
-  --color-accent-foreground:
-  --color-destructi
- 
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-  --radi
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
   --radius-xl: calc(var(--radius) * 2);
+  --radius-2xl: calc(var(--radius) * 3);
   --radius-full: 9999px;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
