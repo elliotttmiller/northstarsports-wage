@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { Game } from '@/types';
-import { getGamesPaginated, getPlayerProps, PlayerProp, PaginatedResponse } from '@/services/mockApi';
+import { getGamesPaginated, getPlayerProps, PaginatedResponse } from '@/services/mockApi';
+import { PlayerProp } from '@/types'
 import { formatOdds, formatTotalLine, formatTime } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

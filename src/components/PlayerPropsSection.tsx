@@ -1,5 +1,5 @@
 import { PlayerPropsContainer } from '@/components/player-props/PlayerPropsContainer'
-import { PropCategory } from '@/services/mockApi'
+import { PropCategory } from '@/types'
 import { Game } from '@/types'
 
 interface PlayerPropsSectionProps {

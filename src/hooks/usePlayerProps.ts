@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
+import type { PlayerProp, PropCategory } from '@/types'
 import { useBetSlip } from '@/context/BetSlipContext'
-import type { PlayerProp, PropCategory } from '@/services/mockApi'
 
 /**
  * Hook to manage player prop interactions and state
@@ -8,18 +8,17 @@ import type { PlayerProp, PropCategory } from '@/services/mockApi'
 export function usePlayerProps(categories: PropCategory[]) {
   const { betSlip } = useBetSlip()
 
-  // Calculate statistics about props
+  // Calculate statistics for all props
   const stats = useMemo(() => {
-    const totalProps = categories.reduce((sum, cat) => sum + cat.props.length, 0)
-    const popularCategory = categories.find(cat => cat.key === 'popular')
-    const mostPropsCategory = categories.reduce((max, cat) => 
-      cat.props.length > (max?.props.length || 0) ? cat : max
+    const totalProps = categories.reduce((sum, category) => sum + category.props.length, 0)
+    const mostPropsCategory = categories.reduce((prev, current) => 
+      prev.props.length > current.props.length ? prev : current
     , categories[0])
 
     return {
       totalProps,
       totalCategories: categories.length,
-      popularProps: popularCategory?.props.length || 0,
+      popularProps: mostPropsCategory?.props.length || 0,
       mostActiveCategory: mostPropsCategory?.name || 'None'
     }
   }, [categories])
@@ -60,7 +59,6 @@ export function usePlayerProps(categories: PropCategory[]) {
         return [...categories].sort((a, b) => a.name.localeCompare(b.name))
       case 'count':
         return [...categories].sort((a, b) => b.props.length - a.props.length)
-      case 'popular':
       default:
         return [...categories].sort((a, b) => {
           if (a.key === 'popular') return -1
@@ -79,7 +77,8 @@ export function usePlayerProps(categories: PropCategory[]) {
       props: category.props.filter(prop =>
         prop.playerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         prop.statType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        prop.position.toLowerCase().includes(searchTerm.toLowerCase())
+        prop.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        prop.team.toLowerCase().includes(searchTerm.toLowerCase())
       )
     })).filter(category => category.props.length > 0)
   }

@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { Game } from '@/types';
-import { getGameById, getPlayerProps, PlayerProp } from '@/services/mockApi';
+import { getGameById, getPlayerProps } from '@/services/mockApi';
+import { PlayerProp } from '@/types'
 import { formatOdds, formatTotalLine, formatDateDetailed } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

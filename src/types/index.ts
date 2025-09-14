@@ -106,3 +106,22 @@ export interface AppState {
   sports: Sport[];
   isLoading: boolean;
 }
+
+export interface PlayerProp {
+  id: string;
+  playerId: string;
+  playerName: string;
+  position: string;
+  team: 'home' | 'away';
+  statType: string;
+  line: number;
+  overOdds: number;
+  underOdds: number;
+  category: 'passing' | 'rushing' | 'receiving' | 'scoring' | 'defense' | 'kicking';
+}
+
+export interface PropCategory {
+  key: string;
+  name: string;
+  props: PlayerProp[];
+}

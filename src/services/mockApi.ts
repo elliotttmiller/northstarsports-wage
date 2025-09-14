@@ -1,4 +1,4 @@
-import { Sport, League, Game, Team } from '@/types';
+import { Sport, League, Game, Team, PlayerProp, PropCategory } from '@/types';
 
 // Mock team data
 const teams: Record<string, Team> = {
@@ -321,26 +321,6 @@ export const getGameById = async (gameId: string): Promise<Game | null> => {
   
   return null;
 };
-
-// Player props interface
-export interface PlayerProp {
-  id: string;
-  playerId: string;
-  playerName: string;
-  position: string;
-  category: 'passing' | 'rushing' | 'receiving' | 'scoring' | 'defense' | 'kicking';
-  statType: string;
-  line: number;
-  overOdds: number;
-  underOdds: number;
-  team: 'home' | 'away';
-}
-
-export interface PropCategory {
-  name: string;
-  key: string;
-  props: PlayerProp[];
-}
 
 // Generate mock player props
 const generatePlayerProps = (gameId: string): PlayerProp[] => {
