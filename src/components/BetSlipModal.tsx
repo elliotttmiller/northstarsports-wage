@@ -125,7 +125,16 @@ export const BetSlipModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent 
-        className="fixed inset-0 z-50 w-screen h-screen max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden"
+        className="fixed inset-0 top-0 left-0 z-[60] w-full h-full max-w-none transform-none translate-x-0 translate-y-0 bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 m-0"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          transform: 'none',
+          maxWidth: 'none'
+        }}
         onInteractOutside={(e) => {
           if (!isPlacing) handleClose();
           else e.preventDefault();
