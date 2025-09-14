@@ -21,19 +21,7 @@ interface LayoutPreferences {
   showExpanded: boolean
 }
 
-// Custom hook for mobile detection
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  return isMobile;
-};
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const WorkspacePanel = () => {
   const { navigation, setMobilePanel } = useNavigation();
