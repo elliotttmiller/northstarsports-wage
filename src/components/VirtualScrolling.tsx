@@ -1,4 +1,3 @@
-import { useVirtualizer } from '@tanstack/react-virtual'
 import { useRef, ReactNode, CSSProperties } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -15,21 +14,11 @@ interface VirtualScrollContainerProps {
 
 export function VirtualScrollContainer({
   items,
-  itemHeight = 60,
   renderItem,
   className,
-  gap = 8,
-  overscan = 5,
   scrollBehavior = 'smooth'
 }: VirtualScrollContainerProps) {
   const parentRef = useRef<HTMLDivElement>(null)
-  
-  const virtualizer = useVirtualizer({
-    count: items.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => itemHeight + gap,
-    overscan,
-  })
 
   return (
     <div
@@ -44,16 +33,10 @@ export function VirtualScrollContainer({
         overscrollBehavior: 'contain'
       }}
     >
-      <div
-        style={{
-          height: `${virtualizer.getTotalSize()}px`,
-          width: '100%',
-          position: 'relative',
-        }}
-      >
-        {virtualizer.getVirtualItems().map((virtualItem, index) => (
+      <div className="space-y-2">
+        {items.map((item, index) => (
           <motion.div
-            key={virtualItem.key}
+            key={index}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ 
@@ -61,16 +44,8 @@ export function VirtualScrollContainer({
               delay: index * 0.05,
               ease: [0.4, 0.0, 0.2, 1]
             }}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: `${virtualItem.size - gap}px`,
-              transform: `translateY(${virtualItem.start}px)`,
-            }}
           >
-            {renderItem(items[virtualItem.index], virtualItem.index)}
+            {renderItem(item, index)}
           </motion.div>
         ))}
       </div>
