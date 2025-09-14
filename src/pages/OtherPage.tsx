@@ -7,12 +7,12 @@ import { Badge } from '@/components/ui/badge';
 import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 import { 
   Target, 
-  TrendingUp, 
+  TrendUp, 
   Users, 
   Trophy, 
   Activity,
   Star
-} from 'lucide-react';
+} from '@phosphor-icons/react';
 
 export const OtherPage = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export const OtherPage = () => {
 
   const betTypes = [
     { id: 'prop-builder', name: 'Prop Builder', icon: Target, description: 'Build custom player props' },
-    { id: 'same-game-parlay', name: 'Same Game Parlay', icon: TrendingUp, description: 'Multiple bets from one game' },
+    { id: 'same-game-parlay', name: 'Same Game Parlay', icon: TrendUp, description: 'Multiple bets from one game' },
     { id: 'player-props', name: 'Player Props', icon: Users, description: 'Individual player statistics' },
     { id: 'futures', name: 'Futures', icon: Trophy, description: 'Season-long outcomes' },
     { id: 'live-betting', name: 'Live Betting', icon: Activity, description: 'Real-time in-game betting' },

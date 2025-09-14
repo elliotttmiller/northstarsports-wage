@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, useMotionValue, useAnimation, PanInfo } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import { useNavigation } from '@/context/NavigationContext'
@@ -42,9 +42,7 @@ export function FloatingBetSlipButton() {
 
   // Initialize position on mount
   useEffect(() => {
-    if (!savedPosition) return
-    
-    const initPosition = savedPosition.x === 0 && savedPosition.y === 0 
+    const initPosition = !savedPosition || (savedPosition.x === 0 && savedPosition.y === 0)
       ? getDefaultPosition() 
       : savedPosition
     
@@ -112,7 +110,7 @@ export function FloatingBetSlipButton() {
 
   if (!isInitialized) return null
 
-  const itemCount = betSlip?.bets?.length || 0
+  const itemCount = betSlip.bets.length
 
   return (
     <div className="pointer-events-auto">

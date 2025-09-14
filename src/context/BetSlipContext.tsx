@@ -1,8 +1,7 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 import { useKV } from '@github/spark/hooks';
-import { Bet, BetSlip, Game } from '@/types';
+import { Bet, BetSlip, Game, PlayerProp } from '@/types';
 import { calculatePayout } from '@/services/mockApi';
-import { PlayerProp } from '@/types'
 
 interface BetSlipContextType {
   betSlip: BetSlip;

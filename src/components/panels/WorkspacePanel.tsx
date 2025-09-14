@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { Game } from '@/types';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { GameCard } from '@/components/GameCard';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CaretUp, SortAscending } from '@phosphor-icons/react';
@@ -19,8 +20,6 @@ interface LayoutPreferences {
   sortBy: 'time' | 'popular' | 'odds'
   showExpanded: boolean
 }
-
-import { useIsMobile } from '@/hooks/use-mobile';
 
 export const WorkspacePanel = () => {
   const { navigation, setMobilePanel } = useNavigation();
@@ -107,7 +106,7 @@ export const WorkspacePanel = () => {
   }, [setExpandedCards])
 
   // Sorting and filtering
-  const processedGames = React.useMemo(() => {
+  const processedGames = useMemo(() => {
     let processed = [...games]
     
     // Sort games

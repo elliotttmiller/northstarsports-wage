@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { formatOdds } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
