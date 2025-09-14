@@ -44,7 +44,7 @@ const getCategoryGradient = (categoryKey: string) => {
     case 'passing':
       return 'from-blue-500/10 to-cyan-500/10 border-blue-500/20'
     case 'rushing':
-      return 'from-emerald-500/10 to-green-500/10 border-emerald-500/20'
+      return 'from-[color:var(--color-win)]/10 to-[color:var(--color-win)]/20 border-[color:var(--color-win)]/20'
     case 'receiving':
       return 'from-purple-500/10 to-indigo-500/10 border-purple-500/20'
     case 'scoring':

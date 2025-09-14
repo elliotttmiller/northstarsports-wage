@@ -363,7 +363,7 @@ export const ActionHubPanel = () => {
           {betSlip.totalPayout > betSlip.totalStake && (
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground">Profit:</span>
-              <span className="font-medium text-emerald-400">
+              <span className="font-medium text-[color:var(--color-win)]">
                 +${(betSlip.totalPayout - betSlip.totalStake).toFixed(2)}
               </span>
             </div>

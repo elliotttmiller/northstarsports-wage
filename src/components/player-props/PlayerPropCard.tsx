@@ -62,7 +62,7 @@ const PropBetButton = ({ prop, selection, onClick, compact = false, isSelected =
         <div className={cn(
           'font-medium opacity-90',
           compact ? 'text-xs' : 'text-sm',
-          odds > 0 ? 'text-emerald-300' : 'text-red-300'
+          odds > 0 ? 'text-[color:var(--color-win)]' : 'text-[color:var(--color-loss)]'
         )}>
           {formatOdds(odds)}
         </div>

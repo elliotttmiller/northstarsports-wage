@@ -161,14 +161,14 @@ export const BetSlipModal = () => {
                 }}
                 className={`flex items-center justify-center w-10 h-10 rounded-xl border transition-all duration-300 ${
                   placementStage === 'success' 
-                    ? 'bg-green-500/20 border-green-500/40' 
+                    ? 'bg-[color:var(--color-win)]/20 border-[color:var(--color-win)]/40' 
                     : betSlip.bets.length > 0
                       ? 'bg-accent/20 border-accent/40'
                       : 'bg-secondary/20 border-border/60'
                 }`}
               >
                 {placementStage === 'success' ? (
-                  <CheckCircle size={20} className="text-green-400" weight="fill" />
+                  <CheckCircle size={20} className="text-[color:var(--color-win)]" weight="fill" />
                 ) : (
                   <Calculator size={20} className="text-accent" />
                 )}
@@ -348,7 +348,7 @@ export const BetSlipModal = () => {
                               </div>
                               <div className="flex items-center justify-between text-sm bg-gradient-to-r from-secondary/15 to-secondary/25 rounded-xl p-3 border border-border/30">
                                 <span className="text-muted-foreground font-semibold">Potential Win:</span>
-                                <span className="font-bold text-green-400 text-base">
+                                <span className="font-bold text-[color:var(--color-win)] text-base">
                                   ${bet.stake > 0 ? (bet.potentialPayout - bet.stake).toFixed(2) : '0.00'}
                                 </span>
                               </div>
@@ -444,7 +444,7 @@ export const BetSlipModal = () => {
                           </div>
                           <div className="flex items-center justify-between text-base">
                             <span className="text-muted-foreground font-semibold">Total Payout:</span>
-                            <span className="font-bold text-green-400 text-xl">
+                            <span className="font-bold text-[color:var(--color-win)] text-xl">
                               ${betSlip.totalPayout.toFixed(2)}
                             </span>
                           </div>
@@ -489,7 +489,7 @@ export const BetSlipModal = () => {
                     transition={{ duration: 0.4, delay: 0.2 }}
                   >
                     <span className="text-muted-foreground font-semibold">Profit:</span>
-                    <span className="font-bold text-green-400 text-lg">
+                    <span className="font-bold text-[color:var(--color-win)] text-lg">
                       +${(betSlip.totalPayout - betSlip.totalStake).toFixed(2)}
                     </span>
                   </motion.div>
@@ -506,7 +506,7 @@ export const BetSlipModal = () => {
                   disabled={isPlacing || betSlip.totalStake === 0}
                   className={`w-full h-14 font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ${
                     placementStage === 'success'
-                      ? 'bg-green-500 hover:bg-green-500 text-white'
+                      ? 'bg-[color:var(--color-win)] hover:bg-[color:var(--color-win)] text-white'
                       : 'bg-accent hover:bg-accent/90 text-accent-foreground'
                   }`}
                 >

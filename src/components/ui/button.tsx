@@ -24,9 +24,9 @@ const buttonVariants = cva(
         bet:
           "bg-accent/10 text-accent border border-accent/20 shadow-xs hover:bg-accent/20 hover:border-accent/30 active:bg-accent/30 transition-all duration-200 transform active:scale-95",
         "bet-positive":
-          "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-xs hover:bg-emerald-500/20 hover:border-emerald-500/30 active:bg-emerald-500/30 transition-all duration-200 transform active:scale-95",
+          "bg-[color:var(--color-win)]/10 text-[color:var(--color-win)] border border-[color:var(--color-win)]/20 shadow-xs hover:bg-[color:var(--color-win)]/20 hover:border-[color:var(--color-win)]/30 active:bg-[color:var(--color-win)]/30 transition-all duration-200 transform active:scale-95",
         "bet-negative":
-          "bg-red-500/10 text-red-400 border border-red-500/20 shadow-xs hover:bg-red-500/20 hover:border-red-500/30 active:bg-red-500/30 transition-all duration-200 transform active:scale-95",
+          "bg-[color:var(--color-loss)]/10 text-[color:var(--color-loss)] border border-[color:var(--color-loss)]/20 shadow-xs hover:bg-[color:var(--color-loss)]/20 hover:border-[color:var(--color-loss)]/30 active:bg-[color:var(--color-loss)]/30 transition-all duration-200 transform active:scale-95",
         "bet-selected":
           "bg-accent text-accent-foreground border-accent shadow-md ring-2 ring-accent/20 transform scale-[1.02]",
       },

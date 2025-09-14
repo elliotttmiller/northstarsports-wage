@@ -278,8 +278,8 @@ html, body {
   --secondary: oklch(0.16 0.02 240); /* Secondary background */
   --secondary-foreground: oklch(0.82 0.01 240); /* Secondary text */
   
-  --accent: oklch(0.48 0.12 180); /* Subtle green accent */
-  --accent-foreground: oklch(0.98 0.005 180); /* White on accent */
+  --accent: oklch(0.45 0.08 240); /* Blue accent - matches primary */
+  --accent-foreground: oklch(0.98 0.005 240); /* White on accent */
   
   --destructive: oklch(0.55 0.15 15); /* Refined red */
   --destructive-foreground: oklch(0.98 0.005 15); /* White on destructive */
@@ -293,8 +293,8 @@ html, body {
   --ring: oklch(0.45 0.08 240); /* Focus ring */
   
   /* Custom betting colors */
-  --color-win: oklch(0.48 0.12 150); /* Green for wins */
-  --color-loss: oklch(0.55 0.15 15); /* Red for losses */
+  --color-win: oklch(0.55 0.10 140); /* Subtle green for wins */
+  --color-loss: oklch(0.55 0.12 20); /* Subtle red for losses */
   --color-info: oklch(0.45 0.08 240); /* Blue for info */
   
   /* Border radius */
