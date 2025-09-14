@@ -352,63 +352,59 @@ export function GameCard({
                   className="h-7 w-7 p-0 hover:bg-accent/20"
                 >
                   {isFavorited ? 
-                    <Heart size={14} className="text-red-400" weight="fill" /> :
-                    <Star size={14} className="text-muted-foreground" />
+                </Button>
+              )}
                   }
                 </Button>
               )}
-              <CaretDown 
-                size={16} 
-                className={cn(
                   'text-muted-foreground transition-transform duration-200',
                   isExpanded && 'rotate-180'
-                )}
+                className={cn(
               />
+                  isExpanded && 'rotate-180'
+                )}
+
             </div>
           </div>
-
-          {/* Thin Main Betting Grid - Desktop */}
-          <div className="grid grid-cols-12 gap-3 items-center">
-            {/* Teams Column - Condensed */}
+ondensed */}
             <div className="col-span-3">
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-sm">{game.awayTeam.shortName}</span>
-                  <span className="text-xs text-muted-foreground">{game.awayTeam.record}</span>
-                </div>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-sm">{game.homeTeam.shortName}</span>
-                  <span className="text-xs text-muted-foreground">{game.homeTeam.record}</span>
                 </div>
-              </div>
+                <div className="flex items-center justify-between">
             </div>
 
+                </div> Column */}
+              </div>
+            </div>d text-center mb-1 font-medium">SPREAD</div>
+
             {/* Spread Column */}
-            <div className="col-span-3">
-              <div className="text-xs text-muted-foreground text-center mb-1 font-medium">SPREAD</div>
-              <div className="grid grid-cols-2 gap-1">
-                <Button
                   variant="outline"
                   size="sm"
-                  className="h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors px-2"
-                  onClick={(e) => {
-                    e.stopPropagation()
+              <div className="grid grid-cols-2 gap-1">-2"
+                <Button
+                  variant="outline"
                     handleBetClick(
                       e, 'spread', 'away',
                       game.odds.spread.away.odds,
                       game.odds.spread.away.line || 0
-                    )
+                    handleBetClick(
                   }}
                 >
                   {game.awayTeam.shortName} {`${(game.odds.spread.away.line || 0) > 0 ? '+' : ''}${game.odds.spread.away.line || 0}`}
                 </Button>
                 <Button
+                >
+                  size="sm"
+                </Button>bg-accent/20 transition-colors px-2"
+                <Button
                   variant="outline"
                   size="sm"
-                  className="h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors px-2"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleBetClick(
                       e, 'spread', 'home',
                       game.odds.spread.home.odds,
                       game.odds.spread.home.line || 0
@@ -418,13 +414,13 @@ export function GameCard({
                   {game.homeTeam.shortName} {`${(game.odds.spread.home.line || 0) > 0 ? '+' : ''}${game.odds.spread.home.line || 0}`}
                 </Button>
               </div>
-            </div>
+                >
+
+                </Button>
+              </div>
+            </div>b-1 font-medium">TOTAL</div>
 
             {/* Total Column */}
-            <div className="col-span-3">
-              <div className="text-xs text-muted-foreground text-center mb-1 font-medium">TOTAL</div>
-              <div className="grid grid-cols-2 gap-1">
-                <Button
                   variant="outline"
                   size="sm"
                   className="h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
@@ -440,33 +436,33 @@ export function GameCard({
                   O {formatTotalLine(game.odds.total.over?.line || 47.5)}
                 </Button>
                 <Button
-                  variant="outline"
+                >
                   size="sm"
-                  className="h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation()
+                </Button>order/60 hover:bg-accent/20 transition-colors"
+                <Button
+                  variant="outline"
                     handleBetClick(
                       e, 'total', 'under',
                       game.odds.total.under?.odds || -110,
-                      game.odds.total.under?.line || 47.5
+                    e.stopPropagation()
                     )
                   }}
                 >
                   U {formatTotalLine(game.odds.total.under?.line || 47.5)}
                 </Button>
               </div>
-            </div>
+                >
 
+                </Button>
+              </div>
+            </div>nter mb-1 font-medium">MONEYLINE</div>
+s-2 gap-1">
             {/* Moneyline Column */}
-            <div className="col-span-3">
-              <div className="text-xs text-muted-foreground text-center mb-1 font-medium">MONEYLINE</div>
-              <div className="grid grid-cols-2 gap-1">
-                <Button
                   variant="outline"
                   size="sm"
                   className="h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation()
+                <Button
+                  variant="outline"
                     handleBetClick(
                       e, 'moneyline', 'away',
                       game.odds.moneyline.away.odds
@@ -474,22 +470,26 @@ export function GameCard({
                   }}
                 >
                   {game.awayTeam.shortName} {formatOdds(game.odds.moneyline.away.odds)}
-                </Button>
-                <Button
-                  variant="outline"
+                    )
+                  }}
+                > variant="outline"
                   size="sm"
-                  className="h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                </Button> border-border/60 hover:bg-accent/20 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation()
-                    handleBetClick(
+                  size="sm"
                       e, 'moneyline', 'home',
                       game.odds.moneyline.home.odds
-                    )
+                    e.stopPropagation()
                   }}
                 >
                   {game.homeTeam.shortName} {formatOdds(game.odds.moneyline.home.odds)}
                 </Button>
-              </div>
+                  }}
+            </div>
+          </div>
+
+          {/* Expanded Content - Desktop */}
             </div>
           </div>
 
@@ -510,11 +510,7 @@ export function GameCard({
                   isLoading={propsLoading}
                   compact={false}
                 />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </CardContent>
       </Card>
     </motion.div>
   )
-}
+}}
