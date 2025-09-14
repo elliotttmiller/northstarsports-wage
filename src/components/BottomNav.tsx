@@ -3,7 +3,7 @@ import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { GameController, House, Receipt, DotsThree, Wrench } from '@phosphor-icons/react';
+import { GameController, House, Receipt, DotsThree } from '@phosphor-icons/react';
 
 export function BottomNav() {
   const location = useLocation();
@@ -32,14 +32,14 @@ export function BottomNav() {
     }
   };
 
-  const handleBuilderClick = () => {
+  const handleOtherClick = () => {
     setMobilePanel(null);
     navigate('/other');
   };
 
   return (
     <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-around px-2 w-full">
-      {/* Bets - Far Left (swapped position) */}
+      {/* Bets - Far Left */}
       <motion.button
         onClick={handleBetsClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] relative ${
@@ -57,21 +57,6 @@ export function BottomNav() {
             {betSlip.bets.length}
           </div>
         )}
-      </motion.button>
-
-      {/* Builder - Left Center */}
-      <motion.button
-        onClick={handleBuilderClick}
-        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          location.pathname === '/other'
-            ? 'bg-accent text-accent-foreground scale-105' 
-            : 'text-muted-foreground hover:text-foreground'
-        }`}
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Wrench size={20} weight={location.pathname === '/other' ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Builder</span>
       </motion.button>
 
       {/* Home - Center (Elevated) */}
@@ -93,7 +78,7 @@ export function BottomNav() {
         </Link>
       </motion.div>
 
-      {/* Sports - Right Center (swapped position) */}
+      {/* Sports - Right Center */}
       <motion.button
         onClick={handleSportsClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
@@ -110,7 +95,7 @@ export function BottomNav() {
 
       {/* Other - Far Right */}
       <motion.button
-        onClick={handleBuilderClick}
+        onClick={handleOtherClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
           location.pathname === '/other'
             ? 'bg-accent text-accent-foreground scale-105' 
