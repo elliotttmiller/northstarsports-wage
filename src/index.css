@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
-@layer base {
-  * {
+    @apply bo
+
     @apply border-border;
   }
 
@@ -94,49 +94,48 @@
   --accent: var(--color-accent-9);
   --accent-foreground: var(--color-accent-contrast);
   
-  --destructive: oklch(0.58 0.15 15);
-  --destructive-foreground: oklch(0.98 0.005 15);
-  
-  --muted: var(--color-bg-overlay);
-  --muted-foreground: var(--color-fg-secondary);
-  
+  --muted-foreground: var(--color-fg-
   --border: var(--color-neutral-11);
-  --input: var(--color-neutral-11);
-  --ring: var(--color-focus-ring);
   
-  --color-win: var(--color-accent-secondary-9);
-  --color-loss: oklch(0.58 0.15 15);
+  --color-win: var(--color-accent-s
   --color-info: var(--color-accent-9);
   
-  /* Border radius system */
-  --radius: 0.5rem;
 }
-
 @theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-foreground: var(--foregr
   
-  --radius-sm: calc(var(--radius) * 0.5);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) * 1.5);
+  --color-popover-foreground: var(--popover-for
+  --color-primary-foreground: var(--
+  --color-secondary-foreground: var(--
+  
+  --color-accent-foreground:
+  --color-destructi
+ 
+
+  --radi
   --radius-xl: calc(var(--radius) * 2);
-  --radius-2xl: calc(var(--radius) * 3);
   --radius-full: 9999px;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
