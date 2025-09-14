@@ -7,7 +7,6 @@ import { GameDetailPage } from '@/pages/GameDetailPage'
 import { MyBetsPage } from '@/pages/MyBetsPage'
 import { AccountPage } from '@/pages/AccountPage'
 import { OtherPage } from '@/pages/OtherPage'
-import { StyleTest } from '@/StyleTest'
 
 function LoadingFallback() {
   return (
@@ -21,13 +20,9 @@ function LoadingFallback() {
 }
 
 function App() {
-  // Temporarily show style test to verify theme is working
-  // return <StyleTest />
-  
   return (
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
-        <Route path="/style-test" element={<StyleTest />} />
         <Route path="/" element={<RootLayout />}>
           <Route index element={<HomePage />} />
           <Route path="games" element={<GamePage />} />
