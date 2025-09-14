@@ -106,7 +106,7 @@ export const WorkspacePanel = () => {
         delay: Math.min(index * 0.05, 0.3),
         ease: [0.4, 0.0, 0.2, 1]
       }}
-      className="mb-4"
+      className={isMobile ? "mb-3" : "mb-4"}
     >
       <GameCard game={game} compact={isMobile} />
     </motion.div>
@@ -155,7 +155,7 @@ export const WorkspacePanel = () => {
         loadMore={loadNextPage}
         hasMore={pagination?.hasNextPage ?? false}
         loading={loading}
-        className="flex-1 p-4 seamless-scroll"
+        className={`flex-1 seamless-scroll ${isMobile ? 'p-3' : 'p-4'}`}
         threshold={200}
       />
 
