@@ -96,7 +96,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
       exit={{ opacity: 0, y: -20 }}
       className="w-full"
     >
-      <Card className="bg-card hover:bg-card/80 transition-all duration-200 cursor-pointer" onClick={handleExpandToggle}>
+      <Card className="bg-card hover:bg-card/80 transition-all duration-200 overflow-hidden">
         <CardContent className="p-4">
           {/* Game Header */}
           <div className="flex items-center justify-between mb-3">
@@ -119,9 +119,9 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 variant="ghost"
                 size="sm"
                 onClick={handleExpandToggle}
-                className="h-6 w-6 p-0"
+                className="h-8 w-8 p-0 hover:bg-accent/20 transition-colors"
               >
-                {isExpanded ? <CaretUp size={14} /> : <CaretDown size={14} />}
+                {isExpanded ? <CaretUp size={16} /> : <CaretDown size={16} />}
               </Button>
             </div>
           </div>
@@ -142,17 +142,17 @@ export function GameCard({ game, compact = false }: GameCardProps) {
           </div>
 
           {/* Betting Lines */}
-          <div className="grid grid-cols-6 gap-2 text-xs">
+          <div className="grid grid-cols-6 gap-1.5 text-xs">
             {/* Spread */}
             <div className="col-span-2">
-              <div className="text-xs text-muted-foreground text-center mb-1 font-medium">
+              <div className="text-xs text-muted-foreground text-center mb-2 font-semibold tracking-wide">
                 SPREAD
               </div>
               <div className="grid grid-cols-2 gap-1">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleBetClick(
@@ -162,12 +162,12 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                     )
                   }}
                 >
-                  <div className="text-center">
-                    <div className="text-xs font-bold text-foreground leading-3">{game.awayTeam.shortName}</div>
-                    <div className="font-semibold leading-3">
+                  <div className="text-center flex flex-col justify-center h-full w-full">
+                    <div className="text-xs font-bold text-foreground mb-0.5">{game.awayTeam.shortName}</div>
+                    <div className="font-semibold text-sm mb-0.5">
                       {game.odds.spread.away.line && game.odds.spread.away.line > 0 ? '+' : ''}{game.odds.spread.away.line || 0}
                     </div>
-                    <div className="text-xs text-muted-foreground leading-3">
+                    <div className="text-xs text-muted-foreground font-medium">
                       {formatOdds(game.odds.spread.away.odds)}
                     </div>
                   </div>
@@ -175,7 +175,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleBetClick(
@@ -185,12 +185,12 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                     )
                   }}
                 >
-                  <div className="text-center">
-                    <div className="text-xs font-bold text-foreground leading-3">{game.homeTeam.shortName}</div>
-                    <div className="font-semibold leading-3">
+                  <div className="text-center flex flex-col justify-center h-full w-full">
+                    <div className="text-xs font-bold text-foreground mb-0.5">{game.homeTeam.shortName}</div>
+                    <div className="font-semibold text-sm mb-0.5">
                       {game.odds.spread.home.line && game.odds.spread.home.line > 0 ? '+' : ''}{game.odds.spread.home.line || 0}
                     </div>
-                    <div className="text-xs text-muted-foreground leading-3">
+                    <div className="text-xs text-muted-foreground font-medium">
                       {formatOdds(game.odds.spread.home.odds)}
                     </div>
                   </div>
@@ -200,14 +200,14 @@ export function GameCard({ game, compact = false }: GameCardProps) {
 
             {/* Total */}
             <div className="col-span-2">
-              <div className="text-xs text-muted-foreground text-center mb-1 font-medium">
+              <div className="text-xs text-muted-foreground text-center mb-2 font-semibold tracking-wide">
                 TOTAL
               </div>
               <div className="grid grid-cols-2 gap-1">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleBetClick(
@@ -217,12 +217,12 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                     )
                   }}
                 >
-                  <div className="text-center">
-                    <div className="text-xs font-bold text-foreground leading-3">OVER</div>
-                    <div className="font-semibold leading-3">
+                  <div className="text-center flex flex-col justify-center h-full w-full">
+                    <div className="text-xs font-bold text-foreground mb-0.5">OVER</div>
+                    <div className="font-semibold text-sm mb-0.5">
                       {formatTotalLine(game.odds.total.over?.line || 45.5)}
                     </div>
-                    <div className="text-xs text-muted-foreground leading-3">
+                    <div className="text-xs text-muted-foreground font-medium">
                       {formatOdds(game.odds.total.over?.odds || -110)}
                     </div>
                   </div>
@@ -230,7 +230,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleBetClick(
@@ -240,12 +240,12 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                     )
                   }}
                 >
-                  <div className="text-center">
-                    <div className="text-xs font-bold text-foreground leading-3">UNDER</div>
-                    <div className="font-semibold leading-3">
+                  <div className="text-center flex flex-col justify-center h-full w-full">
+                    <div className="text-xs font-bold text-foreground mb-0.5">UNDER</div>
+                    <div className="font-semibold text-sm mb-0.5">
                       {formatTotalLine(game.odds.total.under?.line || 45.5)}
                     </div>
-                    <div className="text-xs text-muted-foreground leading-3">
+                    <div className="text-xs text-muted-foreground font-medium">
                       {formatOdds(game.odds.total.under?.odds || -110)}
                     </div>
                   </div>
@@ -255,14 +255,14 @@ export function GameCard({ game, compact = false }: GameCardProps) {
 
             {/* Moneyline */}
             <div className="col-span-2">
-              <div className="text-xs text-muted-foreground text-center mb-1 font-medium">
+              <div className="text-xs text-muted-foreground text-center mb-2 font-semibold tracking-wide">
                 MONEYLINE
               </div>
               <div className="grid grid-cols-2 gap-1">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleBetClick(
@@ -271,9 +271,9 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                     )
                   }}
                 >
-                  <div className="text-center">
-                    <div className="text-xs font-bold text-foreground leading-3">{game.awayTeam.shortName}</div>
-                    <div className="text-xs font-semibold leading-3">
+                  <div className="text-center flex flex-col justify-center h-full w-full">
+                    <div className="text-xs font-bold text-foreground mb-1">{game.awayTeam.shortName}</div>
+                    <div className="text-xs font-semibold">
                       {formatOdds(game.odds.moneyline.away.odds)}
                     </div>
                   </div>
@@ -281,7 +281,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleBetClick(
@@ -290,9 +290,9 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                     )
                   }}
                 >
-                  <div className="text-center">
-                    <div className="text-xs font-bold text-foreground leading-3">{game.homeTeam.shortName}</div>
-                    <div className="text-xs font-semibold leading-3">
+                  <div className="text-center flex flex-col justify-center h-full w-full">
+                    <div className="text-xs font-bold text-foreground mb-1">{game.homeTeam.shortName}</div>
+                    <div className="text-xs font-semibold">
                       {formatOdds(game.odds.moneyline.home.odds)}
                     </div>
                   </div>

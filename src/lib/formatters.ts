@@ -71,36 +71,15 @@ export const formatDateDetailed = (
 };
 
 /**
- * Convert decimal to fraction format for totals (e.g., 41.5 -> "41 1/2")
+ * Convert decimal to numeric format for totals (e.g., 41.5 -> "41.5")
  */
 export const formatTotalLine = (total: number): string => {
   if (typeof total !== 'number' || isNaN(total)) {
     return '0';
   }
   
-  const wholePart = Math.floor(total);
-  const decimalPart = total - wholePart;
-  
-  // Convert decimal to fraction
-  if (decimalPart === 0) {
-    return wholePart.toString();
-  } else if (decimalPart === 0.25) {
-    return `${wholePart} 1/4`;
-  } else if (decimalPart === 0.5) {
-    return `${wholePart} 1/2`;
-  } else if (decimalPart === 0.75) {
-    return `${wholePart} 3/4`;
-  } else {
-    // For other decimals, round to nearest half
-    const roundedDecimal = Math.round(decimalPart * 2) / 2;
-    if (roundedDecimal === 0.5) {
-      return `${wholePart} 1/2`;
-    } else if (roundedDecimal === 1) {
-      return (wholePart + 1).toString();
-    } else {
-      return wholePart.toString();
-    }
-  }
+  // Format to one decimal place if needed, otherwise show as integer
+  return total % 1 === 0 ? total.toString() : total.toFixed(1);
 };
 
 /**
