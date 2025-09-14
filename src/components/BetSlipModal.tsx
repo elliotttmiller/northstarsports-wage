@@ -124,22 +124,28 @@ export const BetSlipModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent 
-        className="fixed inset-0 top-0 left-0 z-[60] w-full h-full max-w-none transform-none translate-x-0 translate-y-0 bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 m-0"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          transform: 'none',
-          maxWidth: 'none'
-        }}
-        onInteractOutside={(e) => {
-          if (!isPlacing) handleClose();
-          else e.preventDefault();
-        }}
-      >
+      <div className="mobile-betslip-modal">
+        <DialogContent 
+          className="fixed inset-0 z-[60] w-screen h-screen max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 m-0 md:max-w-none"
+          style={{
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            right: '0',
+            bottom: '0',
+            width: '100vw',
+            height: '100vh',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+            transform: 'none',
+            margin: '0',
+            padding: '0'
+          }}
+          onInteractOutside={(e) => {
+            if (!isPlacing) handleClose();
+            else e.preventDefault();
+          }}
+        >
         {/* Enhanced Header */}
         <DialogHeader className="flex-shrink-0 border-b border-border/40 p-4 bg-gradient-to-r from-card/90 to-card/80 backdrop-blur-2xl">
           <div className="flex items-center justify-between">
@@ -551,6 +557,7 @@ export const BetSlipModal = () => {
           </motion.div>
         )}
       </DialogContent>
+      </div>
     </Dialog>
   );
 };
