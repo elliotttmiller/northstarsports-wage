@@ -348,9 +348,6 @@ export function GameCard({ game, compact = false }: GameCardProps) {
             </div>
           </div>
 
-          {/* Expanded Player Props - Desktop Only */}
-          {!compact && (
-            <AnimatePresence>
               {isExpanded && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
@@ -374,4 +371,5 @@ export function GameCard({ game, compact = false }: GameCardProps) {
       </Card>
     </motion.div>
   )
+}
 }
