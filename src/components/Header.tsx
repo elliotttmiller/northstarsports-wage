@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Trophy, User } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';

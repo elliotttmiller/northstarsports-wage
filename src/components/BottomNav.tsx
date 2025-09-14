@@ -1,24 +1,29 @@
-import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { motion } from 'framer-motion';
-
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { motion } from 'framer-motion';
 import { GameController, Wrench, House, Receipt, DotsThree } from '@phosphor-icons/react';
 
-
+export function BottomNav() {
   const location = useLocation();
-      // On mobile, show navigati
+  const navigate = useNavigate();
+  const { navigation, setMobilePanel } = useNavigation();
   const isMobile = useIsMobile();
-      } else {
-  const { setMobilePanel } = navigation;
-      }
+
   const handleSportsClick = () => {
     if (isMobile) {
       // On mobile, show navigation panel to select sports/leagues
       if (navigation.mobilePanel === 'navigation') {
         setMobilePanel(null);
       } else {
+        setMobilePanel('navigation');
+      }
+    } else {
+      // On desktop, navigate to games page
+      setMobilePanel(null);
+      navigate('/games');
+    }
+  };
 
   const handleBuilderClick = () => {
     setMobilePanel(null);
@@ -116,4 +121,4 @@ import { GameController, Wrench, House, Receipt, DotsThree } from '@phosphor-ico
       </motion.button>
     </nav>
   );
-};
+}
