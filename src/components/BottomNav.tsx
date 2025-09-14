@@ -1,17 +1,11 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { House, Receipt, GameController, DotsThree, Wrench } from '@phosphor-icons/react';
-import { motion } from 'framer-motion';
+import { useNavigation } from '@/context/NavigationContext';
+import { useIsMobile } from '@/hooks/us
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { useIsMobile } from '@/hooks/useIsMobile';
-
-export const BottomNav = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { navigation, setMobilePanel } = useNavigation();
-  const { betSlip } = useBetSlip();
-  const isMobile = useIsMobile();
 
   const handleSportsClick = () => {
     if (isMobile) {
