@@ -30,60 +30,53 @@ export function FloatingBetSlipButton({ onToggle }: FloatingBetSlipButtonProps) 
   const dragStartTime = useRef(0)
 
   const getDefaultPosition = useCallback(() => {
-    const buttonSize = 48
     const margin = 16
-    const safeWidth = window.innerWidth
-    const safeHeight = window.innerHeight
-    
+    const buttonSize = 48
+    const safeHeight = window.innerHeight - 80 // Account for bottom nav
     return {
-      x: safeWidth - buttonSize - margin,
-      y: safeHeight - buttonSize - margin - 80 // Account for bottom nav
+      x: window.innerWidth - buttonSize - margin,
+      y: safeHeight - buttonSize - margin
     }
   }, [])
 
   // Initialize position
   useEffect(() => {
     if (typeof window === 'undefined') return
-
-    const defaultPos = getDefaultPosition()
-    const initialPos = savedPosition && savedPosition.x !== 0 && savedPosition.y !== 0 
-      ? savedPosition 
-      : defaultPos
     
-    x.set(initialPos.x)
-    y.set(initialPos.y)
+    const defaultPos = getDefaultPosition()
+    
+    // Use saved position or default
+    const initPos = (savedPosition && savedPosition.x !== 0 && savedPosition.y !== 0) ? savedPosition : defaultPos
+    
+    x.set(initPos.x)
+    y.set(initPos.y)
+    
     setIsInitialized(true)
   }, [savedPosition, getDefaultPosition, x, y])
 
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      if (!isInitialized) return
-      
       const currentX = x.get()
       const currentY = y.get()
       const buttonSize = 48
       const margin = 16
       const maxX = window.innerWidth - buttonSize - margin
       const maxY = window.innerHeight - buttonSize - margin - 80
-      
+
       // Keep button within bounds
-      if (currentX > maxX) {
-        x.set(maxX)
-      }
-      if (currentY > maxY) {
-        y.set(maxY)
-      }
+      if (currentX > maxX) x.set(maxX)
+      if (currentY > maxY) y.set(maxY)
     }
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [x, y, isInitialized])
+  }, [x, y])
 
   const handleDragStart = () => {
     setIsDragging(true)
-    hasMoved.current = false
     dragStartTime.current = Date.now()
+    hasMoved.current = false
     initialPosition.current = { x: x.get(), y: y.get() }
   }
 
