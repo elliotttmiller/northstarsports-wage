@@ -346,10 +346,10 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   className="w-full h-8 text-xs"
                   onClick={(e) => {
                     e.stopPropagation()
-                    handleBetClick(e, 'spread', 'away', game.odds.spread.away.odds, game.odds.spread.away.line || 0)
+                    handleBetClick(e, 'spread', 'away', game.odds.spread.away.odds, game.odds.spread.away.line)
                   }}
                 >
-                  {game.odds.spread.away.line && game.odds.spread.away.line > 0 ? '+' : ''}{game.odds.spread.away.line || 0} ({formatOdds(game.odds.spread.away.odds)})
+                  {game.odds.spread.away.line > 0 ? '+' : ''}{game.odds.spread.away.line} ({formatOdds(game.odds.spread.away.odds)})
                 </Button>
                 <Button
                   variant="outline"
@@ -357,10 +357,10 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   className="w-full h-8 text-xs"
                   onClick={(e) => {
                     e.stopPropagation()
-                    handleBetClick(e, 'spread', 'home', game.odds.spread.home.odds, game.odds.spread.home.line || 0)
+                    handleBetClick(e, 'spread', 'home', game.odds.spread.home.odds, game.odds.spread.home.line)
                   }}
                 >
-                  {game.odds.spread.home.line && game.odds.spread.home.line > 0 ? '+' : ''}{game.odds.spread.home.line || 0} ({formatOdds(game.odds.spread.home.odds)})
+                  {game.odds.spread.home.line > 0 ? '+' : ''}{game.odds.spread.home.line} ({formatOdds(game.odds.spread.home.odds)})
                 </Button>
               </div>
             </div>
@@ -375,10 +375,10 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   className="w-full h-8 text-xs"
                   onClick={(e) => {
                     e.stopPropagation()
-                    handleBetClick(e, 'total', 'over', game.odds.total.over?.odds || -110, game.odds.total.over?.line || 47.5)
+                    handleBetClick(e, 'total', 'over', game.odds.total.over.odds, game.odds.total.line)
                   }}
                 >
-                  O {formatTotalLine(game.odds.total.over?.line || 47.5)} ({formatOdds(game.odds.total.over?.odds || -110)})
+                  O {formatTotalLine(game.odds.total.line)} ({formatOdds(game.odds.total.over.odds)})
                 </Button>
                 <Button
                   variant="outline"
@@ -386,10 +386,10 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   className="w-full h-8 text-xs"
                   onClick={(e) => {
                     e.stopPropagation()
-                    handleBetClick(e, 'total', 'under', game.odds.total.under?.odds || -110, game.odds.total.under?.line || 47.5)
+                    handleBetClick(e, 'total', 'under', game.odds.total.under.odds, game.odds.total.line)
                   }}
                 >
-                  U {formatTotalLine(game.odds.total.under?.line || 47.5)} ({formatOdds(game.odds.total.under?.odds || -110)})
+                  U {formatTotalLine(game.odds.total.line)} ({formatOdds(game.odds.total.under.odds)})
                 </Button>
               </div>
             </div>
