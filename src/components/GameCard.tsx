@@ -1,12 +1,14 @@
-import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
 import { useBetSlip } from '@/context/BetSlipContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 import { Game } from '@/types'
 import { formatOdds, formatTotalLine, formatTime } from '@/lib/formatters'
-import { Clock, Trophy } from '@phosphor-icons/react'
+import { getPlayerProps, PlayerProp } from '@/services/mockApi'
+import { Clock, Trophy, CaretDown, CaretUp, Target, TrendUp, Users } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface GameCardProps {
@@ -15,8 +17,10 @@ interface GameCardProps {
 }
 
 export function GameCard({ game, compact = false }: GameCardProps) {
-  const navigate = useNavigate()
   const { addBet } = useBetSlip()
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [playerProps, setPlayerProps] = useState<PlayerProp[]>([])
+  const [propsLoading, setPropsLoading] = useState(false)
 
   const handleBetClick = (
     e: React.MouseEvent,
@@ -30,16 +34,58 @@ export function GameCard({ game, compact = false }: GameCardProps) {
     toast.success('Bet added to slip!', { duration: 1500 })
   }
 
-  const handleGameClick = () => {
-    navigate(`/games/${game.id}`)
+  const handlePlayerPropClick = (
+    e: React.MouseEvent,
+    prop: PlayerProp,
+    selection: 'over' | 'under'
+  ) => {
+    e.stopPropagation()
+    const odds = selection === 'over' ? prop.overOdds : prop.underOdds
+    addBet(game, 'player_prop', selection, odds, prop.line, prop)
+    toast.success(`${prop.playerName} ${prop.statType} ${selection} added!`, {
+      duration: 1500,
+    })
   }
+
+  const handleExpandToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!isExpanded && playerProps.length === 0) {
+      setPropsLoading(true)
+      try {
+        const props = await getPlayerProps(game.id)
+        setPlayerProps(props)
+      } catch (error) {
+        console.error('Failed to load player props:', error)
+      } finally {
+        setPropsLoading(false)
+      }
+    }
+    setIsExpanded(!isExpanded)
+  }
+
+  const getStatIcon = (category: string) => {
+    switch (category) {
+      case 'passing': return <Target className="w-3 h-3" />
+      case 'rushing': return <TrendUp className="w-3 h-3" />
+      case 'receiving': return <Users className="w-3 h-3" />
+      case 'scoring': return <Trophy className="w-3 h-3" />
+      default: return <Target className="w-3 h-3" />
+    }
+  }
+
+  const groupedProps = playerProps.reduce((acc, prop) => {
+    if (!acc[prop.category]) {
+      acc[prop.category] = []
+    }
+    acc[prop.category].push(prop)
+    return acc
+  }, {} as Record<string, PlayerProp[]>)
 
   if (compact) {
     return (
       <motion.div
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        onClick={handleGameClick}
         className="cursor-pointer"
       >
         <Card className="hover:shadow-md transition-all duration-200 border-border bg-card">
@@ -60,9 +106,9 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 variant="ghost"
                 size="sm"
                 className="h-6 w-6 p-0 hover:bg-accent"
-                onClick={handleGameClick}
+                onClick={handleExpandToggle}
               >
-                <Trophy className="w-3 h-3" />
+                {isExpanded ? <CaretUp className="w-3 h-3" /> : <CaretDown className="w-3 h-3" />}
               </Button>
             </div>
             
@@ -130,74 +176,74 @@ export function GameCard({ game, compact = false }: GameCardProps) {
     )
   }
 
-  // Full size card for desktop/detailed view
+  // Optimized desktop card - thinner and more efficient
   return (
     <motion.div
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
-      onClick={handleGameClick}
+      layout
       className="cursor-pointer"
     >
       <Card className="hover:shadow-lg transition-all duration-200 border-border bg-card">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
+        <CardContent className="p-3">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">
                 {formatTime(game.startTime)}
               </span>
               {game.status === 'live' && (
-                <Badge variant="destructive" className="animate-pulse">
+                <Badge variant="destructive" className="text-xs animate-pulse">
                   LIVE
                 </Badge>
               )}
               {game.status === 'finished' && (
-                <Badge variant="secondary">FINAL</Badge>
+                <Badge variant="secondary" className="text-xs">FINAL</Badge>
               )}
             </div>
             <Button
               variant="ghost"
               size="sm"
-              className="hover:bg-accent"
-              onClick={handleGameClick}
+              className="h-8 hover:bg-accent"
+              onClick={handleExpandToggle}
             >
-              <Trophy className="w-4 h-4 mr-2" />
-              View Details
+              {isExpanded ? (
+                <CaretUp className="w-4 h-4 mr-1" />
+              ) : (
+                <CaretDown className="w-4 h-4 mr-1" />
+              )}
+              <span className="text-xs">Props</span>
             </Button>
           </div>
           
-          {/* Team Matchup */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-center mb-4">
-            <div className="text-center lg:text-right">
-              <div className="text-lg font-bold text-foreground">
+          {/* Compact Team Matchup */}
+          <div className="grid grid-cols-5 gap-3 items-center mb-3">
+            <div className="col-span-2 text-right">
+              <div className="text-base font-semibold text-foreground truncate">
                 {game.awayTeam.shortName}
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-xs text-muted-foreground">
                 {game.awayTeam.record}
               </div>
             </div>
 
             <div className="text-center">
-              <div className="text-sm text-muted-foreground mb-1">vs</div>
-              <div className="text-xs font-medium text-muted-foreground">
-                {game.venue || 'TBD'}
-              </div>
+              <div className="text-xs text-muted-foreground">@</div>
             </div>
 
-            <div className="text-center lg:text-left">
-              <div className="text-lg font-bold text-foreground">
+            <div className="col-span-2 text-left">
+              <div className="text-base font-semibold text-foreground truncate">
                 {game.homeTeam.shortName}
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-xs text-muted-foreground">
                 {game.homeTeam.record}
               </div>
             </div>
           </div>
 
-          {/* Betting Lines */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Compact Betting Lines */}
+          <div className="grid grid-cols-6 gap-2">
             {/* Spread */}
-            <div className="space-y-2">
+            <div className="col-span-2 space-y-1">
               <div className="text-xs font-medium text-muted-foreground text-center">
                 SPREAD
               </div>
@@ -205,7 +251,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-8 p-1 hover:bg-accent hover:text-accent-foreground transition-colors"
                   onClick={(e) => handleBetClick(
                     e, 'spread', 'away',
                     game.odds.spread.away.odds,
@@ -213,8 +259,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   )}
                 >
                   <div className="text-center w-full">
-                    <div className="text-xs">{game.awayTeam.shortName}</div>
-                    <div className="font-medium">{game.odds.spread.away.line}</div>
+                    <div className="text-xs font-medium">{game.odds.spread.away.line}</div>
                     <div className="text-xs text-muted-foreground">
                       {formatOdds(game.odds.spread.away.odds)}
                     </div>
@@ -223,7 +268,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-8 p-1 hover:bg-accent hover:text-accent-foreground transition-colors"
                   onClick={(e) => handleBetClick(
                     e, 'spread', 'home',
                     game.odds.spread.home.odds,
@@ -231,8 +276,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   )}
                 >
                   <div className="text-center w-full">
-                    <div className="text-xs">{game.homeTeam.shortName}</div>
-                    <div className="font-medium">{game.odds.spread.home.line}</div>
+                    <div className="text-xs font-medium">{game.odds.spread.home.line}</div>
                     <div className="text-xs text-muted-foreground">
                       {formatOdds(game.odds.spread.home.odds)}
                     </div>
@@ -242,7 +286,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
             </div>
 
             {/* Total */}
-            <div className="space-y-2">
+            <div className="col-span-2 space-y-1">
               <div className="text-xs font-medium text-muted-foreground text-center">
                 TOTAL
               </div>
@@ -250,7 +294,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-8 p-1 hover:bg-accent hover:text-accent-foreground transition-colors"
                   onClick={(e) => handleBetClick(
                     e, 'total', 'over',
                     game.odds.total.over?.odds || -110,
@@ -258,17 +302,14 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   )}
                 >
                   <div className="text-center w-full">
-                    <div className="text-xs">Over</div>
-                    <div className="font-medium">{formatTotalLine(game.odds.total.over?.line || 45.5)}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {formatOdds(game.odds.total.over?.odds || -110)}
-                    </div>
+                    <div className="text-xs">O</div>
+                    <div className="text-xs font-medium">{formatTotalLine(game.odds.total.over?.line || 45.5)}</div>
                   </div>
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-8 p-1 hover:bg-accent hover:text-accent-foreground transition-colors"
                   onClick={(e) => handleBetClick(
                     e, 'total', 'under',
                     game.odds.total.under?.odds || -110,
@@ -276,18 +317,15 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   )}
                 >
                   <div className="text-center w-full">
-                    <div className="text-xs">Under</div>
-                    <div className="font-medium">{formatTotalLine(game.odds.total.under?.line || 45.5)}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {formatOdds(game.odds.total.under?.odds || -110)}
-                    </div>
+                    <div className="text-xs">U</div>
+                    <div className="text-xs font-medium">{formatTotalLine(game.odds.total.under?.line || 45.5)}</div>
                   </div>
                 </Button>
               </div>
             </div>
 
             {/* Moneyline */}
-            <div className="space-y-2">
+            <div className="col-span-2 space-y-1">
               <div className="text-xs font-medium text-muted-foreground text-center">
                 MONEYLINE
               </div>
@@ -295,34 +333,109 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-8 p-1 hover:bg-accent hover:text-accent-foreground transition-colors"
                   onClick={(e) => handleBetClick(
                     e, 'moneyline', 'away',
                     game.odds.moneyline.away.odds
                   )}
                 >
                   <div className="text-center w-full">
-                    <div className="text-xs">{game.awayTeam.shortName}</div>
-                    <div className="font-medium">{formatOdds(game.odds.moneyline.away.odds)}</div>
+                    <div className="text-xs font-medium">{formatOdds(game.odds.moneyline.away.odds)}</div>
                   </div>
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="h-8 p-1 hover:bg-accent hover:text-accent-foreground transition-colors"
                   onClick={(e) => handleBetClick(
                     e, 'moneyline', 'home',
                     game.odds.moneyline.home.odds
                   )}
                 >
                   <div className="text-center w-full">
-                    <div className="text-xs">{game.homeTeam.shortName}</div>
-                    <div className="font-medium">{formatOdds(game.odds.moneyline.home.odds)}</div>
+                    <div className="text-xs font-medium">{formatOdds(game.odds.moneyline.home.odds)}</div>
                   </div>
                 </Button>
               </div>
             </div>
           </div>
+
+          {/* Expandable Player Props */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <Separator className="my-3" />
+                
+                {propsLoading ? (
+                  <div className="text-center py-4">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent mx-auto"></div>
+                  </div>
+                ) : playerProps.length === 0 ? (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-muted-foreground">No player props available</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
+                      <Trophy className="w-4 h-4" />
+                      Player Props
+                    </h4>
+                    {Object.entries(groupedProps).map(([category, props]) => (
+                      <div key={category} className="space-y-2">
+                        <h5 className="text-xs font-medium text-muted-foreground capitalize flex items-center gap-1">
+                          {getStatIcon(category)}
+                          {category}
+                        </h5>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                          {props.slice(0, 4).map((prop) => (
+                            <div key={prop.id} className="border border-border rounded-md p-2">
+                              <div className="flex items-center justify-between mb-2">
+                                <div>
+                                  <div className="text-xs font-medium text-foreground truncate">
+                                    {prop.playerName}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {prop.statType}
+                                  </div>
+                                </div>
+                                <Badge variant="outline" className="text-xs">
+                                  {prop.line}
+                                </Badge>
+                              </div>
+                              <div className="grid grid-cols-2 gap-1">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-7 text-xs hover:bg-accent hover:text-accent-foreground"
+                                  onClick={(e) => handlePlayerPropClick(e, prop, 'over')}
+                                >
+                                  O {formatOdds(prop.overOdds)}
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-7 text-xs hover:bg-accent hover:text-accent-foreground"
+                                  onClick={(e) => handlePlayerPropClick(e, prop, 'under')}
+                                >
+                                  U {formatOdds(prop.underOdds)}
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </CardContent>
       </Card>
     </motion.div>
