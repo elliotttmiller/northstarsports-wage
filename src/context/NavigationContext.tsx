@@ -31,25 +31,25 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const toggleSideNav = () => setSideNavOpen(!sideNavOpen)
   const toggleActionHub = () => setActionHubOpen(!actionHubOpen)
 
+  const value = {
+    navigation: { 
+      mobilePanel, 
+      selectedSport,
+      selectedLeague,
+      sideNavOpen,
+      actionHubOpen
+    },
+    setMobilePanel,
+    selectSport: setSelectedSport,
+    selectLeague: setSelectedLeague,
+    toggleSideNav,
+    toggleActionHub,
+    setSideNavOpen,
+    setActionHubOpen
+  }
+
   return (
-    <NavigationContext.Provider
-      value={{
-        navigation: { 
-          mobilePanel, 
-          selectedSport,
-          selectedLeague,
-          sideNavOpen,
-          actionHubOpen
-        },
-        setMobilePanel,
-        selectSport: setSelectedSport,
-        selectLeague: setSelectedLeague,
-        toggleSideNav,
-        toggleActionHub,
-        setSideNavOpen,
-        setActionHubOpen
-      }}
-    >
+    <NavigationContext.Provider value={value}>
       {children}
     </NavigationContext.Provider>
   )
@@ -57,8 +57,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
 export function useNavigation() {
   const context = useContext(NavigationContext)
-  if (!context) {
-    throw new Error('useNavigation must be used within NavigationProvider')
+  if (context === undefined) {
+    throw new Error('useNavigation must be used within a NavigationProvider. Make sure your component is wrapped in NavigationProvider.')
   }
   return context
 }
