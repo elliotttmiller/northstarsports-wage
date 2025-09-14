@@ -348,9 +348,6 @@ export function GameCard({ game, compact = false }: GameCardProps) {
             </div>
           </div>
 
-          {/* Betting Lines - Desktop Only */}
-          {compact ? null : (
-
           {/* Expanded Player Props - Desktop Only */}
           {!compact && (
             <AnimatePresence>
@@ -377,5 +374,4 @@ export function GameCard({ game, compact = false }: GameCardProps) {
       </Card>
     </motion.div>
   )
-}          {/* Expanded Player Props - Desktop Only */}          {!compact && (            <AnimatePresence>              {isExpanded && (                <motion.div                  initial={{ height: 0, opacity: 0 }}                  animate={{ height: 'auto', opacity: 1 }}                  exit={{ height: 0, opacity: 0 }}                  transition={{ duration: 0.3, ease: 'easeInOut' }}                  className="overflow-hidden"                >                  <Separator className="my-3" />                  <PlayerPropsSection                    categories={propCategories}                    game={game}                    isLoading={propsLoading}                    compact={compact}                  />                </motion.div>              )}            </AnimatePresence>
-          )}
+}
