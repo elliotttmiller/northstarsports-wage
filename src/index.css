@@ -1,25 +1,21 @@
 @import 'tailwindcss';
+@import "tw-animate-css";
 
-
+@layer base {
+  * {
+    @apply border-border;
   }
-  htm
-    @apply bg-background 
+
+  html, body {
+    @apply bg-background text-foreground;
+    overflow: hidden;
+    height: 100vh;
   }
 
-  overf
-
-  height: 100vh;
-}
-/* 
-}
-
-html, body {
-  overflow: hidden;
-}
-
-#root {
-  height: 100vh;
-  overflow: hidden;
+  #root {
+    height: 100vh;
+    overflow: hidden;
+  }
 }
 
 /* Seamless scrolling - completely hidden scrollbars */
@@ -30,49 +26,15 @@ html, body {
 }
 
 .seamless-scroll::-webkit-scrollbar {
-.virtual-scrollb
   width: 0;
   height: 0;
-
+}
 
 /* Virtual scrollbar - subtle when needed */
-/* Focus states */
-  outline: 2px solid var
+.virtual-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-11) transparent;
 }
-:root {
- 
-
-  --color-fg-secondary: oklch(0.70 0.00
-  /* Neutral 
- 
-
-  
-  --color-accent-9: oklch(
- 
-
-  
-  --background: var(--color-bg);
-  
- 
-
-  
-  --primary: var(--color-accent-9);
- 
-
-  --accent: var(--color-accent-9);
-  
-  --destructive-foreground: oklch(0.98 0.005 15);
-  /* Supporting colors */
- 
-
-  --ring: var
-  /* Custom betting colors */
- 
-
-  --radius-md: 0.5r
-}
-@theme {
- 
 
 /* Focus states */
 .focus-ring:focus-visible {
@@ -150,30 +112,26 @@ html, body {
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  /* Map radius variables to create a consistent rounding system */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 2);
+  --radius-2xl: calc(var(--radius) * 3);
+  --radius-full: 9999px;
+}
