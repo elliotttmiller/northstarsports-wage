@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 html, body {
-  background-color: oklch(0.08 0.008 240);
+  background-color: var(--color-bg);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow: hidden;
 }
@@ -28,7 +28,7 @@ html, body {
 /* Virtual scrollbar - subtle when needed */
 .virtual-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: oklch(0.17 0.018 240) transparent;
+  scrollbar-color: var(--color-neutral-8) transparent;
   scroll-behavior: smooth;
 }
 
@@ -41,12 +41,12 @@ html, body {
 }
 
 .virtual-scrollbar::-webkit-scrollbar-thumb {
-  background: oklch(0.17 0.018 240);
+  background: var(--color-neutral-8);
   border-radius: 2px;
 }
 
 .virtual-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.25 0.025 240);
+  background: var(--color-neutral-7);
 }
 
 /* Smooth animations and transitions */
@@ -66,49 +66,49 @@ html, body {
 
 /* Focus states */
 .focus-ring:focus-visible {
-  outline: 2px solid oklch(0.48 0.14 260);
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
 :root {
   /* Base colors - Refined dark theme with subtle elegance */
-  --background: oklch(0.08 0.008 240);
-  --foreground: oklch(0.94 0.005 240);
+  --background: var(--color-bg);
+  --foreground: var(--color-fg);
   
-  --card: oklch(0.11 0.012 240);
-  --card-foreground: oklch(0.90 0.005 240);
+  --card: var(--color-bg-inset);
+  --card-foreground: var(--color-fg);
   
-  --popover: oklch(0.11 0.012 240);
-  --popover-foreground: oklch(0.90 0.005 240);
+  --popover: var(--color-bg-inset);
+  --popover-foreground: var(--color-fg);
   
   /* Action colors - Refined blue theme */
-  --primary: oklch(0.48 0.14 260);
-  --primary-foreground: oklch(0.98 0.005 240);
+  --primary: var(--color-accent-9);
+  --primary-foreground: var(--color-accent-contrast);
   
-  --secondary: oklch(0.15 0.018 240);
-  --secondary-foreground: oklch(0.84 0.008 240);
+  --secondary: var(--color-neutral-11);
+  --secondary-foreground: var(--color-neutral-4);
   
-  --accent: oklch(0.48 0.14 260);
-  --accent-foreground: oklch(0.98 0.005 240);
+  --accent: var(--color-accent-9);
+  --accent-foreground: var(--color-accent-contrast);
   
   --destructive: oklch(0.58 0.15 15);
   --destructive-foreground: oklch(0.98 0.005 15);
   
   /* Supporting colors */
-  --muted: oklch(0.13 0.012 240);
-  --muted-foreground: oklch(0.66 0.012 240);
+  --muted: var(--color-bg-overlay);
+  --muted-foreground: var(--color-fg-secondary);
   
-  --border: oklch(0.17 0.018 240);
-  --input: oklch(0.17 0.018 240);
-  --ring: oklch(0.48 0.14 260);
+  --border: var(--color-neutral-11);
+  --input: var(--color-neutral-11);
+  --ring: var(--color-focus-ring);
   
   /* Custom betting colors */
-  --color-win: oklch(0.58 0.12 140);
+  --color-win: var(--color-accent-secondary-9);
   --color-loss: oklch(0.58 0.14 20);
-  --color-info: oklch(0.48 0.14 260);
+  --color-info: var(--color-accent-9);
   
   /* Border radius */
-  --radius: 0.5rem;
+  --radius: var(--radius-md);
 }
 
 @theme {

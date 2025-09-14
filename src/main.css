@@ -1,6 +1,108 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
 
+:root {
+  /* Spark theme variables */
+  --color-neutral-1: oklch(0.98 0.002 240);
+  --color-neutral-2: oklch(0.96 0.003 240);
+  --color-neutral-3: oklch(0.94 0.005 240);
+  --color-neutral-4: oklch(0.90 0.008 240);
+  --color-neutral-5: oklch(0.84 0.012 240);
+  --color-neutral-6: oklch(0.75 0.015 240);
+  --color-neutral-7: oklch(0.66 0.018 240);
+  --color-neutral-8: oklch(0.55 0.020 240);
+  --color-neutral-9: oklch(0.45 0.022 240);
+  --color-neutral-10: oklch(0.35 0.020 240);
+  --color-neutral-11: oklch(0.25 0.018 240);
+  --color-neutral-12: oklch(0.15 0.015 240);
+  --color-neutral-contrast: oklch(0.08 0.008 240);
+
+  /* Accent colors - Blue theme */
+  --color-accent-1: oklch(0.98 0.014 260);
+  --color-accent-2: oklch(0.95 0.028 260);
+  --color-accent-3: oklch(0.92 0.042 260);
+  --color-accent-4: oklch(0.88 0.056 260);
+  --color-accent-5: oklch(0.82 0.070 260);
+  --color-accent-6: oklch(0.75 0.084 260);
+  --color-accent-7: oklch(0.68 0.098 260);
+  --color-accent-8: oklch(0.60 0.112 260);
+  --color-accent-9: oklch(0.48 0.14 260);
+  --color-accent-10: oklch(0.42 0.126 260);
+  --color-accent-11: oklch(0.35 0.112 260);
+  --color-accent-12: oklch(0.28 0.098 260);
+  --color-accent-contrast: oklch(0.98 0.005 240);
+
+  /* Accent secondary - Green theme */
+  --color-accent-secondary-1: oklch(0.98 0.012 140);
+  --color-accent-secondary-2: oklch(0.95 0.024 140);
+  --color-accent-secondary-3: oklch(0.92 0.036 140);
+  --color-accent-secondary-4: oklch(0.88 0.048 140);
+  --color-accent-secondary-5: oklch(0.82 0.060 140);
+  --color-accent-secondary-6: oklch(0.75 0.072 140);
+  --color-accent-secondary-7: oklch(0.68 0.084 140);
+  --color-accent-secondary-8: oklch(0.60 0.096 140);
+  --color-accent-secondary-9: oklch(0.58 0.12 140);
+  --color-accent-secondary-10: oklch(0.52 0.108 140);
+  --color-accent-secondary-11: oklch(0.45 0.096 140);
+  --color-accent-secondary-12: oklch(0.38 0.084 140);
+  --color-accent-secondary-contrast: oklch(0.98 0.005 240);
+
+  /* Foreground and background */
+  --color-fg: oklch(0.94 0.005 240);
+  --color-fg-secondary: oklch(0.66 0.012 240);
+  --color-bg: oklch(0.08 0.008 240);
+  --color-bg-inset: oklch(0.11 0.012 240);
+  --color-bg-overlay: oklch(0.13 0.012 240);
+  
+  /* Focus ring */
+  --color-focus-ring: oklch(0.48 0.14 260);
+
+  /* Size variables */
+  --size-px: 1px;
+  --size-0: 0rem;
+  --size-0-5: 0.125rem;
+  --size-1: 0.25rem;
+  --size-1-5: 0.375rem;
+  --size-2: 0.5rem;
+  --size-2-5: 0.625rem;
+  --size-3: 0.75rem;
+  --size-3-5: 0.875rem;
+  --size-4: 1rem;
+  --size-5: 1.25rem;
+  --size-6: 1.5rem;
+  --size-7: 1.75rem;
+  --size-8: 2rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+  --size-14: 3.5rem;
+  --size-16: 4rem;
+  --size-20: 5rem;
+  --size-24: 6rem;
+  --size-28: 7rem;
+  --size-32: 8rem;
+  --size-36: 9rem;
+  --size-40: 10rem;
+  --size-44: 11rem;
+  --size-48: 12rem;
+  --size-52: 13rem;
+  --size-56: 14rem;
+  --size-60: 15rem;
+  --size-64: 16rem;
+  --size-72: 18rem;
+  --size-80: 20rem;
+  --size-96: 24rem;
+
+  /* Radius system */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
 /* Additional styles for enhanced UX - imported by the Spark runtime */
 
 /* Hide all scrollbars for seamless UI */
