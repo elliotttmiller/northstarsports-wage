@@ -57,53 +57,32 @@ export function GameCard({ game, compact = false }: GameCardProps) {
 
   if (compact) {
     return (
-      <Card className="bg-card hover:bg-card/80 transition-colors cursor-pointer">
-        <CardContent className="p-3">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <div className="text-sm font-medium">{game.homeTeam.name} vs {game.awayTeam.name}</div>
-              <div className="text-xs text-muted-foreground flex items-center gap-1">
-                <Clock size={12} />
-                {formatTime(game.startTime)}
-              </div>
-            </div>
-            <Badge variant="secondary" className="text-xs">
-              {game.leagueId}
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="w-full"
-      onClick={() => handleExpandToggle()}
-    >
-      <Card className="bg-card hover:bg-card/80 transition-all duration-200 overflow-hidden cursor-pointer">
-        <CardContent className={`${compact ? 'p-3' : 'p-4'}`}>
-          {/* Game Header */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-xs">
-                {game.leagueId}
-              </Badge>
-              <div className="text-xs text-muted-foreground flex items-center gap-1">
-                <Clock size={12} />
-                {formatTime(game.startTime)}
-              </div>
-              {game.status === 'live' && (
-                <Badge variant="destructive" className="text-xs animate-pulse">
-                  LIVE
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="w-full"
+        onClick={() => handleExpandToggle()}
+      >
+        <Card className="bg-card hover:bg-card/80 transition-all duration-200 overflow-hidden cursor-pointer">
+          <CardContent className="p-3">
+            {/* Game Header - Mobile Compact */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                  {game.leagueId}
                 </Badge>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
+                <div className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Clock size={12} />
+                  {formatTime(game.startTime)}
+                </div>
+                {game.status === 'live' && (
+                  <Badge variant="destructive" className="text-xs animate-pulse px-2 py-0.5">
+                    LIVE
+                  </Badge>
+                )}
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -113,26 +92,23 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 {isExpanded ? <CaretUp size={14} /> : <CaretDown size={14} />}
               </Button>
             </div>
-          </div>
 
-          {/* Teams */}
-          <div className={`grid grid-cols-3 gap-2 mb-3 ${compact ? 'text-sm' : ''}`}>
-            <div className="text-center">
-              <div className="font-medium text-sm">{game.awayTeam.shortName}</div>
-              <div className="text-xs text-muted-foreground">{game.awayTeam.record}</div>
+            {/* Teams - Mobile Layout */}
+            <div className="flex items-center justify-between mb-3 text-sm">
+              <div className="flex-1 text-left">
+                <div className="font-semibold text-sm">{game.awayTeam.shortName}</div>
+                <div className="text-xs text-muted-foreground">{game.awayTeam.record}</div>
+              </div>
+              <div className="text-xs text-muted-foreground font-medium px-3">
+                @
+              </div>
+              <div className="flex-1 text-right">
+                <div className="font-semibold text-sm">{game.homeTeam.shortName}</div>
+                <div className="text-xs text-muted-foreground">{game.homeTeam.record}</div>
+              </div>
             </div>
-            <div className="text-center text-xs text-muted-foreground self-center font-medium">
-              @
-            </div>
-            <div className="text-center">
-              <div className="font-medium text-sm">{game.homeTeam.shortName}</div>
-              <div className="text-xs text-muted-foreground">{game.homeTeam.record}</div>
-            </div>
-          </div>
 
-          {/* Betting Lines - Optimized for Mobile */}
-          {compact ? (
-            // Mobile compact layout - vertical stacking
+            {/* Mobile Betting Lines - Compact Front Display */}
             <div className="space-y-2">
               {/* Spread Row */}
               <div className="bg-muted/30 rounded-lg p-2">
@@ -291,19 +267,101 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                 </div>
               </div>
             </div>
-          ) : (
-            // Desktop layout - horizontal grid
-            <div className="grid grid-cols-6 gap-1.5 text-xs">
+
+            {/* Expanded Player Props - Mobile */}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <Separator className="my-3" />
+                  <PlayerPropsSection
+                    categories={propCategories}
+                    game={game}
+                    isLoading={propsLoading}
+                    compact={compact}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+        </Card>
+      </motion.div>
+    )
+  }
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="w-full"
+      onClick={() => handleExpandToggle()}
+    >
+      <Card className="bg-card hover:bg-card/80 transition-all duration-200 overflow-hidden cursor-pointer">
+        <CardContent className={`${compact ? 'p-3' : 'p-3'}`}>
+          {/* Game Header - Compact for Desktop */}
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                {game.leagueId}
+              </Badge>
+              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                <Clock size={12} />
+                {formatTime(game.startTime)}
+              </div>
+              {game.status === 'live' && (
+                <Badge variant="destructive" className="text-xs animate-pulse px-2 py-0.5">
+                  LIVE
+                </Badge>
+              )}
+            </div>
+            {!compact && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleExpandToggle}
+                className="h-6 w-6 p-0 hover:bg-accent/20 transition-colors"
+              >
+                {isExpanded ? <CaretUp size={14} /> : <CaretDown size={14} />}
+              </Button>
+            )}
+          </div>
+
+          {/* Teams - Compact Layout */}
+          <div className={`flex items-center justify-between mb-2 ${compact ? 'text-sm' : ''}`}>
+            <div className="flex-1 text-left">
+              <div className="font-semibold text-sm">{game.awayTeam.shortName}</div>
+              <div className="text-xs text-muted-foreground">{game.awayTeam.record}</div>
+            </div>
+            <div className="text-xs text-muted-foreground font-medium px-3">
+              @
+            </div>
+            <div className="flex-1 text-right">
+              <div className="font-semibold text-sm">{game.homeTeam.shortName}</div>
+              <div className="text-xs text-muted-foreground">{game.homeTeam.record}</div>
+            </div>
+          </div>
+
+          {/* Betting Lines - Desktop Only */}
+          {compact ? null : (
+            // Desktop layout - Optimized compact horizontal grid
+            <div className="grid grid-cols-3 gap-2 text-xs">
               {/* Spread */}
-              <div className="col-span-2">
-                <div className="text-xs text-muted-foreground text-center mb-2 font-semibold tracking-wide">
+              <div className="">
+                <div className="text-xs text-muted-foreground text-center mb-1.5 font-semibold tracking-wide">
                   SPREAD
                 </div>
                 <div className="grid grid-cols-2 gap-1">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
+                    className="h-10 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -315,7 +373,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   >
                     <div className="text-center flex flex-col justify-center h-full w-full">
                       <div className="text-xs font-bold text-foreground mb-0.5">{game.awayTeam.shortName}</div>
-                      <div className="font-semibold text-sm mb-0.5">
+                      <div className="font-semibold text-xs">
                         {game.odds.spread.away.line && game.odds.spread.away.line > 0 ? '+' : ''}{game.odds.spread.away.line || 0}
                       </div>
                       <div className="text-xs text-muted-foreground font-medium">
@@ -326,7 +384,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
+                    className="h-10 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -338,7 +396,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   >
                     <div className="text-center flex flex-col justify-center h-full w-full">
                       <div className="text-xs font-bold text-foreground mb-0.5">{game.homeTeam.shortName}</div>
-                      <div className="font-semibold text-sm mb-0.5">
+                      <div className="font-semibold text-xs">
                         {game.odds.spread.home.line && game.odds.spread.home.line > 0 ? '+' : ''}{game.odds.spread.home.line || 0}
                       </div>
                       <div className="text-xs text-muted-foreground font-medium">
@@ -350,15 +408,15 @@ export function GameCard({ game, compact = false }: GameCardProps) {
               </div>
 
               {/* Total */}
-              <div className="col-span-2">
-                <div className="text-xs text-muted-foreground text-center mb-2 font-semibold tracking-wide">
+              <div className="">
+                <div className="text-xs text-muted-foreground text-center mb-1.5 font-semibold tracking-wide">
                   TOTAL
                 </div>
                 <div className="grid grid-cols-2 gap-1">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
+                    className="h-10 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -370,7 +428,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   >
                     <div className="text-center flex flex-col justify-center h-full w-full">
                       <div className="text-xs font-bold text-foreground mb-0.5">OVER</div>
-                      <div className="font-semibold text-sm mb-0.5">
+                      <div className="font-semibold text-xs">
                         {formatTotalLine(game.odds.total.over?.line || 45.5)}
                       </div>
                       <div className="text-xs text-muted-foreground font-medium">
@@ -381,7 +439,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
+                    className="h-10 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -393,7 +451,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   >
                     <div className="text-center flex flex-col justify-center h-full w-full">
                       <div className="text-xs font-bold text-foreground mb-0.5">UNDER</div>
-                      <div className="font-semibold text-sm mb-0.5">
+                      <div className="font-semibold text-xs">
                         {formatTotalLine(game.odds.total.under?.line || 45.5)}
                       </div>
                       <div className="text-xs text-muted-foreground font-medium">
@@ -405,15 +463,15 @@ export function GameCard({ game, compact = false }: GameCardProps) {
               </div>
 
               {/* Moneyline */}
-              <div className="col-span-2">
-                <div className="text-xs text-muted-foreground text-center mb-2 font-semibold tracking-wide">
+              <div className="">
+                <div className="text-xs text-muted-foreground text-center mb-1.5 font-semibold tracking-wide">
                   MONEYLINE
                 </div>
                 <div className="grid grid-cols-2 gap-1">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
+                    className="h-10 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -432,7 +490,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-12 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors relative overflow-hidden"
+                    className="h-10 p-1 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -453,26 +511,28 @@ export function GameCard({ game, compact = false }: GameCardProps) {
             </div>
           )}
 
-          {/* Expanded Player Props */}
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="overflow-hidden"
-              >
-                <Separator className="my-4" />
-                <PlayerPropsSection
-                  categories={propCategories}
-                  game={game}
-                  isLoading={propsLoading}
-                  compact={compact}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Expanded Player Props - Desktop Only */}
+          {!compact && (
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <Separator className="my-3" />
+                  <PlayerPropsSection
+                    categories={propCategories}
+                    game={game}
+                    isLoading={propsLoading}
+                    compact={compact}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          )}
         </CardContent>
       </Card>
     </motion.div>
