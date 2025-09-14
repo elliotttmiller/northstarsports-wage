@@ -108,7 +108,7 @@ export const WorkspacePanel = () => {
       }}
       className={isMobile ? "mb-3" : "mb-4"}
     >
-      <GameCard game={game} compact={isMobile} />
+      <GameCard game={game} compact={false} />
     </motion.div>
   );
 

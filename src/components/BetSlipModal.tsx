@@ -119,11 +119,13 @@ export const BetSlipModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="max-w-md max-h-[85vh] p-0 flex flex-col gap-0 border-border/50 shadow-2xl [&>button]:hidden">
-        <DialogHeader className="p-4 pb-3 border-b border-border flex-shrink-0">
+      <DialogContent className="max-w-md max-h-[85vh] p-0 flex flex-col gap-0 border-border/50 shadow-2xl backdrop-blur-lg bg-card/95 [&>button]:hidden animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-10 duration-300">
+        <DialogHeader className="p-4 pb-3 border-b border-border/60 flex-shrink-0 bg-gradient-to-r from-card/80 to-card backdrop-blur-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Calculator size={20} className="text-accent" />
+              <div className="p-1.5 rounded-lg bg-accent/10">
+                <Calculator size={20} className="text-accent" />
+              </div>
               <div>
                 <DialogTitle className="text-lg font-semibold">Bet Slip</DialogTitle>
                 <DialogDescription className="text-sm text-muted-foreground">
@@ -136,23 +138,33 @@ export const BetSlipModal = () => {
             </div>
             <div className="flex items-center space-x-2">
               {betSlip.bets.length > 0 && (
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearBetSlip}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 px-2 transition-all"
+                  >
+                    Clear All
+                  </Button>
+                </motion.div>
+              )}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={clearBetSlip}
-                  className="text-destructive hover:text-destructive h-8 px-2"
+                  onClick={handleClose}
+                  className="h-8 w-8 p-0 hover:bg-accent/10"
                 >
-                  Clear All
+                  <X size={16} />
                 </Button>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClose}
-                className="h-8 w-8 p-0"
-              >
-                <X size={16} />
-              </Button>
+              </motion.div>
             </div>
           </div>
         </DialogHeader>
@@ -161,8 +173,8 @@ export const BetSlipModal = () => {
           <EmptyBetSlip />
         ) : (
           <>
-            <ScrollArea className="flex-1 max-h-[50vh]">
-              <div className="px-4 py-3">
+            <ScrollArea className="flex-1 max-h-[50vh] virtual-scrollbar">
+              <div className="px-4 py-3 scroll-smooth">
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -352,9 +364,9 @@ export const BetSlipModal = () => {
               </div>
             </ScrollArea>
 
-            {/* Bet Slip Summary - Fixed at bottom */}
+            {/* Bet Slip Summary - Fixed at bottom with enhanced styling */}
             <motion.div 
-              className="border-t border-border p-4 bg-background/95 backdrop-blur-sm flex-shrink-0"
+              className="border-t border-border/60 p-4 bg-gradient-to-t from-card/95 to-card/80 backdrop-blur-lg flex-shrink-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
@@ -369,12 +381,17 @@ export const BetSlipModal = () => {
                   <span className="font-semibold text-accent">${betSlip.totalPayout.toFixed(2)}</span>
                 </div>
                 {betSlip.totalPayout > betSlip.totalStake && (
-                  <div className="flex items-center justify-between text-xs">
+                  <motion.div 
+                    className="flex items-center justify-between text-xs"
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                  >
                     <span className="text-muted-foreground">Profit:</span>
                     <span className="font-medium text-emerald-400">
                       +${(betSlip.totalPayout - betSlip.totalStake).toFixed(2)}
                     </span>
-                  </div>
+                  </motion.div>
                 )}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
@@ -383,10 +400,19 @@ export const BetSlipModal = () => {
                   <Button 
                     onClick={handlePlaceBet}
                     disabled={isPlacing || betSlip.totalStake === 0}
-                    className="w-full"
+                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg hover:shadow-xl transition-all duration-200"
                     size="lg"
                   >
-                    {isPlacing ? 'Placing Bet...' : (
+                    {isPlacing ? (
+                      <div className="flex items-center gap-2">
+                        <motion.div
+                          className="w-4 h-4 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        />
+                        Placing Bet...
+                      </div>
+                    ) : (
                       <div className="flex items-center gap-2">
                         <TrendUp size={16} />
                         Place {betSlip.betType === 'single' ? 'Bets' : 'Parlay'}

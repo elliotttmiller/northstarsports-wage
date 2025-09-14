@@ -323,7 +323,7 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                     </div>
                   ) : playerProps.length > 0 ? (
-                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                    <div className="space-y-2 max-h-64 overflow-y-auto virtual-scrollbar scroll-smooth">
                       {playerProps.map((prop) => (
                         <div
                           key={`${prop.playerId}-${prop.statType}`}
