@@ -63,10 +63,222 @@ html, body {
   ring-offset: 2px;
 }
 
-/* Enhanced scrollbar styles */
-.scrollbar-thin {
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
+/* Enhanced fluid layout styles */
+.fluid-card {
+  will-change: transform, opacity, width, height;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.fluid-card-expanded {
+  z-index: 10;
+  box-shadow: 0 20px 48px oklch(from var(--accent) l c h / 0.15);
+}
+
+.fluid-card-mobile {
+  /* Mobile-specific optimizations */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fluid-card-inner {
+  /* Hardware acceleration for smooth animations */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.fluid-card-inner:hover {
+  /* Subtle elevation on hover */
+  box-shadow: 
+    0 4px 12px oklch(from var(--accent) l c h / 0.08),
+    0 2px 4px oklch(from var(--accent) l c h / 0.05);
+}
+
+/* Game card specific styles */
+.game-card-layout {
+  /* Container for the fluid game cards */
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.game-card-layout-compact .game-card-wrapper {
+  /* Compact mode adjustments */
+  min-height: 200px;
+}
+
+.game-card-wrapper {
+  min-height: 280px;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.game-card-wrapper-compact {
+  min-height: 180px;
+}
+
+.fluid-game-card-compact {
+  /* Compact card styling */
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, 
+    oklch(from var(--card) l c h / 0.98) 0%,
+    oklch(from var(--card) l c h / 0.95) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.fluid-game-card-desktop {
+  /* Desktop card styling */
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, 
+    oklch(from var(--card) l c h / 0.98) 0%,
+    oklch(from var(--card) l c h / 0.92) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Enhanced button styles for betting */
+.betting-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, 
+    oklch(from var(--muted) l c h / 0.6) 0%,
+    oklch(from var(--muted) l c h / 0.4) 100%);
+  border: 1px solid oklch(from var(--border) l c h / 0.8);
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.betting-button:hover {
+  background: linear-gradient(135deg, 
+    oklch(from var(--accent) l c h / 0.12) 0%,
+    oklch(from var(--accent) l c h / 0.08) 100%);
+  border-color: oklch(from var(--accent) l c h / 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px oklch(from var(--accent) l c h / 0.15);
+}
+
+.betting-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px oklch(from var(--accent) l c h / 0.2);
+}
+
+.betting-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    oklch(from var(--accent) l c h / 0.1) 50%,
+    transparent 100%);
+  transition: left 0.5s ease;
+}
+
+.betting-button:hover::before {
+  left: 100%;
+}
+
+/* Odds movement indicators */
+.odds-movement-up {
+  color: oklch(0.68 0.15 145);
+  animation: oddsUp 0.3s ease-out;
+}
+
+.odds-movement-down {
+  color: oklch(0.55 0.15 15);
+  animation: oddsDown 0.3s ease-out;
+}
+
+@keyframes oddsUp {
+  0% { transform: translateY(2px); opacity: 0.5; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes oddsDown {
+  0% { transform: translateY(-2px); opacity: 0.5; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Virtual scrolling optimizations */
+.virtual-game-list {
+  /* Optimize for smooth scrolling */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
+}
+
+.virtual-game-list .game-card-wrapper {
+  /* Minimize repaints during scroll */
+  contain: layout style paint;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 1023px) {
+  .fluid-card {
+    /* Reduce complexity on mobile */
+    will-change: transform, opacity;
+  }
+  
+  .fluid-card-inner {
+    /* Optimize touch interactions */
+    touch-action: manipulation;
+  }
+  
+  .betting-button {
+    /* Larger touch targets on mobile */
+    min-height: 48px;
+    font-size: 0.875rem;
+  }
+  
+  .game-card-wrapper {
+    /* Adjusted spacing for mobile */
+    min-height: 240px;
+  }
+  
+  .fluid-game-card-compact,
+  .fluid-game-card-desktop {
+    /* Reduced blur for performance */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+/* High-DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .fluid-card-inner {
+    /* Sharper rendering on retina displays */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .fluid-card,
+  .betting-button,
+  .game-card-wrapper {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  
+  .fluid-card-inner:hover {
+    transform: none;
+  }
+}
+
+/* Focus management for accessibility */
+.fluid-card:focus-within {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
+}
+
+.betting-button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  z-index: 1;
 }
 
 .scrollbar-thin::-webkit-scrollbar {
