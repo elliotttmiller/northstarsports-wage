@@ -21,6 +21,7 @@ export interface Game {
   startTime: Date;
   status: 'upcoming' | 'live' | 'finished';
   odds: GameOdds;
+  venue?: string;
 }
 
 export interface Team {
@@ -53,13 +54,19 @@ export interface OddsData {
 export interface Bet {
   id: string;
   gameId: string;
-  betType: 'spread' | 'moneyline' | 'total';
+  betType: 'spread' | 'moneyline' | 'total' | 'player_prop';
   selection: 'home' | 'away' | 'over' | 'under';
   odds: number;
   line?: number;
   stake: number;
   potentialPayout: number;
   game: Game;
+  playerProp?: {
+    playerId: string;
+    playerName: string;
+    statType: string;
+    category: string;
+  };
 }
 
 export interface BetSlip {

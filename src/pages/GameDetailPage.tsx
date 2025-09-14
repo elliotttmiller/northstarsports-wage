@@ -61,9 +61,9 @@ export function GameDetailPage() {
 
   const handlePlayerPropClick = (prop: PlayerProp, selection: 'over' | 'under') => {
     if (!game) return;
-    // Create a special bet for player props
+    // Add player prop bet using the new signature
     const odds = selection === 'over' ? prop.overOdds : prop.underOdds;
-    addBet(game, 'total', selection, odds, prop.line);
+    addBet(game, 'player_prop', selection, odds, prop.line, prop);
     toast.success(`${prop.playerName} ${prop.statType} ${selection} ${prop.line} added to slip!`, {
       duration: 2000,
     });

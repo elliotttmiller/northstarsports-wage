@@ -52,6 +52,13 @@ const generateGames = (leagueId: string, teamIds: string[]): Game[] => {
       
       const currentTime = new Date();
       
+      const venues = [
+        'MetLife Stadium', 'Lambeau Field', 'AT&T Stadium', 'Arrowhead Stadium',
+        'Soldier Field', 'Gillette Stadium', 'M&T Bank Stadium', 'Hard Rock Stadium',
+        'Crypto.com Arena', 'TD Garden', 'Chase Center', 'Ball Arena',
+        'Madison Square Garden', 'TD Garden', 'FLA Live Arena', 'Rogers Place'
+      ];
+      
       games.push({
         id: `${leagueId}-game-${i}`,
         leagueId,
@@ -59,6 +66,7 @@ const generateGames = (leagueId: string, teamIds: string[]): Game[] => {
         awayTeam: teams[awayTeamId],
         startTime: gameDate,
         status,
+        venue: venues[Math.floor(Math.random() * venues.length)],
         odds: {
           spread: {
             home: { odds: -110, line: Math.random() > 0.5 ? -3.5 : 3.5, lastUpdated: currentTime },
@@ -238,7 +246,8 @@ export const getGamesPaginated = async (
       ...baseGame,
       id: `${baseGame.id}-extended-${i}`,
       startTime: gameDate,
-      status: i < 10 ? 'finished' : i < 15 ? 'live' : 'upcoming'
+      status: i < 10 ? 'finished' : i < 15 ? 'live' : 'upcoming',
+      venue: baseGame.venue || 'TBD'
     });
   }
 
@@ -302,7 +311,8 @@ export const getGameById = async (gameId: string): Promise<Game | null> => {
             ...baseGame,
             id: gameId,
             startTime: gameDate,
-            status: index < 10 ? 'finished' : index < 15 ? 'live' : 'upcoming'
+            status: index < 10 ? 'finished' : index < 15 ? 'live' : 'upcoming',
+            venue: baseGame.venue || 'TBD'
           };
         }
       }

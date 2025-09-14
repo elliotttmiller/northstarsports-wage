@@ -1,18 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
-import { useBetSlip } from '@/context/BetSlipContext';
 import { Game } from '@/types';
 import { getGamesPaginated, PaginatedResponse } from '@/services/mockApi';
-import { formatOdds, formatTotalLine, formatDate } from '@/lib/formatters';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { GameCard } from '@/components/GameCard';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { CaretUp, CaretRight } from '@phosphor-icons/react';
-import { InfiniteScrollContainer, SmoothScrollContainer } from '@/components/VirtualScrolling';
+import { CaretUp } from '@phosphor-icons/react';
+import { InfiniteScrollContainer } from '@/components/VirtualScrolling';
 
 // Custom hook for mobile detection
 const useIsMobile = () => {
@@ -30,7 +28,6 @@ const useIsMobile = () => {
 
 export const WorkspacePanel = () => {
   const { navigation, setMobilePanel } = useNavigation();
-  const { addBet } = useBetSlip();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [games, setGames] = useState<Game[]>([]);
@@ -58,7 +55,7 @@ export const WorkspacePanel = () => {
     }
 
     try {
-      const response = await getGamesPaginated(navigation.selectedLeague, page, 5);
+      const response = await getGamesPaginated(navigation.selectedLeague, page, 8);
       
       if (reset) {
         setGames(response.data);
@@ -93,19 +90,6 @@ export const WorkspacePanel = () => {
     }
   }, [navigation.selectedLeague, loadGames]);
 
-  const handleBetClick = (
-    game: Game, 
-    betType: 'spread' | 'moneyline' | 'total',
-    selection: 'home' | 'away' | 'over' | 'under',
-    odds: number,
-    line?: number
-  ) => {
-    addBet(game, betType, selection, odds, line);
-    toast.success('Bet added to slip!', {
-      duration: 2000,
-    });
-  };
-
   const handleScrollToTop = () => {
     if (scrollContainerRef) {
       scrollToTop(scrollContainerRef);
@@ -114,223 +98,17 @@ export const WorkspacePanel = () => {
 
   const renderGameCard = (game: Game, index: number) => (
     <motion.div
+      key={game.id}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ 
         duration: 0.3, 
-        delay: Math.min(index * 0.02, 0.2),
+        delay: Math.min(index * 0.05, 0.3),
         ease: [0.4, 0.0, 0.2, 1]
       }}
-      whileHover={{ y: -2 }}
+      className="mb-4"
     >
-      <Card className="overflow-hidden hover:shadow-lg hover:border-accent/20 transition-all duration-300">
-        <CardContent className="p-0">
-          {/* Game Header */}
-          <div className="p-4 bg-card border-b border-border">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="text-center">
-                  <div className="text-sm font-medium text-card-foreground">
-                    {game.awayTeam.shortName}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {game.awayTeam.record}
-                  </div>
-                </div>
-                <div className="text-xs text-muted-foreground">@</div>
-                <div className="text-center">
-                  <div className="text-sm font-medium text-card-foreground">
-                    {game.homeTeam.shortName}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {game.homeTeam.record}
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-sm font-medium text-card-foreground">
-                  {formatDate(game.startTime)}
-                </div>
-                <div className={`text-xs px-2 py-1 rounded-full ${
-                  game.status === 'live' ? 'bg-red-500 text-white animate-pulse' :
-                  game.status === 'finished' ? 'bg-gray-500 text-white' :
-                  'bg-accent text-accent-foreground'
-                }`}>
-                  {game.status === 'live' ? 'LIVE' :
-                   game.status === 'finished' ? 'FINAL' : 'UPCOMING'}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Betting Options */}
-          <div className="p-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              {/* Spread */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium text-card-foreground">Spread</h4>
-                <div className="space-y-1">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBetClick(
-                          game, 'spread', 'away', 
-                          game.odds.spread.away.odds, 
-                          game.odds.spread.away.line
-                        );
-                      }}
-                    >
-                      <span>{game.awayTeam.shortName} {game.odds.spread.away.line}</span>
-                      <span>{formatOdds(game.odds.spread.away.odds)}</span>
-                    </Button>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBetClick(
-                          game, 'spread', 'home', 
-                          game.odds.spread.home.odds, 
-                          game.odds.spread.home.line
-                        );
-                      }}
-                    >
-                      <span>{game.homeTeam.shortName} {game.odds.spread.home.line}</span>
-                      <span>{formatOdds(game.odds.spread.home.odds)}</span>
-                    </Button>
-                  </motion.div>
-                </div>
-              </div>
-
-              {/* Moneyline */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium text-card-foreground">Moneyline</h4>
-                <div className="space-y-1">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBetClick(
-                          game, 'moneyline', 'away', 
-                          game.odds.moneyline.away.odds
-                        );
-                      }}
-                    >
-                      <span>{game.awayTeam.shortName}</span>
-                      <span>{formatOdds(game.odds.moneyline.away.odds)}</span>
-                    </Button>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBetClick(
-                          game, 'moneyline', 'home', 
-                          game.odds.moneyline.home.odds
-                        );
-                      }}
-                    >
-                      <span>{game.homeTeam.shortName}</span>
-                      <span>{formatOdds(game.odds.moneyline.home.odds)}</span>
-                    </Button>
-                  </motion.div>
-                </div>
-              </div>
-
-              {/* Total */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium text-card-foreground">Total</h4>
-                <div className="space-y-1">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBetClick(
-                          game, 'total', 'over', 
-                          game.odds.total.over?.odds || -110, 
-                          game.odds.total.over?.line
-                        );
-                      }}
-                    >
-                      <span>Over {formatTotalLine(game.odds.total.over?.line || 45.5)}</span>
-                      <span>{formatOdds(game.odds.total.over?.odds || -110)}</span>
-                    </Button>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-between hover:bg-accent hover:text-accent-foreground transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBetClick(
-                          game, 'total', 'under', 
-                          game.odds.total.under?.odds || -110, 
-                          game.odds.total.under?.line
-                        );
-                      }}
-                    >
-                      <span>Under {formatTotalLine(game.odds.total.under?.line || 45.5)}</span>
-                      <span>{formatOdds(game.odds.total.under?.odds || -110)}</span>
-                    </Button>
-                  </motion.div>
-                </div>
-              </div>
-            </div>
-
-            {/* View All Bets Button */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="border-t border-border pt-4"
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-center hover:bg-secondary transition-colors"
-                onClick={() => navigate(`/games/${game.id}`)}
-              >
-                <span className="mr-2">View All Bets & Player Props</span>
-                <CaretRight className="w-4 h-4" />
-              </Button>
-            </motion.div>
-          </div>
-        </CardContent>
-      </Card>
+      <GameCard game={game} compact={isMobile} />
     </motion.div>
   );
 

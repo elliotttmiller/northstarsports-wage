@@ -6,6 +6,7 @@ import { GameDetailPage } from '@/pages/GameDetailPage'
 import { MyBetsPage } from '@/pages/MyBetsPage'
 import { AccountPage } from '@/pages/AccountPage'
 import { OtherPage } from '@/pages/OtherPage'
+import { BuilderPage } from '@/pages/BuilderPage'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="games" element={<GamePage />} />
         <Route path="games/:gameId" element={<GameDetailPage />} />
         <Route path="my-bets" element={<MyBetsPage />} />
+        <Route path="builder" element={<BuilderPage />} />
         <Route path="account" element={<AccountPage />} />
         <Route path="other" element={<OtherPage />} />
       </Route>

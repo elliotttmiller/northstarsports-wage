@@ -42,12 +42,9 @@ export const BottomNav = () => {
   };
 
   const handleBuilderClick = () => {
-    // Builder will open the unified bet builder modal/panel
-    if (navigation.mobilePanel === 'builder') {
-      setMobilePanel(null);
-    } else {
-      setMobilePanel('builder');
-    }
+    // Navigate to builder page
+    setMobilePanel(null);
+    navigate('/builder');
   };
 
   const handleOtherClick = () => {
@@ -76,14 +73,14 @@ export const BottomNav = () => {
       <motion.button
         onClick={handleBuilderClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          navigation.mobilePanel === 'builder'
+          location.pathname === '/builder'
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
         }`}
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <Wrench size={20} weight={navigation.mobilePanel === 'builder' ? 'fill' : 'regular'} />
+        <Wrench size={20} weight={location.pathname === '/builder' ? 'fill' : 'regular'} />
         <span className="text-xs font-medium">Builder</span>
       </motion.button>
 

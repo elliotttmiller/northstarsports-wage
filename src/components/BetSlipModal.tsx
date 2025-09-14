@@ -57,7 +57,7 @@ export const BetSlipModal = () => {
   };
 
   const formatBetDescription = (bet: any) => {
-    const { game, betType, selection, line } = bet;
+    const { game, betType, selection, line, playerProp } = bet;
     
     switch (betType) {
       case 'spread':
@@ -68,6 +68,11 @@ export const BetSlipModal = () => {
         return `${mlTeam.shortName} Win`;
       case 'total':
         return `${selection === 'over' ? 'Over' : 'Under'} ${line}`;
+      case 'player_prop':
+        if (playerProp) {
+          return `${playerProp.playerName} ${playerProp.statType} ${selection === 'over' ? 'Over' : 'Under'} ${line}`;
+        }
+        return 'Player Prop';
       default:
         return 'Unknown bet';
     }

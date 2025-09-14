@@ -1,11 +1,11 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useKV } from '@github/spark/hooks';
 import { Bet, BetSlip, Game } from '@/types';
-import { calculatePayout } from '@/services/mockApi';
+import { calculatePayout, PlayerProp } from '@/services/mockApi';
 
 interface BetSlipContextType {
   betSlip: BetSlip;
-  addBet: (game: Game, betType: 'spread' | 'moneyline' | 'total', selection: 'home' | 'away' | 'over' | 'under', odds: number, line?: number) => void;
+  addBet: (game: Game, betType: 'spread' | 'moneyline' | 'total' | 'player_prop', selection: 'home' | 'away' | 'over' | 'under', odds: number, line?: number, playerProp?: PlayerProp) => void;
   removeBet: (betId: string) => void;
   updateStake: (betId: string, stake: number) => void;
   setBetType: (betType: 'single' | 'parlay') => void;
@@ -66,20 +66,31 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
 
   const addBet = (
     game: Game, 
-    betType: 'spread' | 'moneyline' | 'total', 
+    betType: 'spread' | 'moneyline' | 'total' | 'player_prop', 
     selection: 'home' | 'away' | 'over' | 'under',
     odds: number,
-    line?: number
+    line?: number,
+    playerProp?: PlayerProp
   ) => {
-    const betId = `${game.id}-${betType}-${selection}`;
+    const betId = playerProp 
+      ? `${game.id}-${betType}-${playerProp.id}-${selection}`
+      : `${game.id}-${betType}-${selection}`;
     
     setBetSlip(currentBetSlip => {
       if (!currentBetSlip) return defaultBetSlip;
       
-      // Remove existing bet on same game/type if it exists
-      const filteredBets = currentBetSlip.bets.filter(
-        bet => !(bet.gameId === game.id && bet.betType === betType)
-      );
+      // Remove existing bet on same game/type if it exists (except for player props which can be multiple)
+      let filteredBets = currentBetSlip.bets;
+      if (betType !== 'player_prop') {
+        filteredBets = currentBetSlip.bets.filter(
+          bet => !(bet.gameId === game.id && bet.betType === betType)
+        );
+      } else {
+        // For player props, remove only if it's the same prop
+        filteredBets = currentBetSlip.bets.filter(
+          bet => bet.id !== betId
+        );
+      }
       
       const newBet: Bet = {
         id: betId,
@@ -90,7 +101,13 @@ export const BetSlipProvider: React.FC<BetSlipProviderProps> = ({ children }) =>
         line,
         stake: 10, // Default stake
         potentialPayout: 10 + calculatePayout(10, odds),
-        game
+        game,
+        playerProp: playerProp ? {
+          playerId: playerProp.playerId,
+          playerName: playerProp.playerName,
+          statType: playerProp.statType,
+          category: playerProp.category
+        } : undefined
       };
 
       const updatedBets = [...filteredBets, newBet];

@@ -116,3 +116,16 @@ export const formatOdds = (odds: number): string => {
 export const formatSpreadLine = (line: number): string => {
   return line > 0 ? `+${line}` : `${line}`;
 };
+
+/**
+ * Format time only for compact displays
+ */
+export const formatTime = (
+  date: Date | string | number | null | undefined
+): string => {
+  return formatDate(date, {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+};
