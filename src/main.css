@@ -1,3 +1,6 @@
+@import 'tailwindcss';
+@import "tw-animate-css";
+
 /* Additional styles for enhanced UX - imported by the Spark runtime */
 
 /* Hide all scrollbars for seamless UI */
