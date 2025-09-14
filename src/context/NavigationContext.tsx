@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 
-type MobilePanel = 'navigation' | 'workspace' | 'betslip' | 'builder' | null
+type MobilePanel = 'navigation' | 'workspace' | 'betslip' | null
 
 interface NavigationContextType {
   navigation: {

@@ -9,7 +9,6 @@ export { BetSlipModal } from './BetSlipModal'
 export { SideNavPanel } from './panels/SideNavPanel'
 export { WorkspacePanel } from './panels/WorkspacePanel'
 export { ActionHubPanel } from './panels/ActionHubPanel'
-export { BuilderPanel } from './panels/BuilderPanel'
 
 // Game Components
 export { GameCard } from './GameCard'

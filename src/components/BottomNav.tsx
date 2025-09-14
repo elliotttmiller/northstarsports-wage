@@ -1,13 +1,15 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
+import { useBetSlip } from '@/context/BetSlipContext';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { GameController, Wrench, House, Receipt, DotsThree } from '@phosphor-icons/react';
+import { GameController, House, Receipt, DotsThree, TrendUp } from '@phosphor-icons/react';
 
 export function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { navigation, setMobilePanel } = useNavigation();
+  const { betSlip } = useBetSlip();
   const isMobile = useIsMobile();
 
   const handleSportsClick = () => {
@@ -25,9 +27,9 @@ export function BottomNav() {
     }
   };
 
-  const handleBuilderClick = () => {
+  const handleBetsClick = () => {
     setMobilePanel(null);
-    navigate('/builder');
+    navigate('/my-bets');
   };
 
   const handleOtherClick = () => {
@@ -52,19 +54,19 @@ export function BottomNav() {
         <span className="text-xs font-medium">Sports</span>
       </motion.button>
 
-      {/* Builder - Left Center */}
+      {/* My Bets - Left Center */}
       <motion.button
-        onClick={handleBuilderClick}
-        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          location.pathname === '/builder'
+        onClick={handleBetsClick}
+        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] relative ${
+          location.pathname === '/my-bets'
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
         }`}
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <Wrench size={20} weight={location.pathname === '/builder' ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Builder</span>
+        <Receipt size={20} weight={location.pathname === '/my-bets' ? 'fill' : 'regular'} />
+        <span className="text-xs font-medium">Bets</span>
       </motion.button>
 
       {/* Home - Center (Elevated) */}
@@ -86,24 +88,20 @@ export function BottomNav() {
         </Link>
       </motion.div>
 
-      {/* My Bets - Right Center */}
-      <motion.div
+      {/* Live Odds - Right Center */}
+      <motion.button
+        onClick={() => navigate('/games')}
+        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
+          location.pathname === '/games'
+            ? 'bg-accent text-accent-foreground scale-105' 
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <Link
-          to="/my-bets"
-          className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-            location.pathname === '/my-bets' 
-              ? 'bg-accent text-accent-foreground scale-105' 
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-          onClick={() => setMobilePanel(null)}
-        >
-          <Receipt size={20} weight={location.pathname === '/my-bets' ? 'fill' : 'regular'} />
-          <span className="text-xs font-medium">Bets</span>
-        </Link>
-      </motion.div>
+        <TrendUp size={20} weight={location.pathname === '/games' ? 'fill' : 'regular'} />
+        <span className="text-xs font-medium">Live</span>
+      </motion.button>
 
       {/* Other - Far Right */}
       <motion.button

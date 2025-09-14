@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { RootLayout } from '@/components/layouts/RootLayout'
 import { HomePage } from '@/pages/HomePage'
 import { GamePage } from '@/pages/GamePage'
@@ -6,7 +6,6 @@ import { GameDetailPage } from '@/pages/GameDetailPage'
 import { MyBetsPage } from '@/pages/MyBetsPage'
 import { AccountPage } from '@/pages/AccountPage'
 import { OtherPage } from '@/pages/OtherPage'
-import { BuilderPage } from '@/pages/BuilderPage'
 
 function App() {
   return (
@@ -16,9 +15,10 @@ function App() {
         <Route path="games" element={<GamePage />} />
         <Route path="games/:gameId" element={<GameDetailPage />} />
         <Route path="my-bets" element={<MyBetsPage />} />
-        <Route path="builder" element={<BuilderPage />} />
         <Route path="account" element={<AccountPage />} />
         <Route path="other" element={<OtherPage />} />
+        {/* Redirect old builder route to games */}
+        <Route path="builder" element={<Navigate to="/games" replace />} />
       </Route>
     </Routes>
   )
