@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { PropCategory, PlayerProp } from '@/services/mockApi'
 import { useBetSlip } from '@/context/BetSlipContext'
+import type { PlayerProp, PropCategory } from '@/services/mockApi'
 
 /**
  * Hook to manage player prop interactions and state
@@ -8,12 +8,12 @@ import { useBetSlip } from '@/context/BetSlipContext'
 export function usePlayerProps(categories: PropCategory[]) {
   const { betSlip } = useBetSlip()
 
-  // Memoized statistics
+  // Calculate prop statistics
   const stats = useMemo(() => {
     const totalProps = categories.reduce((sum, cat) => sum + cat.props.length, 0)
     const popularCategory = categories.find(cat => cat.key === 'popular')
     const mostPropsCategory = categories.reduce((max, cat) => 
-      cat.props.length > max.props.length ? cat : max, categories[0] || { props: [] }
+      cat.props.length > (max?.props.length || 0) ? cat : max
     )
 
     return {
