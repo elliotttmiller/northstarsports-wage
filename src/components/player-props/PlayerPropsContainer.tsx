@@ -249,7 +249,7 @@ export function PlayerPropsContainer({
 
         {/* Categories */}
         <div className={cn(
-          'p-6 space-y-4 max-h-[70vh] overflow-y-auto scrollbar-hide',
+          'p-6 space-y-4 max-h-[70vh] overflow-y-auto seamless-scroll',
           compact && 'p-4 max-h-80'
         )}>
           {processedCategories.map((category, index) => (
