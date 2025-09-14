@@ -9,6 +9,7 @@ interface NavigationContextType {
     selectedLeague: string | null
     sideNavOpen: boolean
     actionHubOpen: boolean
+    isBetSlipOpen: boolean
   }
   setMobilePanel: (panel: MobilePanel) => void
   selectSport: (sport: string) => void
@@ -17,6 +18,7 @@ interface NavigationContextType {
   toggleActionHub: () => void
   setSideNavOpen: (open: boolean) => void
   setActionHubOpen: (open: boolean) => void
+  setIsBetSlipOpen: (open: boolean) => void
 }
 
 export const NavigationContext = createContext<NavigationContextType | undefined>(undefined)
@@ -27,6 +29,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [selectedLeague, setSelectedLeague] = useState<string | null>('nfl')
   const [sideNavOpen, setSideNavOpen] = useState(true)
   const [actionHubOpen, setActionHubOpen] = useState(true)
+  const [isBetSlipOpen, setIsBetSlipOpen] = useState(false)
 
   const toggleSideNav = () => setSideNavOpen(!sideNavOpen)
   const toggleActionHub = () => setActionHubOpen(!actionHubOpen)
@@ -37,7 +40,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
       selectedSport,
       selectedLeague,
       sideNavOpen,
-      actionHubOpen
+      actionHubOpen,
+      isBetSlipOpen
     },
     setMobilePanel,
     selectSport: setSelectedSport,
@@ -45,7 +49,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     toggleSideNav,
     toggleActionHub,
     setSideNavOpen,
-    setActionHubOpen
+    setActionHubOpen,
+    setIsBetSlipOpen
   }
 
   return (

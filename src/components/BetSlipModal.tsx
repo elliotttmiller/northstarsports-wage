@@ -16,18 +16,18 @@ import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 
 export const BetSlipModal = () => {
   const { betSlip, removeBet, updateStake, setBetType, clearBetSlip } = useBetSlip();
-  const { navigation, setMobilePanel } = useNavigation();
+  const { navigation, setIsBetSlipOpen } = useNavigation();
   const [isPlacing, setIsPlacing] = useState(false);
   const [placementStage, setPlacementStage] = useState<'idle' | 'validating' | 'processing' | 'success'>('idle');
 
-  const isOpen = navigation.mobilePanel === 'betslip';
+  const isOpen = navigation.isBetSlipOpen;
 
   // Handle close with smooth animation reset
   const handleClose = useCallback(() => {
     if (isPlacing) return; // Prevent closing during bet placement
     setPlacementStage('idle');
-    setMobilePanel(null);
-  }, [setMobilePanel, isPlacing]);
+    setIsBetSlipOpen(false);
+  }, [setIsBetSlipOpen, isPlacing]);
 
   // Handle stake updates with validation
   const handleStakeChange = useCallback((betId: string, value: string) => {

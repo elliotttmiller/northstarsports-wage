@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { motion, useMotionValue, useAnimation, PanInfo } from 'framer-motion'
+import { motion, useMotionValue, useAnimation } from 'framer-motion'
 import { useNavigation } from '@/context/NavigationContext'
 import { useBetSlip } from '@/context/BetSlipContext'
 import { Receipt } from '@phosphor-icons/react'
@@ -11,15 +11,19 @@ interface Position {
 }
 
 export function FloatingBetSlipButton() {
-  const { setMobilePanel } = useNavigation()
+  const { setIsBetSlipOpen } = useNavigation()
   const { betSlip } = useBetSlip()
-  const [savedPosition, setSavedPosition] = useKV<Position>("floating-button-position", { x: 0, y: 0 })
-  const [isInitialized, setIsInitialized] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
+  const itemCount = betSlip.bets.length
+
+  // Persistent position
+  const [savedPosition, setSavedPosition] = useKV<Position>('bet-slip-button-position', { x: 0, y: 0 })
   
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const controls = useAnimation()
+  
+  const [isInitialized, setIsInitialized] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   
   const hasMoved = useRef(false)
   const initialPosition = useRef({ x: 0, y: 0 })
@@ -37,16 +41,17 @@ export function FloatingBetSlipButton() {
     }
   }, [])
 
-  // Initialize position on mount
+  // Initialize position
   useEffect(() => {
-    if (!savedPosition) return
+    if (typeof window === 'undefined') return
+
+    const defaultPos = getDefaultPosition()
+    const initialPos = savedPosition && savedPosition.x !== 0 && savedPosition.y !== 0 
+      ? savedPosition 
+      : defaultPos
     
-    const initPosition = savedPosition.x === 0 && savedPosition.y === 0 
-      ? getDefaultPosition() 
-      : savedPosition
-    
-    x.set(initPosition.x)
-    y.set(initPosition.y)
+    x.set(initialPos.x)
+    y.set(initialPos.y)
     setIsInitialized(true)
   }, [savedPosition, getDefaultPosition, x, y])
 
@@ -55,9 +60,9 @@ export function FloatingBetSlipButton() {
     const handleResize = () => {
       const currentX = x.get()
       const currentY = y.get()
+      
       const buttonSize = 48
       const margin = 16
-
       const maxX = window.innerWidth - buttonSize - margin
       const maxY = window.innerHeight - buttonSize - margin - 80
       
@@ -67,66 +72,62 @@ export function FloatingBetSlipButton() {
       if (newX !== currentX || newY !== currentY) {
         x.set(newX)
         y.set(newY)
+        setSavedPosition({ x: newX, y: newY })
       }
     }
-
+    
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [x, y])
+  }, [x, y, setSavedPosition])
 
-  const handleDragStart = useCallback(() => {
+  const handleDragStart = () => {
     setIsDragging(true)
     hasMoved.current = false
-    initialPosition.current = { x: x.get(), y: y.get() }
     dragStartTime.current = Date.now()
-  }, [x, y])
+    initialPosition.current = { x: x.get(), y: y.get() }
+  }
 
-  const handleDrag = useCallback((_: any, info: PanInfo) => {
-    const dragDistance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2)
+  const handleDrag = () => {
+    const currentPos = { x: x.get(), y: y.get() }
+    const dragDistance = Math.sqrt(
+      Math.pow(currentPos.x - initialPosition.current.x, 2) + 
+      Math.pow(currentPos.y - initialPosition.current.y, 2)
+    )
     
     if (dragDistance > 5) {
       hasMoved.current = true
     }
-  }, [])
+  }
 
-  const handleDragEnd = useCallback(() => {
+  const handleDragEnd = () => {
     const dragDuration = Date.now() - dragStartTime.current
-    const wasIntentionalDrag = hasMoved.current && dragDuration > 100
+    const currentX = x.get()
+    const currentY = y.get()
     
-    if (wasIntentionalDrag) {
-      const currentX = x.get()
-      const currentY = y.get()
-      setSavedPosition({ x: currentX, y: currentY })
-    } else {
+    if (!hasMoved.current && dragDuration < 300) {
       // Handle tap - open bet slip modal
-      setMobilePanel('betslip')
+      setIsBetSlipOpen(true)
+    } else {
+      // Save position after drag
+      setSavedPosition({ x: currentX, y: currentY })
     }
-
+    
     // Reset all states
-    setIsDragging(false)
     hasMoved.current = false
-  }, [x, y, setSavedPosition, setMobilePanel])
+    setIsDragging(false)
+  }
 
   if (!isInitialized) return null
 
-  const itemCount = betSlip.bets.length
-
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
+    <div className="fixed inset-0 pointer-events-none z-40">
       <motion.div
-        style={{ 
-          x, 
-          y, 
-          position: 'absolute',
-          pointerEvents: 'auto'
-        }}
+        style={{ x, y }}
         drag
-        initial={false}
         dragMomentum={false}
-        dragElastic={0.1}
         dragConstraints={{
-          top: 16,
           left: 16,
+          top: 16,
           right: typeof window !== 'undefined' ? window.innerWidth - 64 : 300,
           bottom: typeof window !== 'undefined' ? window.innerHeight - 144 : 500
         }}
@@ -135,7 +136,7 @@ export function FloatingBetSlipButton() {
         onDragEnd={handleDragEnd}
         whileHover={!isDragging ? { scale: 1.05 } : {}}
         whileTap={!isDragging ? { scale: 0.95 } : {}}
-        className="relative cursor-pointer"
+        className="relative cursor-pointer pointer-events-auto"
       >
         <div className="
           w-12 h-12 rounded-full 
