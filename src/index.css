@@ -1,0 +1,140 @@
+@import 'tailwindcss';
+@import "tw-animate-css";
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+html, body {
+  background-color: oklch(0.08 0.01 240);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Hide all scrollbars */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.seamless-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.seamless-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth panel transitions */
+.panel-transition {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.sidebar-transition {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, width;
+}
+
+/* Mobile bottom navigation spacing */
+@media (max-width: 1023px) {
+  .layout-container {
+    padding-bottom: 5rem; /* 80px - space for bottom nav */
+  }
+}
+
+/* Focus states */
+.focus-ring:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--ring);
+  ring-offset: 2px;
+}
+
+:root {
+  /* Base colors - Refined dark theme */
+  --background: oklch(0.08 0.01 240); /* Deep slate background */
+  --foreground: oklch(0.92 0.005 240); /* Light text */
+  
+  --card: oklch(0.12 0.015 240); /* Card background */
+  --card-foreground: oklch(0.88 0.005 240); /* Card text */
+  
+  --popover: oklch(0.12 0.015 240); /* Popover background */
+  --popover-foreground: oklch(0.88 0.005 240); /* Popover text */
+  
+  /* Action colors - Subtle and professional */
+  --primary: oklch(0.45 0.08 240); /* Refined blue primary */
+  --primary-foreground: oklch(0.98 0.005 240); /* White on primary */
+  
+  --secondary: oklch(0.16 0.02 240); /* Secondary background */
+  --secondary-foreground: oklch(0.82 0.01 240); /* Secondary text */
+  
+  --accent: oklch(0.48 0.12 180); /* Subtle green accent */
+  --accent-foreground: oklch(0.98 0.005 180); /* White on accent */
+  
+  --destructive: oklch(0.55 0.15 15); /* Refined red */
+  --destructive-foreground: oklch(0.98 0.005 15); /* White on destructive */
+  
+  /* Supporting colors */
+  --muted: oklch(0.14 0.015 240); /* Muted background */
+  --muted-foreground: oklch(0.65 0.015 240); /* Muted text */
+  
+  --border: oklch(0.18 0.02 240); /* Border color */
+  --input: oklch(0.18 0.02 240); /* Input border */
+  --ring: oklch(0.45 0.08 240); /* Focus ring */
+  
+  /* Custom betting colors */
+  --color-win: oklch(0.48 0.12 150); /* Green for wins */
+  --color-loss: oklch(0.55 0.15 15); /* Red for losses */
+  --color-info: oklch(0.45 0.08 240); /* Blue for info */
+  
+  /* Border radius */
+  --radius: 0.5rem;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  /* Custom colors */
+  --color-win: var(--color-win);
+  --color-loss: var(--color-loss);
+  --color-info: var(--color-info);
+  
+  /* Radius system */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 2);
+  --radius-2xl: calc(var(--radius) * 3);
+  --radius-full: 9999px;
+}
