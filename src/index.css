@@ -1,96 +1,25 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
 
-@layer base {
-  :root {
-    /* Core color system - Dark theme with blue accents */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
 
-    --card: 217.2 32.6% 15.5%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 217.2 32.6% 15.5%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 91.2% 59.8%;
-    --accent-foreground: 222.2 84% 4.9%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 217.2 91.2% 59.8%;
-
-    /* Custom betting colors */
-    --color-win: oklch(0.45 0.12 140);
-    --color-loss: oklch(0.58 0.14 20);
-    --color-info: oklch(0.55 0.15 240);
-
-    /* Border radius system */
-    --radius: 0.5rem;
+  }
+  htm
+    @apply bg-background 
   }
 
-  * {
-    border-color: hsl(var(--border));
-  }
-  
-  html,
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    overflow: hidden;
-  }
+  overf
 
-  #root {
-    height: 100vh;
-    overflow: hidden;
-  }
+  height: 100vh;
+}
+/* 
 }
 
-/*
- * Map the CSS variables to Tailwind's theme system
- * This enables using classes like bg-primary, text-foreground, etc.
- */
-@theme {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
+html, body {
+  overflow: hidden;
+}
 
-  /* Map radius variables to create a consistent rounding system */
-  --radius-sm: calc(var(--radius) * 0.5);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) * 1.5);
-  --radius-xl: calc(var(--radius) * 2);
-  --radius-2xl: calc(var(--radius) * 3);
-  --radius-full: 9999px;
+#root {
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Seamless scrolling - completely hidden scrollbars */
@@ -101,52 +30,150 @@
 }
 
 .seamless-scroll::-webkit-scrollbar {
-  display: none;
+.virtual-scrollb
   width: 0;
   height: 0;
-}
+
 
 /* Virtual scrollbar - subtle when needed */
-.virtual-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--muted-foreground)) transparent;
-  scroll-behavior: smooth;
+/* Focus states */
+  outline: 2px solid var
 }
+:root {
+ 
 
-.virtual-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
+  --color-fg-secondary: oklch(0.70 0.00
+  /* Neutral 
+ 
 
-.virtual-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
+  
+  --color-accent-9: oklch(
+ 
 
-.virtual-scrollbar::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground));
-  border-radius: 2px;
-}
+  
+  --background: var(--color-bg);
+  
+ 
 
-.virtual-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.8);
-}
+  
+  --primary: var(--color-accent-9);
+ 
 
-/* Smooth animations and transitions */
-.smooth-transition {
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
-}
+  --accent: var(--color-accent-9);
+  
+  --destructive-foreground: oklch(0.98 0.005 15);
+  /* Supporting colors */
+ 
 
-.card-hover {
-  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
+  --ring: var
+  /* Custom betting colors */
+ 
 
-.card-hover:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px hsl(var(--foreground) / 0.1);
+  --radius-md: 0.5r
 }
+@theme {
+ 
 
 /* Focus states */
 .focus-ring:focus-visible {
-  outline: 2px solid hsl(var(--ring));
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
+
+:root {
+  /* Core color system - Dark theme with blue accents */
+  --color-bg: oklch(0.06 0.007 240);
+  --color-bg-inset: oklch(0.08 0.007 240);
+  --color-bg-overlay: oklch(0.10 0.007 240);
+  --color-fg: oklch(0.98 0.003 240);
+  --color-fg-secondary: oklch(0.70 0.007 240);
+  
+  /* Neutral grays */
+  --color-neutral-4: oklch(0.25 0.005 240);
+  --color-neutral-7: oklch(0.40 0.007 240);
+  --color-neutral-8: oklch(0.50 0.007 240);
+  --color-neutral-11: oklch(0.14 0.007 240);
+  --color-neutral-12: oklch(0.12 0.007 240);
+  
+  /* Blue accent system */
+  --color-accent-9: oklch(0.55 0.15 240);
+  --color-accent-contrast: oklch(0.98 0.003 240);
+  --color-accent-secondary-9: oklch(0.45 0.12 140);
+  
+  /* Focus and interaction */
+  --color-focus-ring: oklch(0.55 0.15 240);
+  
+  /* Base colors - using defined variables */
+  --background: var(--color-bg);
+  --foreground: var(--color-fg);
+  
+  --card: var(--color-bg-inset);
+  --card-foreground: var(--color-fg);
+  
+  --popover: var(--color-bg-inset);
+  --popover-foreground: var(--color-fg);
+  
+  /* Action colors - Blue theme */
+  --primary: var(--color-accent-9);
+  --primary-foreground: var(--color-accent-contrast);
+  
+  --secondary: var(--color-neutral-11);
+  --secondary-foreground: var(--color-neutral-4);
+  
+  --accent: var(--color-accent-9);
+  --accent-foreground: var(--color-accent-contrast);
+  
+  --destructive: oklch(0.58 0.15 15);
+  --destructive-foreground: oklch(0.98 0.005 15);
+  
+  /* Supporting colors */
+  --muted: var(--color-bg-overlay);
+  --muted-foreground: var(--color-fg-secondary);
+  
+  --border: var(--color-neutral-11);
+  --input: var(--color-neutral-11);
+  --ring: var(--color-focus-ring);
+  
+  /* Custom betting colors */
+  --color-win: var(--color-accent-secondary-9);
+  --color-loss: oklch(0.58 0.14 20);
+  --color-info: var(--color-accent-9);
+  
+  /* Border radius system */
+  --radius-md: 0.5rem;
+  --radius: var(--radius-md);
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
