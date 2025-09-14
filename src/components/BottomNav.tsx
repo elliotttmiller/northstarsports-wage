@@ -2,8 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { House, Receipt, GameController, DotsThree, Wrench } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
-import { useNavigation } from '@/context/NavigationContext';
-import { useBetSlip } from '@/context/BetSlipContext';
+
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 export const BottomNav = () => {
