@@ -59,57 +59,57 @@ export const SideNavPanel = () => {
     return (
       <AccordionItem key={sport.id} value={sport.id} className="border-border">
         <AccordionTrigger
-          className={`text-left hover:no-underline px-2 transition-all duration-200 ${
+          className={`text-left hover:no-underline px-2 py-2 transition-all duration-200 ${
             isExpanded ? 'bg-muted/50' : 'hover:bg-muted/30'
           }`}
         >
           <motion.div 
-            className="flex items-center space-x-3 w-full"
-            whileHover={{ x: 2 }}
+            className="flex items-center space-x-2 w-full"
+            whileHover={{ x: 1 }}
           >
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors duration-200 ${
+            <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-colors duration-200 ${
               isExpanded ? 'bg-primary/20' : 'bg-primary/10'
             }`}>
-              <div className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+              <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
                 isExpanded ? 'bg-primary' : 'bg-primary/70'
               }`} />
             </div>
-            <span className={`font-medium transition-colors duration-200 ${
+            <span className={`font-medium text-sm transition-colors duration-200 ${
               isExpanded ? 'text-card-foreground' : 'text-card-foreground/80'
             }`}>
               {sport.name}
             </span>
             <div className="flex-1" />
             <span className="text-xs text-muted-foreground">
-              {sport.leagues.length} leagues
+              {sport.leagues.length}
             </span>
           </motion.div>
         </AccordionTrigger>
-        <AccordionContent className="pb-2">
-          <div className="ml-8 space-y-1">
+        <AccordionContent className="pb-1">
+          <div className="ml-6 space-y-0.5">
             {sport.leagues.map((league, leagueIndex) => (
               <motion.button
                 key={league.id}
                 onClick={() => handleLeagueClick(league.id)}
-                className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-300 ${
+                className={`w-full text-left px-2 py-1.5 rounded-md text-xs transition-all duration-300 ${
                   navigation.selectedLeague === league.id
-                    ? 'bg-accent text-accent-foreground shadow-sm scale-105'
-                    : 'text-muted-foreground hover:text-card-foreground hover:bg-muted hover:scale-102'
+                    ? 'bg-accent text-accent-foreground shadow-sm scale-[1.02]'
+                    : 'text-muted-foreground hover:text-card-foreground hover:bg-muted/50'
                 }`}
-                whileHover={{ x: 4 }}
+                whileHover={{ x: 2 }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ 
                   duration: 0.2, 
-                  delay: leagueIndex * 0.05,
+                  delay: leagueIndex * 0.03,
                   ease: [0.4, 0.0, 0.2, 1]
                 }}
               >
                 <div className="flex items-center justify-between">
                   <span>{league.name}</span>
-                  <span className="text-xs opacity-70">
-                    {league.games.length} games
+                  <span className="text-xs opacity-60">
+                    {league.games.length}
                   </span>
                 </div>
               </motion.button>
@@ -124,13 +124,13 @@ export const SideNavPanel = () => {
     return (
       <div className="h-full bg-card flex flex-col overflow-hidden">
         <motion.div 
-          className="p-4 border-b border-border flex-shrink-0"
+          className="p-3 border-b border-border flex-shrink-0"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h2 className="text-lg font-semibold text-card-foreground">Sports</h2>
-          <p className="text-sm text-muted-foreground">Select a sport to view games</p>
+          <h2 className="text-base font-semibold text-card-foreground">Sports</h2>
+          <p className="text-xs text-muted-foreground">Loading sports...</p>
         </motion.div>
         <div className="flex-1">
           <SkeletonLoader type="navigation" count={3} />
@@ -141,25 +141,25 @@ export const SideNavPanel = () => {
 
   return (
     <div className="h-full bg-card flex flex-col overflow-hidden">
-      {/* Header - Sports only */}
+      {/* Header - Compact Sports header */}
       <motion.div 
-        className="p-4 border-b border-border flex-shrink-0"
+        className="p-3 border-b border-border flex-shrink-0"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <h2 className="text-lg font-semibold text-card-foreground">Sports</h2>
-        <p className="text-sm text-muted-foreground">Select a sport to view games</p>
+        <h2 className="text-base font-semibold text-card-foreground">Sports</h2>
+        <p className="text-xs text-muted-foreground">Select league to view games</p>
       </motion.div>
 
       <div className="flex-1 overflow-hidden">
-        <div className="h-full seamless-scroll overflow-y-auto p-4">
+        <div className="h-full seamless-scroll overflow-y-auto p-3">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.1 }}
           >
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Accordion 
                 type="single" 
                 collapsible 

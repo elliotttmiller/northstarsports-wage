@@ -27,8 +27,8 @@ function LayoutContent() {
       
       {/* Main Layout Container */}
       <div className="flex-1 overflow-hidden relative">
-        {/* Desktop Layout - 3-panel grid */}
-        <div className="hidden lg:flex h-full">
+        {/* Desktop Layout - 3-panel grid with overlay bet slip */}
+        <div className="hidden lg:flex h-full relative">
           {/* Desktop Sidebar Toggles */}
           <div className="absolute left-0 top-1/2 -translate-y-1/2 z-30">
             <SidebarToggle
@@ -46,40 +46,40 @@ function LayoutContent() {
             />
           </div>
 
-          {/* Left Panel - Side Navigation */}
+          {/* Left Panel - Side Navigation (Compact) */}
           <AnimatePresence mode="wait">
             {navigation.sideNavOpen && (
               <motion.div
                 initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 320, opacity: 1 }}
+                animate={{ width: 280, opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
                 transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                className="border-r border-border overflow-hidden bg-card/30"
+                className="border-r border-border overflow-hidden bg-card/50 backdrop-blur-sm"
               >
                 <SideNavPanel />
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Main Content Panel */}
-          <div className="flex-1 min-w-0 overflow-hidden">
+          {/* Main Content Panel - Full width without right panel interference */}
+          <div className="flex-1 min-w-0 overflow-hidden relative">
             <Outlet />
+            
+            {/* Desktop Bet Slip Overlay - Appears over main content */}
+            <AnimatePresence mode="wait">
+              {navigation.actionHubOpen && (
+                <motion.div
+                  initial={{ x: '100%', opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: '100%', opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                  className="absolute top-0 right-0 bottom-0 w-96 bg-card/95 backdrop-blur-md border-l border-border z-40 shadow-2xl"
+                >
+                  <ActionHubPanel />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-
-          {/* Right Panel - Action Hub */}
-          <AnimatePresence mode="wait">
-            {navigation.actionHubOpen && (
-              <motion.div
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 380, opacity: 1 }}
-                exit={{ width: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                className="border-l border-border overflow-hidden bg-card/30"
-              >
-                <ActionHubPanel />
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Mobile Layout */}
