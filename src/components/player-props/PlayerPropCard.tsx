@@ -30,9 +30,9 @@ const PropBetButton = ({ prop, selection, onClick, compact = false, isSelected =
   
   // Determine button variant based on odds and selection state
   const getButtonVariant = () => {
-    if (isSelected) return 'bet-selected'
-    if (odds > 0) return 'bet-positive'
-    return 'bet-negative'
+    if (isSelected) return 'default'
+    if (odds > 0) return 'outline'
+    return 'outline'
   }
   
   return (
