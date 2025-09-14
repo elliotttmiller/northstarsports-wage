@@ -20,6 +20,15 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        // Professional betting variants
+        bet:
+          "bg-accent/10 text-accent border border-accent/20 shadow-xs hover:bg-accent/20 hover:border-accent/30 active:bg-accent/30 transition-all duration-200 transform active:scale-95",
+        "bet-positive":
+          "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-xs hover:bg-emerald-500/20 hover:border-emerald-500/30 active:bg-emerald-500/30 transition-all duration-200 transform active:scale-95",
+        "bet-negative":
+          "bg-red-500/10 text-red-400 border border-red-500/20 shadow-xs hover:bg-red-500/20 hover:border-red-500/30 active:bg-red-500/30 transition-all duration-200 transform active:scale-95",
+        "bet-selected":
+          "bg-accent text-accent-foreground border-accent shadow-md ring-2 ring-accent/20 transform scale-[1.02]",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
