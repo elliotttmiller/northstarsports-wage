@@ -19,7 +19,7 @@ interface NavigationContextType {
   setActionHubOpen: (open: boolean) => void
 }
 
-const NavigationContext = createContext<NavigationContextType | undefined>(undefined)
+export const NavigationContext = createContext<NavigationContextType | undefined>(undefined)
 
 export function NavigationProvider({ children }: { children: ReactNode }) {
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null)

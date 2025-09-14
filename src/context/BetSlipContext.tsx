@@ -13,7 +13,7 @@ interface BetSlipContextType {
   clearBetSlip: () => void;
 }
 
-const BetSlipContext = createContext<BetSlipContextType | undefined>(undefined);
+export const BetSlipContext = createContext<BetSlipContextType | undefined>(undefined);
 
 export const useBetSlip = () => {
   const context = useContext(BetSlipContext);
