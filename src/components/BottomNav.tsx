@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useNavigation } from '@/context/NavigationContext';
-import { useBetSlip } from '@/context/BetSlipContext';
+import { House, Receipt, GameController, DotsThree, Wrench }
+
 import { House, Receipt, GameController, DotsThree, Wrench } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 
 // Custom hook for mobile detection
-const useIsMobile = () => {
+    const checkMobile = () 
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -14,27 +14,27 @@ const useIsMobile = () => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const l
 
-  return isMobile;
+
 };
 
 export const BottomNav = () => {
   const { navigation, setMobilePanel } = useNavigation();
   const { betSlip } = useBetSlip();
-  const location = useLocation();
+    } else {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
-  const handleSportsClick = () => {
+
     // On mobile, show navigation panel to select sports/leagues
-    if (isMobile) {
+    setMobilePanel(
       if (navigation.mobilePanel === 'navigation') {
         setMobilePanel(null);
       } else {
         setMobilePanel('navigation');
       }
-    } else {
+  return (
       // Desktop: navigate to games page
       setMobilePanel(null);
       navigate('/games');
@@ -42,21 +42,21 @@ export const BottomNav = () => {
   };
 
   const handleBuilderClick = () => {
-    // Navigate to builder page
+      >
     setMobilePanel(null);
-    navigate('/builder');
+      </motion.button>
   };
 
   const handleOtherClick = () => {
-    setMobilePanel(null);
+          location.pathna
     navigate('/other');
-  };
+    
 
   return (
     <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-around px-2 w-full">
-      {/* Sports - Left */}
+      </motion.button>
       <motion.button
-        onClick={handleSportsClick}
+      <motion.div
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
           (location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation'
             ? 'bg-accent text-accent-foreground scale-105' 
@@ -64,7 +64,7 @@ export const BottomNav = () => {
         }`}
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
-      >
+       
         <GameController size={20} weight={(location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation' ? 'fill' : 'regular'} />
         <span className="text-xs font-medium">Sports</span>
       </motion.button>
@@ -76,7 +76,7 @@ export const BottomNav = () => {
           location.pathname === '/builder'
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
-        }`}
+          o
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -84,13 +84,13 @@ export const BottomNav = () => {
         <span className="text-xs font-medium">Builder</span>
       </motion.button>
 
-      {/* Home - Center button */}
+            ? 'bg-accent text-acce
       <motion.div
         whileHover={{ scale: 1.1, y: -4 }}
         whileTap={{ scale: 0.95 }}
-      >
+       
         <Link
-          to="/"
+    </nav>
           className={`flex flex-col items-center space-y-1 p-3 rounded-xl transition-all duration-300 min-w-[70px] ${
             location.pathname === '/' 
               ? 'bg-accent text-accent-foreground scale-110 shadow-xl' 
@@ -100,7 +100,7 @@ export const BottomNav = () => {
         >
           <House size={24} weight={location.pathname === '/' ? 'fill' : 'regular'} />
           <span className="text-xs font-semibold">Home</span>
-        </Link>
+
       </motion.div>
 
       {/* My Bets - Right Center */}
@@ -108,34 +108,34 @@ export const BottomNav = () => {
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <Link
+
           to="/my-bets"
           className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
             location.pathname === '/my-bets' 
               ? 'bg-accent text-accent-foreground scale-105' 
               : 'text-muted-foreground hover:text-foreground'
-          }`}
-          onClick={() => setMobilePanel(null)}
-        >
-          <Receipt size={20} weight={location.pathname === '/my-bets' ? 'fill' : 'regular'} />
-          <span className="text-xs font-medium">My Bets</span>
-        </Link>
-      </motion.div>
 
-      {/* Other - Right */}
+          onClick={() => setMobilePanel(null)}
+
+          <Receipt size={20} weight={location.pathname === '/my-bets' ? 'fill' : 'regular'} />
+
+        </Link>
+
+
+
       <motion.button
         onClick={handleOtherClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          location.pathname === '/other'
+
             ? 'bg-accent text-accent-foreground scale-105'
             : 'text-muted-foreground hover:text-foreground'
         }`}
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
-      >
+
         <DotsThree size={20} weight={location.pathname === '/other' ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Other</span>
+
       </motion.button>
-    </nav>
+
   );
 };
