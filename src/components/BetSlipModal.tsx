@@ -353,12 +353,10 @@ export const BetSlipModal = () => {
                                 />
                               </div>
                               <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground font-medium">Parlay Odds:</span>
-                                <span className="font-semibold text-accent">{formatOdds(betSlip.totalOdds)}</span>
                               </div>
                             </div>
-                          </CardContent>
-                        </Card>
+                              </div>
+                            </div>
                       </motion.div>
                     )}
                   </div>
@@ -368,15 +366,13 @@ export const BetSlipModal = () => {
 
             {/* Bet Slip Summary - Enhanced mobile-first design */}
             <motion.div 
-              className="border-t border-border/60 p-4 bg-gradient-to-t from-card/98 to-card/95 backdrop-blur-xl flex-shrink-0"
+            {/* Bet Slip Summary - Enhanced mobile-first design */}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              className="border-t border-border/60 p-4 bg-gradient-to-t from-card/98 to-card/95 backdrop-blur-xl flex-shrink-0"
               transition={{ duration: 0.4, delay: 0.2 }}
-            >
+              animate={{ opacity: 1, y: 0 }}
               <div className="space-y-4">
                 <div className="space-y-2 bg-gradient-to-r from-secondary/10 to-secondary/20 rounded-xl p-3 border border-border/30">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground font-medium">Total Stake:</span>
                     <span className="font-bold text-foreground">${betSlip.totalStake.toFixed(2)}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
@@ -401,33 +397,33 @@ export const BetSlipModal = () => {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
+                <motion.div
+                    onClick={handlePlaceBet}
+                    disabled={isPlacing || betSlip.totalStake === 0}
+                >d text-base rounded-xl"
                   <Button 
                     onClick={handlePlaceBet}
                     disabled={isPlacing || betSlip.totalStake === 0}
                     className="w-full h-12 bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg hover:shadow-xl transition-all duration-200 font-semibold text-base rounded-xl"
-                    size="lg"
-                  >
-                    {isPlacing ? (
-                      <div className="flex items-center gap-3">
                         <motion.div
                           className="w-5 h-5 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full"
                           animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      <div className="flex items-center gap-3">
                         />
-                        <span>Placing Bet...</span>
+                          className="w-5 h-5 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full"
                       </div>
-                    ) : (
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       <div className="flex items-center gap-2">
-                        <TrendUp size={18} />
+                        <span>Placing Bet...</span>
                         <span>Place {betSlip.betType === 'single' ? 'Bets' : 'Parlay'}</span>
                       </div>
                     )}
-                  </Button>
-                </motion.div>
+                        <TrendUp size={18} />
+                        <span>Place {betSlip.betType === 'single' ? 'Bets' : 'Parlay'}</span>
               </div>
             </motion.div>
-          </>
-        )}
+                  </Button>
+                </motion.div>
       </DialogContent>
     </Dialog>
   );
