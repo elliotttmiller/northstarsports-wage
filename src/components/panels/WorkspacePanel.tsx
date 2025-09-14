@@ -4,14 +4,12 @@ import { useNavigation } from '@/context/NavigationContext';
 import { Game } from '@/types';
 import { getGamesPaginated, PaginatedResponse } from '@/services/mockApi';
 import { Button } from '@/components/ui/button';
-import { FluidGameCard } from '@/components/FluidGameCard';
-import { FluidLayout } from '@/components/FluidLayout';
+import { GameCard } from '@/components/GameCard';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { CaretUp, FunnelSimple, SortAscending, Star, Heart } from '@phosphor-icons/react';
-import { InfiniteScrollContainer } from '@/components/VirtualScrolling';
+import { CaretUp, SortAscending, Heart } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { useKV } from '@github/spark/hooks';
 
@@ -277,41 +275,35 @@ export const WorkspacePanel = () => {
         </div>
       </div>
 
-      {/* Fluid Layout Container */}
-      <div className="flex-1 relative">
-        <FluidLayout
-          itemIds={gameIds}
-          enableVirtualization={processedGames.length > 20}
-          compactMode={isMobile || layoutPrefs?.viewMode === 'compact'}
-          onCardToggle={handleGameToggle}
-          className={cn(
-            'h-full',
-            isMobile ? 'p-3' : 'p-4'
-          )}
-        >
-          <AnimatePresence mode="popLayout">
-            {processedGames.map((game, index) => (
-              <FluidGameCard
-                key={game.id}
-                game={game}
-                compact={isMobile || layoutPrefs?.viewMode === 'compact'}
-                isExpanded={expandedCards?.includes(game.id)}
-                onToggle={() => handleGameToggle(game.id)}
-                showFavorites={true}
-                onFavoriteToggle={handleFavoriteToggle}
-                className={cn(
-                  'game-card-item',
-                  favoriteGames?.includes(game.id) && 'ring-1 ring-yellow-400/20'
-                )}
-              />
-            ))}
-          </AnimatePresence>
-        </FluidLayout>
+      {/* Games Container */}
+      <div className="flex-1 overflow-hidden">
+        <div className={cn(
+          'h-full seamless-scroll overflow-y-auto',
+          isMobile ? 'p-3' : 'p-4'
+        )}>
+          <div className="space-y-3">
+            <AnimatePresence mode="popLayout">
+              {processedGames.map((game) => (
+                <GameCard
+                  key={game.id}
+                  game={game}
+                  variant={isMobile ? 'mobile' : 'desktop'}
+                  showFavorites={true}
+                  onFavoriteToggle={handleFavoriteToggle}
+                  className={cn(
+                    'game-card-item',
+                    favoriteGames?.includes(game.id) && 'ring-1 ring-yellow-400/20'
+                  )}
+                />
+              ))}
+            </AnimatePresence>
+          </div>
 
-        {/* Load more trigger */}
-        {pagination?.hasNextPage && !loading && (
-          <div ref={loadMoreRef} className="h-20 w-full" />
-        )}
+          {/* Load more trigger */}
+          {pagination?.hasNextPage && !loading && (
+            <div ref={loadMoreRef} className="h-20 w-full" />
+          )}
+        </div>
         
         {/* Loading indicator */}
         {loading && (
