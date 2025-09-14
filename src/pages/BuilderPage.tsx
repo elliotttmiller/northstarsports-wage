@@ -413,8 +413,8 @@ export const BuilderPage = () => {
       <div className="flex-1 flex overflow-hidden">
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-shrink-0 px-4 pt-4">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-shrink-0 px-4 pt-4">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="games">Games</TabsTrigger>
                 <TabsTrigger value="props" disabled={!selectedGame}>
@@ -426,17 +426,17 @@ export const BuilderPage = () => {
                   )}
                 </TabsTrigger>
               </TabsList>
-            </Tabs>
-          </div>
-          
-          <ScrollArea className="flex-1 seamless-scroll p-4">
-            <TabsContent value="games" className="mt-0">
-              {renderGamesList()}
-            </TabsContent>
-            <TabsContent value="props" className="mt-0">
-              {renderPlayerProps()}
-            </TabsContent>
-          </ScrollArea>
+            </div>
+            
+            <ScrollArea className="flex-1 seamless-scroll p-4">
+              <TabsContent value="games" className="mt-0">
+                {renderGamesList()}
+              </TabsContent>
+              <TabsContent value="props" className="mt-0">
+                {renderPlayerProps()}
+              </TabsContent>
+            </ScrollArea>
+          </Tabs>
         </div>
 
         {/* Bet Slip Preview - Desktop Only */}
