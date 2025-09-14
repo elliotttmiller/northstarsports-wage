@@ -1,30 +1,24 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
+import { motion } from 'framer-motion';
+
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { motion } from 'framer-motion';
 import { GameController, Wrench, House, Receipt, DotsThree } from '@phosphor-icons/react';
 
-export const BottomNav: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const { navigation, setMobilePanel } = useNavigation();
 
+  const location = useLocation();
+      // On mobile, show navigati
+  const isMobile = useIsMobile();
+      } else {
+  const { setMobilePanel } = navigation;
+      }
   const handleSportsClick = () => {
     if (isMobile) {
       // On mobile, show navigation panel to select sports/leagues
       if (navigation.mobilePanel === 'navigation') {
         setMobilePanel(null);
       } else {
-        setMobilePanel('navigation');
-      }
-    } else {
-      // Desktop: navigate to games page
-      setMobilePanel(null);
-      navigate('/games');
-    }
-  };
 
   const handleBuilderClick = () => {
     setMobilePanel(null);
