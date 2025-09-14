@@ -236,7 +236,6 @@ export const WorkspacePanel = () => {
                 <GameCard
                   key={game.id}
                   game={game}
-                  variant={isMobile ? 'mobile' : 'desktop'}
                   className={cn(
                     'game-card-item',
                     favoriteGames?.includes(game.id) && 'ring-1 ring-yellow-400/20'

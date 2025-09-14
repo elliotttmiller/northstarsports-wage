@@ -1,290 +1,224 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, useMotionValue, useAnimation, PanInfo } from 'framer-motion';
-import { Receipt, Plus } from '@phosphor-icons/react';
-import { useBetSlip } from '@/context/BetSlipContext';
-import { useNavigation } from '@/context/NavigationContext';
-import { useKV } from '@github/spark/hooks';
+import React, { useState, useRef, useCallback, useEffect } from 'react'
+import { motion, useMotionValue, useAnimation, PanInfo } from 'framer-motion'
+import { useBetSlip } from '@/context/BetSlipContext'
+import { useNavigation } from '@/context/NavigationContext'
+import { useKV } from '@github/spark/hooks'
+import { Plus } from '@phosphor-icons/react'
 
 interface Position {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 export const FloatingBetSlipButton = () => {
-  const { betSlip } = useBetSlip();
-  const { navigation, setMobilePanel } = useNavigation();
-  const controls = useAnimation();
+  const { betSlip } = useBetSlip()
+  const { navigation, setMobilePanel } = useNavigation()
+  const [savedPosition, setSavedPosition] = useKV<Position>('floating-button-position', { x: 0, y: 0 })
+  const [isInitialized, setIsInitialized] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   
-  // Persist button position across sessions
-  const [savedPosition, setSavedPosition] = useKV<Position | undefined>('floating-button-position', undefined);
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const controls = useAnimation()
   
-  const [isDragging, setIsDragging] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const hasMoved = useRef(false)
+  const dragStartTime = useRef(0)
+  const totalDragDistance = useRef(0)
+  const initialPosition = useRef<Position>({ x: 0, y: 0 })
   
-  // Track drag state more precisely
-  const dragStartTime = useRef<number>(0);
-  const hasMoved = useRef(false);
-  const totalDragDistance = useRef(0);
-  const initialPosition = useRef<Position>({ x: 0, y: 0 });
+  const isModalOpen = navigation.mobilePanel === 'betslip'
   
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  // Hide button when bet slip modal is open
-  const isModalOpen = navigation.mobilePanel === 'betslip';
-
-  // Get default position - smaller button, more translucent
-  const getDefaultPosition = useCallback((): Position => {
-    const buttonSize = 48; // Smaller button
-    const margin = 16;
-    const safeWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
-    const safeHeight = typeof window !== 'undefined' ? window.innerHeight : 667;
+  // Initialize position
+  const getDefaultPosition = useCallback(() => {
+    const buttonSize = 48
+    const margin = 16
+    const safeWidth = typeof window !== 'undefined' ? window.innerWidth : 375
+    const safeHeight = typeof window !== 'undefined' ? window.innerHeight : 667
+    
     return {
       x: safeWidth - buttonSize - margin,
       y: safeHeight - buttonSize - margin - 80 // Account for bottom nav
-    };
-  }, []);
-
-  // Initialize position from saved coordinates or default
-  useEffect(() => {
-    if (!isInitialized) {
-      const initPosition = savedPosition || getDefaultPosition();
-      x.set(initPosition.x);
-      y.set(initPosition.y);
-      initialPosition.current = initPosition;
-      setIsInitialized(true);
     }
-  }, [savedPosition, x, y, getDefaultPosition, isInitialized]);
+  }, [])
 
-  // Handle window resize to keep button within bounds
+  // Initialize position on mount
   useEffect(() => {
-    if (!isInitialized) return;
+    if (typeof window === 'undefined') return
+    
+    const initPosition = (!savedPosition || (savedPosition.x === 0 && savedPosition.y === 0))
+      ? getDefaultPosition() 
+      : savedPosition
+    
+    x.set(initPosition.x)
+    y.set(initPosition.y)
+    setIsInitialized(true)
+  }, [savedPosition, x, y, getDefaultPosition])
 
+  // Handle window resize
+  useEffect(() => {
     const handleResize = () => {
-      if (typeof window === 'undefined') return;
-      
-      const currentX = x.get();
-      const currentY = y.get();
-      const buttonSize = 48;
-      const margin = 16;
+      if (typeof window === 'undefined') return
+      const currentX = x.get()
+      const currentY = y.get()
+      const buttonSize = 48
+      const margin = 16
       
       // Ensure button stays within new viewport bounds
-      const maxX = window.innerWidth - buttonSize - margin;
-      const maxY = window.innerHeight - buttonSize - margin - 80;
+      const maxX = window.innerWidth - buttonSize - margin
+      const maxY = window.innerHeight - buttonSize - margin - 80
       
-      const newX = Math.min(Math.max(margin, currentX), maxX);
-      const newY = Math.min(Math.max(margin, currentY), maxY);
+      const newX = Math.min(Math.max(margin, currentX), maxX)
+      const newY = Math.min(Math.max(margin, currentY), maxY)
       
       if (newX !== currentX || newY !== currentY) {
-        x.set(newX);
-        y.set(newY);
-        setSavedPosition({ x: newX, y: newY });
+        x.set(newX)
+        y.set(newY)
+        setSavedPosition({ x: newX, y: newY })
       }
-    };
+    }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [x, y, setSavedPosition, isInitialized]);
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [x, y, setSavedPosition, isInitialized])
 
   const handleDragStart = () => {
-    if (!isInitialized) return;
-    dragStartTime.current = Date.now();
-    hasMoved.current = false;
-    totalDragDistance.current = 0;
-    initialPosition.current = { x: x.get(), y: y.get() };
-    setIsDragging(false);
-  };
+    if (!isInitialized) return
+    dragStartTime.current = Date.now()
+    hasMoved.current = false
+    totalDragDistance.current = 0
+    initialPosition.current = { x: x.get(), y: y.get() }
+    setIsDragging(false)
+  }
 
   const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    if (!isInitialized) return;
-    const dragDistance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
-    totalDragDistance.current = dragDistance;
+    if (!isInitialized) return
+    const dragDistance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2)
+    totalDragDistance.current = dragDistance
     
     // Only start visual dragging state after significant movement
     if (dragDistance > 8 && !hasMoved.current) {
-      hasMoved.current = true;
-      setIsDragging(true);
+      hasMoved.current = true
+      setIsDragging(true)
     }
-  };
+  }
 
   const handleDragEnd = async (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    if (!isInitialized) return;
-    const dragDuration = Date.now() - dragStartTime.current;
-    const totalDistance = totalDragDistance.current;
+    if (!isInitialized) return
+    const dragDuration = Date.now() - dragStartTime.current
+    const totalDistance = totalDragDistance.current
     
     // Determine if this was an intentional drag or just a tap
-    const wasIntentionalDrag = totalDistance > 12 || (dragDuration > 150 && totalDistance > 6);
+    const wasIntentionalDrag = totalDistance > 12 || (dragDuration > 150 && totalDistance > 6)
     
     if (wasIntentionalDrag && hasMoved.current) {
       // Handle drag - save new position
-      const currentX = x.get();
-      const currentY = y.get();
-      setSavedPosition({ x: currentX, y: currentY });
+      const currentX = x.get()
+      const currentY = y.get()
+      setSavedPosition({ x: currentX, y: currentY })
     } else {
       // Handle tap - open bet slip modal
-      setMobilePanel('betslip');
+      setMobilePanel('betslip')
     }
     
     // Reset all states
-    setIsDragging(false);
-    hasMoved.current = false;
-    totalDragDistance.current = 0;
-  };
-
-  const handleClick = (e: React.MouseEvent) => {
-    if (!isInitialized) return;
-    
-    // Prevent click if we've been dragging
-    if (hasMoved.current || totalDragDistance.current > 6) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-    
-    // Add subtle haptic feedback for mobile
-    if (navigator.vibrate) {
-      navigator.vibrate(50);
-    }
-    
-    // Only handle click if no drag occurred
-    setMobilePanel('betslip');
-  };
-
-  // Don't render if modal is open or not initialized
-  if (isModalOpen || !isInitialized) {
-    return null;
+    setIsDragging(false)
+    hasMoved.current = false
+    totalDragDistance.current = 0
   }
 
+  if (!isInitialized) return null
+
   return (
-    <motion.button
-      className={`fixed w-12 h-12 rounded-full shadow-xl backdrop-blur-md border flex items-center justify-center transition-all duration-300 z-[60] pointer-events-auto ${
-        isDragging 
-          ? 'bg-accent/30 border-accent/20 shadow-2xl cursor-grabbing scale-110' 
-          : betSlip.bets.length > 0
-            ? 'bg-accent/25 border-accent/15 hover:bg-accent/35 hover:shadow-2xl active:scale-95 cursor-pointer'
-            : 'bg-muted/20 border-muted-foreground/10 hover:bg-muted/30 hover:shadow-2xl active:scale-95 cursor-pointer'
-      }`}
-      style={{
-        x,
-        y,
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        touchAction: 'none'
+    <motion.div
+      className="pointer-events-auto"
+      style={{ 
+        x, 
+        y, 
+        position: 'absolute',
+        zIndex: 50
       }}
-      drag={true}
+      drag
       dragMomentum={false}
-      dragElastic={0.05}
-      dragPropagation={false}
+      dragElastic={0.1}
       dragConstraints={{
         left: 16,
         right: typeof window !== 'undefined' ? window.innerWidth - 64 : 300,
         top: 16,
-        bottom: typeof window !== 'undefined' ? window.innerHeight - 160 : 600
+        bottom: typeof window !== 'undefined' ? window.innerHeight - 144 : 500
       }}
       onDragStart={handleDragStart}
       onDrag={handleDrag}
       onDragEnd={handleDragEnd}
-      onClick={handleClick}
       whileHover={!isDragging ? { 
-        scale: 1.08,
-        transition: { duration: 0.2, ease: "easeOut" }
+        scale: 1.05,
+        transition: { duration: 0.2 }
       } : {}}
       whileTap={!isDragging ? { 
-        scale: 0.92,
+        scale: 0.95,
         transition: { duration: 0.15 }
       } : {}}
       initial={{ scale: 0, opacity: 0, rotate: -10 }}
       animate={{ 
+        opacity: isModalOpen ? 0.3 : 0.9, 
         scale: 1, 
-        opacity: 1,
         rotate: 0
       }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 400, 
-        damping: 25,
-        duration: 0.4 
-      }}
+      transition={{ type: "spring", damping: 20, stiffness: 300 }}
     >
-      <div className="relative pointer-events-none">
+      <div className="relative">
         <motion.div
-          animate={betSlip.bets.length > 0 ? { 
+          animate={{
             scale: [1, 1.1, 1],
-            rotate: [0, -3, 3, 0] 
-          } : {}}
-          transition={{ 
-            duration: 0.6,
-            repeat: betSlip.bets.length > 0 ? Infinity : 0,
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 2,
             repeatDelay: 3
           }}
+          className={`
+            w-12 h-12 rounded-full shadow-lg cursor-pointer
+            bg-accent text-accent-foreground
+            flex items-center justify-center
+            backdrop-blur-sm border border-accent/20
+            ${isDragging ? 'shadow-2xl' : 'shadow-lg'}
+          `}
         >
-          {betSlip.bets.length > 0 ? (
-            <Receipt 
-              size={20} 
-              weight="fill" 
-              className="text-accent"
-            />
-          ) : (
-            <Plus 
-              size={20} 
-              weight="bold" 
-              className="text-muted-foreground"
-            />
-          )}
+          <Plus 
+            size={20} 
+            weight="bold"
+            className="transition-transform duration-200"
+          />
         </motion.div>
-        
-        {/* Enhanced bet count badge */}
+
+        {/* Bet count badge */}
         {betSlip.bets.length > 0 && (
-          <motion.div 
-            className="absolute -top-2 -right-2 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold border-2 border-background shadow-lg"
+          <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
-            exit={{ scale: 0, rotate: 180 }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 600, 
-              damping: 25,
-              duration: 0.4 
+            exit={{
+              scale: 0,
+              rotate: 180,
+              transition: { duration: 0.2 }
             }}
-            key={betSlip.bets.length}
+            transition={{
+              type: "spring", 
+              damping: 25,
+              stiffness: 400
+            }}
             layoutId="bet-count"
+            className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center text-xs font-bold shadow-md"
           >
-            <motion.span
-              key={betSlip.bets.length}
-              initial={{ scale: 1.5 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.2 }}
-            >
-              {betSlip.bets.length > 9 ? '9+' : betSlip.bets.length}
-            </motion.span>
+            {betSlip.bets.length}
           </motion.div>
         )}
 
-        {/* Animated border pulse when bets exist */}
-        {betSlip.bets.length > 0 && (
+        {/* Dragging ripple effect */}
+        {isDragging && (
           <motion.div
             className="absolute inset-0 rounded-full border-2 border-accent/30"
             animate={{ 
-              scale: [1, 1.15, 1],
-              opacity: [0.3, 0.6, 0.3] 
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-        )}
-
-        {/* Drag state indicator - enhanced */}
-        {isDragging && (
-          <motion.div
-            className="absolute inset-0 rounded-full bg-accent/20 border-2 border-dashed border-accent/40"
-            initial={{ scale: 1, opacity: 0.3 }}
-            animate={{ 
-              scale: [1, 1.3, 1],
-              opacity: [0.3, 0.6, 0.3],
-              rotate: [0, 360]
+              scale: [1, 2.5],
+              opacity: [0.6, 0]
             }}
             transition={{
               duration: 2,
@@ -294,6 +228,6 @@ export const FloatingBetSlipButton = () => {
           />
         )}
       </div>
-    </motion.button>
-  );
-};
+    </motion.div>
+  )
+}

@@ -16,20 +16,14 @@ import { cn } from '@/lib/utils'
 
 interface GameCardProps {
   game: Game
-  variant?: 'mobile' | 'desktop'
   className?: string
 }
 
-export function GameCard({ 
-  game, 
-  variant = 'mobile',
-  className
-}: GameCardProps) {
+export function GameCard({ game, className }: GameCardProps) {
   const { addBet } = useBetSlip()
   const [isExpanded, setIsExpanded] = useState(false)
   const [propCategories, setPropCategories] = useState<PropCategory[]>([])
   const [propsLoading, setPropsLoading] = useState(false)
-
 
   const handleBetClick = useCallback((
     e: React.MouseEvent,
@@ -63,24 +57,25 @@ export function GameCard({
     setIsExpanded(!isExpanded)
   }, [isExpanded, propCategories.length, game.id])
 
-  if (variant === 'mobile') {
-    return (
-      <motion.div
-        layout
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
-        className="w-full"
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      className="w-full"
+    >
+      <Card 
+        className={cn(
+          'bg-card/50 border-border/30 hover:border-accent/40 smooth-transition cursor-pointer',
+          isExpanded && 'border-accent/50 bg-card/80',
+          className
+        )}
+        onClick={handleExpandToggle}
       >
-        <Card 
-          className={cn(
-            'bg-card/50 border-border/30 hover:border-accent/40 transition-all duration-200 cursor-pointer',
-            isExpanded && 'border-accent/50 bg-card/80',
-            className
-          )}
-          onClick={handleExpandToggle}
-        >
-          <CardContent className="p-2.5">
+        <CardContent className="p-2.5 lg:p-3">
+          {/* Mobile Layout */}
+          <div className="lg:hidden">
             {/* League Badge */}
             <div className="flex items-center justify-center mb-2">
               <Badge variant="secondary" className="text-xs px-2 py-0.5 font-medium bg-muted/40">
@@ -106,7 +101,7 @@ export function GameCard({
               </div>
             </div>
 
-            {/* Three-Column Betting Grid */}
+            {/* Three-Column Mobile Betting Grid */}
             <div className="grid grid-cols-3 gap-2">
               {/* Spread Column */}
               <div className="space-y-1">
@@ -115,14 +110,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'spread', 'away',
-                        game.odds.spread.away.odds,
-                        game.odds.spread.away.line || 0
-                      )
+                      handleBetClick(e, 'spread', 'away', game.odds.spread.away.odds, game.odds.spread.away.line || 0)
                     }}
                   >
                     <div className="flex flex-col items-center leading-none">
@@ -133,14 +124,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'spread', 'home',
-                        game.odds.spread.home.odds,
-                        game.odds.spread.home.line || 0
-                      )
+                      handleBetClick(e, 'spread', 'home', game.odds.spread.home.odds, game.odds.spread.home.line || 0)
                     }}
                   >
                     <div className="flex flex-col items-center leading-none">
@@ -164,14 +151,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'total', 'over',
-                        game.odds.total.over?.odds || -110,
-                        game.odds.total.over?.line || 47.5
-                      )
+                      handleBetClick(e, 'total', 'over', game.odds.total.over?.odds || -110, game.odds.total.over?.line || 47.5)
                     }}
                   >
                     <div className="flex flex-col items-center leading-none">
@@ -182,14 +165,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'total', 'under',
-                        game.odds.total.under?.odds || -110,
-                        game.odds.total.under?.line || 47.5
-                      )
+                      handleBetClick(e, 'total', 'under', game.odds.total.under?.odds || -110, game.odds.total.under?.line || 47.5)
                     }}
                   >
                     <div className="flex flex-col items-center leading-none">
@@ -207,13 +186,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'moneyline', 'away',
-                        game.odds.moneyline.away.odds
-                      )
+                      handleBetClick(e, 'moneyline', 'away', game.odds.moneyline.away.odds)
                     }}
                   >
                     <div className="flex flex-col items-center leading-none">
@@ -224,13 +200,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'moneyline', 'home',
-                        game.odds.moneyline.home.odds
-                      )
+                      handleBetClick(e, 'moneyline', 'home', game.odds.moneyline.home.odds)
                     }}
                   >
                     <div className="flex flex-col items-center leading-none">
@@ -241,53 +214,10 @@ export function GameCard({
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Expanded Content - Mobile */}
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  className="overflow-hidden mt-2"
-                >
-                  <Separator className="mb-2" />
-                  <PlayerPropsSection
-                    categories={propCategories}
-                    game={game}
-                    isLoading={propsLoading}
-                    compact={true}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </CardContent>
-        </Card>
-      </motion.div>
-    )
-  }
-
-  // Desktop Layout
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      className="w-full"
-    >
-      <Card 
-        className={cn(
-          'bg-card/50 border-border/30 hover:border-accent/40 transition-all duration-200 cursor-pointer',
-          isExpanded && 'border-accent/50 bg-card/80',
-          className
-        )}
-        onClick={handleExpandToggle}
-      >
-        <CardContent className="p-3">
-          {/* Desktop Compact Layout */}
-          <div className="flex items-center justify-between">
+          {/* Desktop Layout */}
+          <div className="hidden lg:flex items-center justify-between">
             {/* Left Side - Game Info */}
             <div className="flex items-center gap-4 min-w-0 flex-1">
               <div className="flex items-center gap-3">
@@ -324,14 +254,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'spread', 'away',
-                        game.odds.spread.away.odds,
-                        game.odds.spread.away.line || 0
-                      )
+                      handleBetClick(e, 'spread', 'away', game.odds.spread.away.odds, game.odds.spread.away.line || 0)
                     }}
                   >
                     {game.awayTeam.shortName} {`${(game.odds.spread.away.line || 0) > 0 ? '+' : ''}${game.odds.spread.away.line || 0}`}
@@ -339,14 +265,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'spread', 'home',
-                        game.odds.spread.home.odds,
-                        game.odds.spread.home.line || 0
-                      )
+                      handleBetClick(e, 'spread', 'home', game.odds.spread.home.odds, game.odds.spread.home.line || 0)
                     }}
                   >
                     {game.homeTeam.shortName} {`${(game.odds.spread.home.line || 0) > 0 ? '+' : ''}${game.odds.spread.home.line || 0}`}
@@ -367,14 +289,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'total', 'over',
-                        game.odds.total.over?.odds || -110,
-                        game.odds.total.over?.line || 47.5
-                      )
+                      handleBetClick(e, 'total', 'over', game.odds.total.over?.odds || -110, game.odds.total.over?.line || 47.5)
                     }}
                   >
                     O {formatTotalLine(game.odds.total.over?.line || 47.5)}
@@ -382,14 +300,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'total', 'under',
-                        game.odds.total.under?.odds || -110,
-                        game.odds.total.under?.line || 47.5
-                      )
+                      handleBetClick(e, 'total', 'under', game.odds.total.under?.odds || -110, game.odds.total.under?.line || 47.5)
                     }}
                   >
                     U {formatTotalLine(game.odds.total.under?.line || 47.5)}
@@ -404,13 +318,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'moneyline', 'away',
-                        game.odds.moneyline.away.odds
-                      )
+                      handleBetClick(e, 'moneyline', 'away', game.odds.moneyline.away.odds)
                     }}
                   >
                     {game.awayTeam.shortName} {formatOdds(game.odds.moneyline.away.odds)}
@@ -418,13 +329,10 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 smooth-transition"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleBetClick(
-                        e, 'moneyline', 'home',
-                        game.odds.moneyline.home.odds
-                      )
+                      handleBetClick(e, 'moneyline', 'home', game.odds.moneyline.home.odds)
                     }}
                   >
                     {game.homeTeam.shortName} {formatOdds(game.odds.moneyline.home.odds)}
@@ -434,7 +342,7 @@ export function GameCard({
             </div>
           </div>
 
-          {/* Expanded Content - Desktop */}
+          {/* Expanded Player Props - Responsive */}
           <AnimatePresence>
             {isExpanded && (
               <motion.div
@@ -442,14 +350,14 @@ export function GameCard({
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.25, ease: 'easeInOut' }}
-                className="overflow-hidden mt-3"
+                className="overflow-hidden mt-2 lg:mt-3"
               >
-                <Separator className="mb-3" />
+                <Separator className="mb-2 lg:mb-3" />
                 <PlayerPropsSection
                   categories={propCategories}
                   game={game}
                   isLoading={propsLoading}
-                  compact={false}
+                  compact={true}
                 />
               </motion.div>
             )}

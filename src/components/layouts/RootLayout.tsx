@@ -1,5 +1,4 @@
 import { Outlet } from 'react-router-dom'
-import { useState, useEffect } from 'react'
 import { Header } from '../Header'
 import { BottomNav } from '../BottomNav'
 import { SideNavPanel } from '../panels/SideNavPanel'
@@ -14,105 +13,78 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 function LayoutContent() {
   const { navigation, setMobilePanel, toggleSideNav, toggleActionHub } = useNavigation()
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   return (
     <div className="h-screen bg-background text-foreground flex flex-col overflow-hidden">
       {/* Header - Always visible */}
       <Header />
       
-      {/* Main Layout - Takes remaining height */}
-      <div className="flex-1 flex overflow-hidden relative">
+      {/* Main Layout - Desktop: 3-panel grid, Mobile: single panel with overlays */}
+      <div className="flex-1 overflow-hidden relative lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-0">
         
-        {/* Desktop Sidebar Toggles */}
-        {!isMobile && (
-          <>
-            <SidebarToggle
-              side="left"
-              isOpen={navigation.sideNavOpen}
-              onToggle={toggleSideNav}
-            />
-            <SidebarToggle
-              side="right"
-              isOpen={navigation.actionHubOpen}
-              onToggle={toggleActionHub}
-            />
-          </>
-        )}
+        {/* Desktop Sidebar Toggles - Only on large screens */}
+        <div className="hidden lg:block">
+          <SidebarToggle
+            side="left"
+            isOpen={navigation.sideNavOpen}
+            onToggle={toggleSideNav}
+          />
+        </div>
+        
+        <div className="hidden lg:block">
+          <SidebarToggle
+            side="right"
+            isOpen={navigation.actionHubOpen}
+            onToggle={toggleActionHub}
+          />
+        </div>
 
-        {/* Side Navigation Panel */}
-        <AnimatePresence mode="wait" key="sidenav-presence">
-          {((isMobile && navigation.mobilePanel === 'navigation') || (!isMobile && navigation.sideNavOpen)) && (
+        {/* Left Panel - Side Navigation */}
+        <AnimatePresence mode="wait">
+          {/* Mobile: Slide-in overlay */}
+          {navigation.mobilePanel === 'navigation' && (
             <motion.div
-              key="sidenav"
-              initial={isMobile ? { x: '-100%' } : { width: 0, opacity: 0 }}
-              animate={
-                isMobile 
-                  ? { x: 0 }
-                  : { width: 300, opacity: 1 }
-              }
-              exit={
-                isMobile 
-                  ? { x: '-100%' }
-                  : { width: 0, opacity: 0 }
-              }
-              transition={{ 
-                duration: 0.35, 
-                ease: [0.23, 1, 0.32, 1],
-                width: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
-                opacity: { duration: 0.25, ease: [0.23, 1, 0.32, 1] }
-              }}
-              style={{
-                willChange: 'transform, width, opacity'
-              }}
-              className={`
-                ${isMobile 
-                  ? 'fixed inset-0 top-16 z-40 bg-card'
-                  : 'border-r border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition'
-                }
-              `}
+              key="mobile-sidenav"
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="lg:hidden fixed inset-0 top-16 z-40 bg-card"
+            >
+              <SideNavPanel />
+            </motion.div>
+          )}
+          
+          {/* Desktop: Collapsible sidebar */}
+          {navigation.sideNavOpen && (
+            <motion.div
+              key="desktop-sidenav"
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 300, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="hidden lg:block border-r border-border overflow-hidden"
             >
               <SideNavPanel />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Main Workspace Panel - Contains routed content */}
-        <div className={`
-          flex-1 overflow-hidden min-w-0 layout-container
-          ${isMobile 
-            ? `${navigation.mobilePanel === 'workspace' || !navigation.mobilePanel ? 'block' : 'hidden'}`
-            : 'block'
-          }
-        `}>
+        {/* Main Content Panel - Always visible */}
+        <div className="flex-1 min-w-0 overflow-hidden pb-20 lg:pb-0">
           <Outlet />
         </div>
 
-        {/* Action Hub Panel (Bet Slip) - Desktop only since mobile uses modal */}
-        <AnimatePresence mode="wait" key="actionhub-presence">
-          {!isMobile && navigation.actionHubOpen && (
+        {/* Right Panel - Action Hub (Desktop only, mobile uses modal) */}
+        <AnimatePresence mode="wait">
+          {navigation.actionHubOpen && (
             <motion.div
-              key="actionhub"
+              key="desktop-actionhub"
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 350, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
-              transition={{ 
-                duration: 0.35, 
-                ease: [0.23, 1, 0.32, 1],
-                width: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
-                opacity: { duration: 0.25, ease: [0.23, 1, 0.32, 1] }
-              }}
-              style={{
-                willChange: 'transform, width, opacity'
-              }}
-              className="border-l border-border overflow-hidden flex-shrink-0 animate-optimized sidebar-transition"
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="hidden lg:block border-l border-border overflow-hidden"
             >
               <ActionHubPanel />
             </motion.div>
@@ -120,38 +92,35 @@ function LayoutContent() {
         </AnimatePresence>
       </div>
 
-      {/* Bottom Navigation - Mobile only, always visible */}
-      {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 z-40">
-          <BottomNav />
-        </div>
-      )}
+      {/* Mobile Bottom Navigation - Always visible on mobile */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40">
+        <BottomNav />
+      </div>
       
-      {/* Floating Bet Slip Button - Mobile only, highest z-index */}
-      {isMobile && (
-        <div className="fixed inset-0 pointer-events-none z-50">
-          <FloatingBetSlipButton />
-        </div>
-      )}
+      {/* Mobile Floating Bet Slip Button */}
+      <div className="lg:hidden fixed inset-0 pointer-events-none z-50">
+        <FloatingBetSlipButton />
+      </div>
 
-      {/* Bet Slip Modal - Mobile only */}
-      {isMobile && <BetSlipModal />}
+      {/* Mobile Bet Slip Modal */}
+      <div className="lg:hidden">
+        <BetSlipModal />
+      </div>
 
-      {/* Mobile overlay backdrop - excluding betslip since modal handles its own */}
+      {/* Mobile overlay backdrop */}
       <AnimatePresence>
-        {isMobile && navigation.mobilePanel && navigation.mobilePanel !== 'workspace' && navigation.mobilePanel !== 'betslip' && (
+        {navigation.mobilePanel && navigation.mobilePanel !== 'workspace' && navigation.mobilePanel !== 'betslip' && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-            className="fixed inset-0 bg-black/50 z-30"
+            transition={{ duration: 0.2 }}
+            className="lg:hidden fixed inset-0 bg-black/50 z-30"
             onClick={() => setMobilePanel(null)}
           />
         )}
       </AnimatePresence>
       
-      {/* Toast notifications */}
       <Toaster />
     </div>
   )

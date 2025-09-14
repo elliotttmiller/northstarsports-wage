@@ -18,7 +18,7 @@ html, body {
   overflow: hidden;
 }
 
-/* Hide all scrollbars */
+/* Hide scrollbars consistently */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -28,274 +28,48 @@ html, body {
   display: none;
 }
 
-.seamless-scroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.seamless-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-/* Smooth panel transitions */
-.panel-transition {
+/* Smooth animations */
+.smooth-transition {
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, opacity;
 }
 
-.sidebar-transition {
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, width;
-}
-
-/* Mobile bottom navigation spacing */
-@media (max-width: 1023px) {
-  .layout-container {
-    padding-bottom: 5rem; /* 80px - space for bottom nav */
-  }
-}
-
-/* Enhanced modal backdrop */
-.modal-backdrop {
-  backdrop-filter: blur(12px);
-  background: oklch(0.08 0.01 240 / 0.8);
-}
-
-/* Smooth modal transitions */
-.modal-content-enter {
-  animation: modal-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.modal-content-exit {
-  animation: modal-slide-down 0.25s cubic-bezier(0.4, 0, 1, 1) forwards;
-}
-
-@keyframes modal-slide-up {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -45%) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@keyframes modal-slide-down {
-  from {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -45%) scale(0.96);
-  }
-}
-
-/* Enhanced floating button animations */
-@keyframes float-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.floating-button-pulse {
-  animation: float-pulse 2s ease-in-out infinite;
-}
-
-/* Bet slip item transitions */
-.bet-item-enter {
-  animation: slide-in-left 0.3s ease-out forwards;
-}
-
-.bet-item-exit {
-  animation: slide-out-right 0.2s ease-in forwards;
-}
-
-@keyframes slide-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes slide-out-right {
-  from {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(20px) scale(0.95);
-  }
-}
-
-/* Enhanced player props animations */
-@keyframes prop-card-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes prop-button-press {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.95); }
-  100% { transform: scale(1); }
-}
-
-@keyframes category-expand {
-  from {
-    opacity: 0;
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    max-height: 500px;
-  }
-}
-
-.prop-card-enter {
-  animation: prop-card-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.prop-button-press {
-  animation: prop-button-press 0.15s ease-out;
-}
-
-.category-expand {
-  animation: category-expand 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Professional betting button states */
-.bet-button-glow {
-  box-shadow: 0 0 20px rgba(var(--accent), 0.3);
-}
-
-/* Smooth scrolling for prop sections */
-.props-scroll {
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: oklch(0.18 0.02 240) transparent;
-}
-
-.props-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-
-.props-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.props-scroll::-webkit-scrollbar-thumb {
-  background: oklch(0.18 0.02 240);
-  border-radius: 2px;
-}
-
-.props-scroll::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.25 0.03 240);
-}
-
-/* Focus states */
-.focus-ring:focus {
-  outline: none;
-  ring: 2px;
-  ring-color: var(--ring);
-  ring-offset: 2px;
-}
-
-/* Enhanced dialog animations */
-.dialog-overlay-enter {
-  animation: fade-in 0.2s ease-out;
-}
-
-.dialog-overlay-exit {
-  animation: fade-out 0.15s ease-in;
-}
-
-.dialog-content-enter {
-  animation: dialog-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.dialog-content-exit {
-  animation: dialog-out 0.2s cubic-bezier(0.4, 0, 1, 1);
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes dialog-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -48%) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@keyframes dialog-out {
-  from {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -52%) scale(0.95);
-  }
-}
-
 :root {
   /* Base colors - Refined dark theme */
-  --background: oklch(0.08 0.01 240); /* Deep slate background */
-  --foreground: oklch(0.92 0.005 240); /* Light text */
+  --background: oklch(0.08 0.01 240);
+  --foreground: oklch(0.92 0.005 240);
   
-  --card: oklch(0.12 0.015 240); /* Card background */
-  --card-foreground: oklch(0.88 0.005 240); /* Card text */
+  --card: oklch(0.12 0.015 240);
+  --card-foreground: oklch(0.88 0.005 240);
   
-  --popover: oklch(0.12 0.015 240); /* Popover background */
-  --popover-foreground: oklch(0.88 0.005 240); /* Popover text */
+  --popover: oklch(0.12 0.015 240);
+  --popover-foreground: oklch(0.88 0.005 240);
   
   /* Action colors - Consistent blue theme */
-  --primary: oklch(0.45 0.12 260); /* Professional blue primary */
-  --primary-foreground: oklch(0.98 0.005 240); /* White on primary */
+  --primary: oklch(0.45 0.12 260);
+  --primary-foreground: oklch(0.98 0.005 240);
   
-  --secondary: oklch(0.16 0.02 240); /* Secondary background */
-  --secondary-foreground: oklch(0.82 0.01 240); /* Secondary text */
+  --secondary: oklch(0.16 0.02 240);
+  --secondary-foreground: oklch(0.82 0.01 240);
   
-  --accent: oklch(0.45 0.12 260); /* Blue accent - matches primary */
-  --accent-foreground: oklch(0.98 0.005 240); /* White on accent */
+  --accent: oklch(0.45 0.12 260);
+  --accent-foreground: oklch(0.98 0.005 240);
   
-  --destructive: oklch(0.55 0.15 15); /* Refined red */
-  --destructive-foreground: oklch(0.98 0.005 15); /* White on destructive */
+  --destructive: oklch(0.55 0.15 15);
+  --destructive-foreground: oklch(0.98 0.005 15);
   
   /* Supporting colors */
-  --muted: oklch(0.14 0.015 240); /* Muted background */
-  --muted-foreground: oklch(0.65 0.015 240); /* Muted text */
+  --muted: oklch(0.14 0.015 240);
+  --muted-foreground: oklch(0.65 0.015 240);
   
-  --border: oklch(0.18 0.02 240); /* Border color */
-  --input: oklch(0.18 0.02 240); /* Input border */
-  --ring: oklch(0.45 0.12 260); /* Focus ring - blue */
+  --border: oklch(0.18 0.02 240);
+  --input: oklch(0.18 0.02 240);
+  --ring: oklch(0.45 0.12 260);
   
-  /* Custom betting colors - refined */
-  --color-win: oklch(0.55 0.08 140); /* Subtle green for wins */
-  --color-loss: oklch(0.55 0.10 20); /* Subtle red for losses */
-  --color-info: oklch(0.45 0.12 260); /* Blue for info */
+  /* Custom betting colors */
+  --color-win: oklch(0.55 0.08 140);
+  --color-loss: oklch(0.55 0.10 20);
+  --color-info: oklch(0.45 0.12 260);
   
   /* Border radius */
   --radius: 0.5rem;
