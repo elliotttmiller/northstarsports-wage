@@ -33,9 +33,26 @@ export interface Team {
 }
 
 export interface GameOdds {
-  spread: BetOption;
-  moneyline: BetOption;
-  total: BetOption;
+  spread: SpreadBetOption;
+  moneyline: MoneylineBetOption;
+  total: TotalBetOption;
+}
+
+export interface SpreadBetOption {
+  home: OddsData;
+  away: OddsData;
+}
+
+export interface MoneylineBetOption {
+  home: OddsData;
+  away: OddsData;
+}
+
+export interface TotalBetOption {
+  home: OddsData;
+  away: OddsData;
+  over?: OddsData;
+  under?: OddsData;
 }
 
 export interface BetOption {
