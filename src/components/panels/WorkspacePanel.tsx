@@ -9,7 +9,7 @@ import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { CaretUp, SortAscending, Heart } from '@phosphor-icons/react';
+import { CaretUp, SortAscending } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { useKV } from '@github/spark/hooks';
 
@@ -17,7 +17,6 @@ import { useKV } from '@github/spark/hooks';
 interface LayoutPreferences {
   viewMode: 'fluid' | 'compact' | 'list'
   sortBy: 'time' | 'popular' | 'odds'
-  filterFavorites: boolean
   showExpanded: boolean
 }
 
@@ -31,11 +30,10 @@ export const WorkspacePanel = () => {
   // State management
   const [games, setGames] = useState<Game[]>([]);
   const [expandedCards, setExpandedCards] = useKV<string[]>('expanded-game-cards', []);
-  const [favoriteGames, setFavoriteGames] = useKV<string[]>('favorite-games', []);
+  const [favoriteGames] = useKV<string[]>('favorite-games', []);
   const [layoutPrefs, setLayoutPrefs] = useKV<LayoutPreferences>('workspace-layout-prefs', {
     viewMode: 'fluid',
     sortBy: 'time',
-    filterFavorites: false,
     showExpanded: false
   });
   
@@ -108,23 +106,9 @@ export const WorkspacePanel = () => {
     })
   }, [setExpandedCards])
 
-  const handleFavoriteToggle = useCallback((gameId: string) => {
-    setFavoriteGames((current) => {
-      if (current?.includes(gameId)) {
-        return current.filter(id => id !== gameId)
-      }
-      return [...(current || []), gameId]
-    })
-  }, [setFavoriteGames])
-
   // Sorting and filtering
   const processedGames = React.useMemo(() => {
     let processed = [...games]
-    
-    // Filter favorites if enabled
-    if (layoutPrefs?.filterFavorites) {
-      processed = processed.filter(game => favoriteGames?.includes(game.id))
-    }
     
     // Sort games
     switch (layoutPrefs?.sortBy) {
@@ -208,28 +192,6 @@ export const WorkspacePanel = () => {
         </div>
         
         <div className="flex items-center gap-2">
-          {/* Favorites filter */}
-          <Button
-            variant={layoutPrefs?.filterFavorites ? "default" : "outline"}
-            size="sm"
-            onClick={() => setLayoutPrefs((current) => {
-              const defaultPrefs: LayoutPreferences = {
-                viewMode: 'fluid',
-                sortBy: 'time',
-                filterFavorites: false,
-                showExpanded: false
-              }
-              return {
-                ...(current || defaultPrefs),
-                filterFavorites: !(current?.filterFavorites)
-              }
-            })}
-            className="h-8"
-          >
-            <Heart size={14} weight={layoutPrefs?.filterFavorites ? "fill" : "regular"} />
-            {!isMobile && <span className="ml-1">Favorites</span>}
-          </Button>
-          
           {/* Sort options */}
           <Button
             variant="outline"
@@ -242,7 +204,6 @@ export const WorkspacePanel = () => {
                 const defaultPrefs: LayoutPreferences = {
                   viewMode: 'fluid',
                   sortBy: 'time',
-                  filterFavorites: false,
                   showExpanded: false
                 }
                 return {
@@ -276,8 +237,6 @@ export const WorkspacePanel = () => {
                   key={game.id}
                   game={game}
                   variant={isMobile ? 'mobile' : 'desktop'}
-                  showFavorites={true}
-                  onFavoriteToggle={handleFavoriteToggle}
                   className={cn(
                     'game-card-item',
                     favoriteGames?.includes(game.id) && 'ring-1 ring-yellow-400/20'

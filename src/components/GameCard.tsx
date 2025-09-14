@@ -9,7 +9,7 @@ import { Game } from '@/types'
 import { formatOdds, formatTotalLine, formatTime } from '@/lib/formatters'
 import { getCategorizedPlayerProps } from '@/services/mockApi'
 import { PropCategory } from '@/types'
-import { Clock, CaretDown, Star, Heart } from '@phosphor-icons/react'
+import { Clock } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { PlayerPropsSection } from '@/components/PlayerPropsSection'
 import { cn } from '@/lib/utils'
@@ -18,22 +18,18 @@ interface GameCardProps {
   game: Game
   variant?: 'mobile' | 'desktop'
   className?: string
-  showFavorites?: boolean
-  onFavoriteToggle?: (gameId: string) => void
 }
 
 export function GameCard({ 
   game, 
   variant = 'mobile',
-  className,
-  showFavorites = false,
-  onFavoriteToggle
+  className
 }: GameCardProps) {
   const { addBet } = useBetSlip()
   const [isExpanded, setIsExpanded] = useState(false)
   const [propCategories, setPropCategories] = useState<PropCategory[]>([])
   const [propsLoading, setPropsLoading] = useState(false)
-  const [isFavorited, setIsFavorited] = useState(false)
+
 
   const handleBetClick = useCallback((
     e: React.MouseEvent,
@@ -51,11 +47,7 @@ export function GameCard({
     })
   }, [addBet, game])
 
-  const handleExpandToggle = useCallback(async (e?: React.MouseEvent) => {
-    if (e) {
-      e.stopPropagation()
-    }
-    
+  const handleExpandToggle = useCallback(async () => {
     if (!isExpanded && propCategories.length === 0) {
       setPropsLoading(true)
       try {
@@ -70,16 +62,6 @@ export function GameCard({
     
     setIsExpanded(!isExpanded)
   }, [isExpanded, propCategories.length, game.id])
-
-  const handleFavoriteToggle = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsFavorited(!isFavorited)
-    onFavoriteToggle?.(game.id)
-    toast.success(isFavorited ? 'Removed from favorites' : 'Added to favorites', {
-      duration: 1000,
-      position: 'bottom-center'
-    })
-  }, [isFavorited, game.id, onFavoriteToggle])
 
   if (variant === 'mobile') {
     return (
@@ -98,62 +80,33 @@ export function GameCard({
           )}
           onClick={handleExpandToggle}
         >
-          <CardContent className="p-3">
-            {/* Compact Header Row */}
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-xs px-2 py-0.5 font-medium bg-muted/40">
-                  {game.leagueId}
+          <CardContent className="p-2.5">
+            {/* League Badge */}
+            <div className="flex items-center justify-center mb-2">
+              <Badge variant="secondary" className="text-xs px-2 py-0.5 font-medium bg-muted/40">
+                {game.leagueId}
+              </Badge>
+              {game.status === 'live' && (
+                <Badge className="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 border-red-400/30 animate-pulse ml-2">
+                  LIVE
                 </Badge>
-                <div className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Clock size={10} />
-                  {formatTime(game.startTime)}
-                </div>
-                {game.status === 'live' && (
-                  <Badge className="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 border-red-400/30 animate-pulse">
-                    LIVE
-                  </Badge>
-                )}
+              )}
+            </div>
+
+            {/* Teams Row with Records */}
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div className="text-center">
+                <div className="text-sm font-semibold">{game.awayTeam.shortName}</div>
+                <div className="text-xs text-muted-foreground">({game.awayTeam.record})</div>
               </div>
-              
-              <div className="flex items-center gap-1">
-                {showFavorites && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleFavoriteToggle}
-                    className="h-6 w-6 p-0 hover:bg-accent/20"
-                  >
-                    {isFavorited ? 
-                      <Heart size={12} className="text-red-400" weight="fill" /> :
-                      <Star size={12} className="text-muted-foreground" />
-                    }
-                  </Button>
-                )}
-                <CaretDown 
-                  size={14} 
-                  className={cn(
-                    'text-muted-foreground transition-transform duration-200',
-                    isExpanded && 'rotate-180'
-                  )}
-                />
+              <span className="text-xs text-muted-foreground font-medium px-2">@</span>
+              <div className="text-center">
+                <div className="text-sm font-semibold">{game.homeTeam.shortName}</div>
+                <div className="text-xs text-muted-foreground">({game.homeTeam.record})</div>
               </div>
             </div>
 
-            {/* Slim Teams Row */}
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-semibold">{game.awayTeam.shortName}</span>
-                <span className="text-xs text-muted-foreground">({game.awayTeam.record})</span>
-              </div>
-              <span className="text-xs text-muted-foreground font-medium">@</span>
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-semibold">{game.homeTeam.shortName}</span>
-                <span className="text-xs text-muted-foreground">({game.homeTeam.record})</span>
-              </div>
-            </div>
-
-            {/* Thin Three-Column Betting Grid */}
+            {/* Three-Column Betting Grid */}
             <div className="grid grid-cols-3 gap-2">
               {/* Spread Column */}
               <div className="space-y-1">
@@ -162,7 +115,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-8 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -180,7 +133,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-8 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -198,14 +151,20 @@ export function GameCard({
                 </div>
               </div>
 
-              {/* Total Column */}
+              {/* Total Column with Time */}
               <div className="space-y-1">
-                <div className="text-xs text-muted-foreground text-center font-medium">TOTAL</div>
+                <div className="text-xs text-muted-foreground text-center font-medium flex flex-col items-center gap-0.5">
+                  <div className="flex items-center gap-1">
+                    <Clock size={10} />
+                    {formatTime(game.startTime)}
+                  </div>
+                  <div>TOTAL</div>
+                </div>
                 <div className="space-y-1">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-8 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -223,7 +182,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-8 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -248,7 +207,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-8 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -265,7 +224,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-8 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="w-full h-7 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -291,9 +250,9 @@ export function GameCard({
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  className="overflow-hidden mt-3"
+                  className="overflow-hidden mt-2"
                 >
-                  <Separator className="mb-3" />
+                  <Separator className="mb-2" />
                   <PlayerPropsSection
                     categories={propCategories}
                     game={game}
@@ -326,7 +285,7 @@ export function GameCard({
         )}
         onClick={handleExpandToggle}
       >
-        <CardContent className="p-4">
+        <CardContent className="p-3">
           {/* Desktop Compact Layout */}
           <div className="flex items-center justify-between">
             {/* Left Side - Game Info */}
@@ -335,10 +294,6 @@ export function GameCard({
                 <Badge variant="secondary" className="text-xs px-2 py-1 font-medium bg-muted/40">
                   {game.leagueId}
                 </Badge>
-                <div className="text-sm text-muted-foreground flex items-center gap-1">
-                  <Clock size={12} />
-                  {formatTime(game.startTime)}
-                </div>
                 {game.status === 'live' && (
                   <Badge className="text-xs px-2 py-1 bg-red-500/20 text-red-400 border-red-400/30 animate-pulse">
                     LIVE
@@ -346,16 +301,16 @@ export function GameCard({
                 )}
               </div>
 
-              {/* Teams */}
+              {/* Teams with Records */}
               <div className="flex items-center gap-3 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">{game.awayTeam.shortName}</span>
-                  <span className="text-xs text-muted-foreground">({game.awayTeam.record})</span>
+                <div className="text-center">
+                  <div className="font-semibold">{game.awayTeam.shortName}</div>
+                  <div className="text-xs text-muted-foreground">({game.awayTeam.record})</div>
                 </div>
                 <span className="text-xs text-muted-foreground font-medium">@</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">{game.homeTeam.shortName}</span>
-                  <span className="text-xs text-muted-foreground">({game.homeTeam.record})</span>
+                <div className="text-center">
+                  <div className="font-semibold">{game.homeTeam.shortName}</div>
+                  <div className="text-xs text-muted-foreground">({game.homeTeam.record})</div>
                 </div>
               </div>
             </div>
@@ -369,7 +324,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -384,7 +339,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -399,14 +354,20 @@ export function GameCard({
                 </div>
               </div>
 
-              {/* Total */}
+              {/* Total with Time */}
               <div className="flex flex-col gap-1 items-center">
-                <div className="text-xs text-muted-foreground font-medium">TOTAL</div>
+                <div className="text-xs text-muted-foreground font-medium flex flex-col items-center gap-0.5">
+                  <div className="flex items-center gap-1">
+                    <Clock size={10} />
+                    {formatTime(game.startTime)}
+                  </div>
+                  <div>TOTAL</div>
+                </div>
                 <div className="flex gap-1">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -421,7 +382,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -443,7 +404,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -457,7 +418,7 @@ export function GameCard({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
+                    className="h-7 px-3 text-xs bg-muted/20 border-border/60 hover:bg-accent/20 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleBetClick(
@@ -470,30 +431,6 @@ export function GameCard({
                   </Button>
                 </div>
               </div>
-
-              {/* Controls */}
-              <div className="flex items-center gap-2">
-                {showFavorites && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleFavoriteToggle}
-                    className="h-7 w-7 p-0 hover:bg-accent/20"
-                  >
-                    {isFavorited ? 
-                      <Heart size={14} className="text-red-400" weight="fill" /> :
-                      <Star size={14} className="text-muted-foreground" />
-                    }
-                  </Button>
-                )}
-                <CaretDown 
-                  size={16} 
-                  className={cn(
-                    'text-muted-foreground transition-transform duration-200',
-                    isExpanded && 'rotate-180'
-                  )}
-                />
-              </div>
             </div>
           </div>
 
@@ -505,9 +442,9 @@ export function GameCard({
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.25, ease: 'easeInOut' }}
-                className="overflow-hidden mt-4"
+                className="overflow-hidden mt-3"
               >
-                <Separator className="mb-4" />
+                <Separator className="mb-3" />
                 <PlayerPropsSection
                   categories={propCategories}
                   game={game}
