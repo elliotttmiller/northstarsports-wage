@@ -14,6 +14,7 @@ export { ActionHubPanel } from './panels/ActionHubPanel'
 export { GameCard } from './GameCard'
 export { OddsButton } from './OddsButton'
 export { BetSlipItem } from './BetSlipItem'
+export { PlayerPropsSection } from './PlayerPropsSection'
 
 // UI Enhancement Components
 export { SidebarToggle } from './SidebarToggle'

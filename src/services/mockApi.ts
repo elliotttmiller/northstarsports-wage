@@ -328,12 +328,18 @@ export interface PlayerProp {
   playerId: string;
   playerName: string;
   position: string;
-  category: 'passing' | 'rushing' | 'receiving' | 'scoring' | 'defense';
+  category: 'passing' | 'rushing' | 'receiving' | 'scoring' | 'defense' | 'kicking';
   statType: string;
   line: number;
   overOdds: number;
   underOdds: number;
   team: 'home' | 'away';
+}
+
+export interface PropCategory {
+  name: string;
+  key: string;
+  props: PlayerProp[];
 }
 
 // Generate mock player props
@@ -342,66 +348,73 @@ const generatePlayerProps = (gameId: string): PlayerProp[] => {
   
   // Mock players and their stats
   const mockPlayers = [
-    { name: 'Patrick Mahomes', position: 'QB', team: 'home', categories: ['passing', 'rushing'] },
-    { name: 'Josh Allen', position: 'QB', team: 'away', categories: ['passing', 'rushing'] },
-    { name: 'Travis Kelce', position: 'TE', team: 'home', categories: ['receiving'] },
-    { name: 'Stefon Diggs', position: 'WR', team: 'away', categories: ['receiving'] },
-    { name: 'Clyde Edwards-Helaire', position: 'RB', team: 'home', categories: ['rushing', 'receiving'] },
-    { name: 'James Cook', position: 'RB', team: 'away', categories: ['rushing', 'receiving'] }
+    { name: 'Patrick Mahomes', position: 'QB', team: 'home', categories: ['passing', 'rushing', 'scoring'] },
+    { name: 'Josh Allen', position: 'QB', team: 'away', categories: ['passing', 'rushing', 'scoring'] },
+    { name: 'Travis Kelce', position: 'TE', team: 'home', categories: ['receiving', 'scoring'] },
+    { name: 'Stefon Diggs', position: 'WR', team: 'away', categories: ['receiving', 'scoring'] },
+    { name: 'Clyde Edwards-Helaire', position: 'RB', team: 'home', categories: ['rushing', 'receiving', 'scoring'] },
+    { name: 'James Cook', position: 'RB', team: 'away', categories: ['rushing', 'receiving', 'scoring'] },
+    { name: 'Harrison Butker', position: 'K', team: 'home', categories: ['kicking'] },
+    { name: 'Tyler Bass', position: 'K', team: 'away', categories: ['kicking'] }
   ];
 
-  const passingStats = ['Passing Yards', 'TD Passes', 'Completions', 'Attempts'];
-  const rushingStats = ['Rushing Yards', 'Rushing TDs', 'Rush Attempts'];
-  const receivingStats = ['Receiving Yards', 'Receptions', 'Receiving TDs'];
+  const statsByCategory = {
+    passing: [
+      { name: 'Passing Yards', baseRange: [250, 350] },
+      { name: 'TD Passes', baseRange: [1.5, 3.5] },
+      { name: 'Completions', baseRange: [20.5, 30.5] },
+      { name: 'Pass Attempts', baseRange: [30.5, 45.5] },
+      { name: 'Longest Completion', baseRange: [25.5, 45.5] },
+      { name: 'Interceptions', baseRange: [0.5, 1.5] }
+    ],
+    rushing: [
+      { name: 'Rushing Yards', baseRange: [35.5, 95.5] },
+      { name: 'Rush Attempts', baseRange: [15.5, 23.5] },
+      { name: 'Rushing TDs', baseRange: [0.5, 1.5] },
+      { name: 'Longest Rush', baseRange: [12.5, 25.5] },
+      { name: 'Rushing 1st Downs', baseRange: [3.5, 8.5] }
+    ],
+    receiving: [
+      { name: 'Receiving Yards', baseRange: [65.5, 125.5] },
+      { name: 'Receptions', baseRange: [5.5, 9.5] },
+      { name: 'Receiving TDs', baseRange: [0.5, 1.5] },
+      { name: 'Longest Reception', baseRange: [18.5, 35.5] },
+      { name: 'Receiving 1st Downs', baseRange: [3.5, 6.5] }
+    ],
+    scoring: [
+      { name: 'Anytime TD', baseRange: [0.5, 0.5] },
+      { name: 'First TD', baseRange: [0.5, 0.5] },
+      { name: 'Last TD', baseRange: [0.5, 0.5] },
+      { name: 'Total TDs', baseRange: [0.5, 2.5] }
+    ],
+    kicking: [
+      { name: 'Field Goals Made', baseRange: [1.5, 3.5] },
+      { name: 'Extra Points Made', baseRange: [2.5, 4.5] },
+      { name: 'Longest Field Goal', baseRange: [42.5, 52.5] },
+      { name: 'Total Kicking Points', baseRange: [7.5, 12.5] }
+    ]
+  };
 
   mockPlayers.forEach((player, playerIndex) => {
     player.categories.forEach(category => {
-      let stats: string[] = [];
-      switch (category) {
-        case 'passing':
-          stats = passingStats;
-          break;
-        case 'rushing':
-          stats = rushingStats;
-          break;
-        case 'receiving':
-          stats = receivingStats;
-          break;
-      }
+      const categoryStats = statsByCategory[category as keyof typeof statsByCategory];
+      
+      categoryStats.forEach((stat, statIndex) => {
+        let line = stat.baseRange[0] + Math.random() * (stat.baseRange[1] - stat.baseRange[0]);
+        
+        // Adjust line based on position for certain stats
+        if (stat.name === 'Rushing Yards' && player.position === 'QB') {
+          line = 35.5 + Math.random() * 20;
+        }
+        if (stat.name === 'Rush Attempts' && player.position === 'QB') {
+          line = 5.5 + Math.random() * 3;
+        }
 
-      stats.forEach((stat, statIndex) => {
-        let line = 0;
-        switch (stat) {
-          case 'Passing Yards':
-            line = 250 + Math.floor(Math.random() * 100);
-            break;
-          case 'TD Passes':
-            line = 1.5 + Math.floor(Math.random() * 2);
-            break;
-          case 'Completions':
-            line = 20.5 + Math.floor(Math.random() * 10);
-            break;
-          case 'Attempts':
-            line = 30.5 + Math.floor(Math.random() * 15);
-            break;
-          case 'Rushing Yards':
-            line = player.position === 'QB' ? 35.5 + Math.floor(Math.random() * 20) : 75.5 + Math.floor(Math.random() * 40);
-            break;
-          case 'Rushing TDs':
-            line = 0.5;
-            break;
-          case 'Rush Attempts':
-            line = player.position === 'QB' ? 5.5 + Math.floor(Math.random() * 3) : 15.5 + Math.floor(Math.random() * 8);
-            break;
-          case 'Receiving Yards':
-            line = 65.5 + Math.floor(Math.random() * 60);
-            break;
-          case 'Receptions':
-            line = 5.5 + Math.floor(Math.random() * 4);
-            break;
-          case 'Receiving TDs':
-            line = 0.5;
-            break;
+        // Round to appropriate decimal places
+        if (stat.name.includes('TD') || stat.name.includes('Attempts') || stat.name.includes('Completions') || stat.name.includes('Receptions')) {
+          line = Math.round(line * 2) / 2; // Round to nearest 0.5
+        } else {
+          line = Math.round(line * 2) / 2; // Round to nearest 0.5
         }
 
         props.push({
@@ -410,10 +423,10 @@ const generatePlayerProps = (gameId: string): PlayerProp[] => {
           playerName: player.name,
           position: player.position,
           category: category as any,
-          statType: stat,
+          statType: stat.name,
           line,
-          overOdds: -110 + Math.floor(Math.random() * 20) - 10,
-          underOdds: -110 + Math.floor(Math.random() * 20) - 10,
+          overOdds: -110 + Math.floor(Math.random() * 40) - 20,
+          underOdds: -110 + Math.floor(Math.random() * 40) - 20,
           team: player.team as 'home' | 'away'
         });
       });
@@ -427,4 +440,51 @@ const generatePlayerProps = (gameId: string): PlayerProp[] => {
 export const getPlayerProps = async (gameId: string): Promise<PlayerProp[]> => {
   await new Promise(resolve => setTimeout(resolve, 300));
   return generatePlayerProps(gameId);
+};
+
+// Get categorized player props for a game
+export const getCategorizedPlayerProps = async (gameId: string): Promise<PropCategory[]> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const allProps = generatePlayerProps(gameId);
+  
+  // Group props by category
+  const categoryMap: Record<string, PlayerProp[]> = {};
+  
+  allProps.forEach(prop => {
+    if (!categoryMap[prop.category]) {
+      categoryMap[prop.category] = [];
+    }
+    categoryMap[prop.category].push(prop);
+  });
+  
+  // Create category objects with friendly names
+  const categories: PropCategory[] = [];
+  
+  const categoryNames = {
+    passing: 'Passing',
+    rushing: 'Rushing', 
+    receiving: 'Receiving',
+    scoring: 'Scoring',
+    kicking: 'Kicking',
+    defense: 'Defense'
+  };
+  
+  Object.entries(categoryMap).forEach(([key, props]) => {
+    categories.push({
+      name: categoryNames[key as keyof typeof categoryNames] || key,
+      key,
+      props: props.sort((a, b) => a.playerName.localeCompare(b.playerName))
+    });
+  });
+  
+  // Sort categories by priority
+  const categoryOrder = ['passing', 'rushing', 'receiving', 'scoring', 'kicking', 'defense'];
+  categories.sort((a, b) => {
+    const aIndex = categoryOrder.indexOf(a.key);
+    const bIndex = categoryOrder.indexOf(b.key);
+    return aIndex - bIndex;
+  });
+  
+  return categories;
 };

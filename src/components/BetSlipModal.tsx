@@ -7,12 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Trash, X, Target, Stack, TrendUp, Calculator } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { SmoothScrollContainer } from '@/components/VirtualScrolling';
 
 export const BetSlipModal = () => {
   const { betSlip, removeBet, updateStake, setBetType, clearBetSlip } = useBetSlip();
@@ -129,7 +129,7 @@ export const BetSlipModal = () => {
           </div>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-4">
+        <SmoothScrollContainer className="flex-1 px-4 seamless-scroll">
           <motion.div 
             className="py-4 space-y-4"
             initial={{ opacity: 0 }}
@@ -311,7 +311,7 @@ export const BetSlipModal = () => {
               </div>
             )}
           </motion.div>
-        </ScrollArea>
+        </SmoothScrollContainer>
 
         {/* Bet Slip Summary - Enhanced mobile-first design */}
         {betSlip.bets.length > 0 && (
