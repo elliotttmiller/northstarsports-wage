@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+
 
 export function SimpleTest() {
   return (
@@ -9,7 +9,6 @@ export function SimpleTest() {
     </div>
   )
 }
-
 
 
 
