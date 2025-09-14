@@ -1,9 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { motion, useMotionValue, PanInfo } from 'framer-motion'
-import { Plus } from '@phosphor-icons/react'
+import { motion, useMotionValue, useAnimation, PanInfo } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import { useNavigation } from '@/context/NavigationContext'
 import { useBetSlip } from '@/context/BetSlipContext'
+import { Receipt } from '@phosphor-icons/react'
 
 interface Position {
   x: number
@@ -18,6 +18,7 @@ export function FloatingBetSlipButton() {
   
   const x = useMotionValue(0)
   const y = useMotionValue(0)
+  const controls = useAnimation()
   const dragStartTime = useRef(0)
   const initialPosition = useRef<Position>({ x: 0, y: 0 })
   const hasMoved = useRef(false)
@@ -25,12 +26,13 @@ export function FloatingBetSlipButton() {
   const { betSlip } = useBetSlip()
   const isModalOpen = navigation.mobilePanel === 'betslip'
 
-  // Initialize position
   const getDefaultPosition = useCallback((): Position => {
+    if (typeof window === 'undefined') return { x: 0, y: 0 }
+    
     const buttonSize = 48
     const margin = 16
-    const safeWidth = typeof window !== 'undefined' ? window.innerWidth : 375
-    const safeHeight = typeof window !== 'undefined' ? window.innerHeight : 667
+    const safeWidth = window.innerWidth
+    const safeHeight = window.innerHeight
     
     return {
       x: safeWidth - buttonSize - margin,
@@ -40,10 +42,11 @@ export function FloatingBetSlipButton() {
 
   // Initialize position on mount
   useEffect(() => {
-    const defaultPos = getDefaultPosition()
-    const initPosition = (savedPosition && savedPosition.x !== 0 && savedPosition.y !== 0) 
-      ? savedPosition 
-      : defaultPos
+    if (!savedPosition) return
+    
+    const initPosition = savedPosition.x === 0 && savedPosition.y === 0 
+      ? getDefaultPosition() 
+      : savedPosition
     
     x.set(initPosition.x)
     y.set(initPosition.y)
@@ -57,7 +60,7 @@ export function FloatingBetSlipButton() {
       const currentY = y.get()
       const buttonSize = 48
       const margin = 16
-      
+
       const maxX = window.innerWidth - buttonSize - margin
       const maxY = window.innerHeight - buttonSize - margin - 80
       
@@ -91,12 +94,9 @@ export function FloatingBetSlipButton() {
 
   const handleDragEnd = useCallback(() => {
     const dragDuration = Date.now() - dragStartTime.current
-    
-    setIsDragging(false)
-
     const wasIntentionalDrag = hasMoved.current && dragDuration > 100
     
-    if (wasIntentionalDrag && savedPosition) {
+    if (wasIntentionalDrag) {
       const currentX = x.get()
       const currentY = y.get()
       setSavedPosition({ x: currentX, y: currentY })
@@ -106,111 +106,65 @@ export function FloatingBetSlipButton() {
     }
 
     // Reset all states
+    setIsDragging(false)
     hasMoved.current = false
-  }, [x, y, setSavedPosition, setMobilePanel, isModalOpen, savedPosition])
+  }, [x, y, setSavedPosition, setMobilePanel, isModalOpen])
 
   if (!isInitialized) return null
 
+  const itemCount = betSlip?.bets?.length || 0
+
   return (
-    <motion.div
-      className="pointer-events-auto"
-      style={{ 
-        x, 
-        y, 
-        position: 'absolute',
-        zIndex: 50
-      }}
-      drag
-      dragMomentum={false}
-      dragElastic={0.1}
-      dragConstraints={{
-        left: 16,
-        right: typeof window !== 'undefined' ? window.innerWidth - 64 : 300,
-        top: 16,
-        bottom: typeof window !== 'undefined' ? window.innerHeight - 144 : 500
-      }}
-      onDragStart={handleDragStart}
-      onDrag={handleDrag}
-      onDragEnd={handleDragEnd}
-      whileHover={!isDragging ? { 
-        scale: 1.05,
-        transition: { duration: 0.2 }
-      } : {}}
-      whileTap={!isDragging ? { 
-        scale: 0.95,
-        transition: { duration: 0.15 }
-      } : {}}
-      initial={{ scale: 0, opacity: 0, rotate: -10 }}
-      animate={{ 
-        opacity: isModalOpen ? 0.3 : 0.9, 
-        scale: 1, 
-        rotate: 0
-      }}
-      transition={{ type: "spring", damping: 20, stiffness: 300 }}
-    >
-      <div className="relative">
-        <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 2,
-            repeatDelay: 3
-          }}
-          className={`
-            w-12 h-12 rounded-full shadow-lg cursor-pointer
-            bg-accent text-accent-foreground
-            flex items-center justify-center
-            backdrop-blur-sm border border-accent/20
-            ${isDragging ? 'shadow-2xl' : 'shadow-lg'}
-          `}
-        >
-          <Plus 
-            size={20} 
-            weight="bold"
-            className="transition-transform duration-200"
-          />
-        </motion.div>
-
-        {/* Bet count badge */}
-        {betSlip.bets && betSlip.bets.length > 0 && (
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            exit={{
-              scale: 0,
-              rotate: 180,
-              transition: { duration: 0.2 }
-            }}
-            transition={{
-              type: "spring", 
-              damping: 25,
-              stiffness: 400
-            }}
-            layoutId="bet-count"
-            className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center text-xs font-bold shadow-md"
-          >
-            {betSlip.bets?.length || 0}
-          </motion.div>
-        )}
-
-        {/* Dragging ripple effect */}
-        {isDragging && (
-          <motion.div
-            className="absolute inset-0 rounded-full border-2 border-accent/30"
-            animate={{ 
-              scale: [1, 2.5],
-              opacity: [0.6, 0]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        )}
-      </div>
-    </motion.div>
+    <div className="pointer-events-auto">
+      <motion.div
+        drag
+        style={{
+          x, 
+          y, 
+          position: 'absolute',
+          zIndex: 9999
+        }}
+        animate={controls}
+        initial={false}
+        dragMomentum={false}
+        dragElastic={0.1}
+        dragConstraints={{
+          left: 16,
+          top: 16,
+          right: typeof window !== 'undefined' ? window.innerWidth - 64 : 300,
+          bottom: typeof window !== 'undefined' ? window.innerHeight - 144 : 500
+        }}
+        onDragStart={handleDragStart}
+        onDrag={handleDrag}
+        onDragEnd={handleDragEnd}
+        whileHover={!isDragging ? { scale: 1.05 } : {}}
+        whileTap={!isDragging ? { scale: 0.95 } : {}}
+        className="relative"
+      >
+        <div className="
+          w-12 h-12 rounded-full 
+          bg-accent text-accent-foreground
+          flex items-center justify-center
+          shadow-lg border border-border
+          cursor-pointer select-none
+          transition-colors duration-200
+        ">
+          <Receipt weight="fill" size={20} />
+          
+          {itemCount > 0 && (
+            <div className="
+              absolute -top-1 -right-1 
+              w-5 h-5 rounded-full 
+              bg-primary text-primary-foreground 
+              flex items-center justify-center 
+              text-xs font-medium
+              border-2 border-background
+            ">
+              {itemCount > 9 ? '9+' : itemCount}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </div>
   )
 }
