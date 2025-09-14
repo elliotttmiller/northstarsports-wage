@@ -10,7 +10,7 @@ import { BetSlipProvider } from '../../context/BetSlipContext'
 import { Toaster } from '@/components/ui/sonner'
 import { SidebarToggle } from '../SidebarToggle'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useIsMobile } from '@/hooks/use-mobile'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 function LayoutContent() {
   const { navigation, setMobilePanel, toggleSideNav, toggleActionHub, setIsBetSlipOpen } = useNavigation()

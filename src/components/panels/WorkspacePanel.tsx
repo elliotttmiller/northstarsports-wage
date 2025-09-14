@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { GameCard } from '@/components/GameCard';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useInfiniteScroll, useSmoothScroll } from '@/hooks/useInfiniteScroll';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CaretUp, SortAscending } from '@phosphor-icons/react';

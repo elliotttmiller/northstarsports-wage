@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { motion } from 'framer-motion';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { GameController, House, Receipt, DotsThree, Lightning } from '@phosphor-icons/react';
 
 export function BottomNav() {
@@ -43,11 +43,11 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-between px-4 w-full">
+    <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-between px-2 w-full">
       {/* Sports - Far Left */}
       <motion.button
         onClick={handleSportsClick}
-        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[56px] ${
+        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
           (location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation'
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
@@ -62,7 +62,7 @@ export function BottomNav() {
       {/* Live - Left of Center */}
       <motion.button
         onClick={handleLiveClick}
-        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[56px] ${
+        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
           location.search.includes('filter=live')
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
@@ -96,7 +96,7 @@ export function BottomNav() {
       {/* Bets - Right of Center */}
       <motion.button
         onClick={handleBetsClick}
-        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[56px] relative ${
+        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] relative ${
           location.pathname === '/my-bets'
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
@@ -116,7 +116,7 @@ export function BottomNav() {
       {/* Other - Far Right */}
       <motion.button
         onClick={handleOtherClick}
-        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[56px] ${
+        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
           location.pathname === '/other'
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
