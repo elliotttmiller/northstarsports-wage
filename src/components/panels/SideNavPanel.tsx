@@ -152,42 +152,43 @@ export const SideNavPanel = () => {
         <p className="text-sm text-muted-foreground">Select a sport to view games</p>
       </motion.div>
 
-      <SmoothScrollContainer className="flex-1 scrollbar-hide" showScrollbar={false}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="p-4"
-        >
-          <div className="space-y-2">
-            <Accordion 
-              type="single" 
-              collapsible 
-              value={navigation.selectedSport || undefined}
-              onValueChange={(value) => {
-                if (value) {
-                  selectSport(value);
-                }
-              }}
-            >
-              {sports.map((sport, index) => (
-                <motion.div
-                  key={sport.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ 
-                    duration: 0.3, 
-                    delay: index * 0.05,
-                    ease: [0.4, 0.0, 0.2, 1]
-                  }}
-                >
-                  {renderSportItem(sport, index)}
-                </motion.div>
-              ))}
-            </Accordion>
-          </div>
-        </motion.div>
-      </SmoothScrollContainer>
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full seamless-scroll overflow-y-auto p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            <div className="space-y-2">
+              <Accordion 
+                type="single" 
+                collapsible 
+                value={navigation.selectedSport || undefined}
+                onValueChange={(value) => {
+                  if (value) {
+                    selectSport(value);
+                  }
+                }}
+              >
+                {sports.map((sport, index) => (
+                  <motion.div
+                    key={sport.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ 
+                      duration: 0.3, 
+                      delay: index * 0.05,
+                      ease: [0.4, 0.0, 0.2, 1]
+                    }}
+                  >
+                    {renderSportItem(sport, index)}
+                  </motion.div>
+                ))}
+              </Accordion>
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 };

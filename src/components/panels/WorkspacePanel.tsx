@@ -225,18 +225,21 @@ export const WorkspacePanel = () => {
 
       {/* Games Container */}
       <div className="flex-1 overflow-hidden">
-        <div className={cn(
-          'h-full seamless-scroll overflow-y-auto',
-          isMobile ? 'p-3' : 'p-4'
-        )}>
-          <div className="space-y-3">
+        <div 
+          ref={(el) => setScrollContainerRef(el)}
+          className={cn(
+            'h-full seamless-scroll overflow-y-auto',
+            isMobile ? 'p-3' : 'p-4'
+          )}
+        >
+          <div className="space-y-2">
             <AnimatePresence mode="popLayout">
               {processedGames.map((game) => (
                 <GameCard
                   key={game.id}
                   game={game}
                   className={cn(
-                    'game-card-item',
+                    'card-hover',
                     favoriteGames?.includes(game.id) && 'ring-1 ring-yellow-400/20'
                   )}
                 />
@@ -246,7 +249,21 @@ export const WorkspacePanel = () => {
 
           {/* Load more trigger */}
           {pagination?.hasNextPage && !loading && (
-            <div ref={loadMoreRef} className="h-20 w-full" />
+            <div ref={loadMoreRef} className="h-16 w-full" />
+          )}
+
+          {/* End of results indicator */}
+          {pagination && !pagination.hasNextPage && processedGames.length > 0 && (
+            <motion.div 
+              className="text-center py-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="text-sm text-muted-foreground">
+                End of games list
+              </div>
+            </motion.div>
           )}
         </div>
         
@@ -256,7 +273,7 @@ export const WorkspacePanel = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-card/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg"
+              className="bg-card/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-border"
             >
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
@@ -271,7 +288,7 @@ export const WorkspacePanel = () => {
       <AnimatePresence>
         {processedGames.length > 5 && (
           <motion.div
-            className="fixed bottom-20 right-4 z-30 lg:bottom-4"
+            className="fixed bottom-20 right-4 z-30 lg:bottom-6"
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -281,27 +298,13 @@ export const WorkspacePanel = () => {
               variant="secondary"
               size="sm"
               onClick={handleScrollToTop}
-              className="rounded-full h-12 w-12 shadow-lg hover:shadow-xl transition-shadow bg-card/80 backdrop-blur-sm"
+              className="rounded-full h-10 w-10 shadow-lg hover:shadow-xl transition-shadow bg-card/90 backdrop-blur-sm border border-border"
             >
               <CaretUp size={16} />
             </Button>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* End of results indicator */}
-      {pagination && !pagination.hasNextPage && processedGames.length > 0 && (
-        <motion.div 
-          className="text-center py-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="text-sm text-muted-foreground">
-            You've reached the end of the games list
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 };

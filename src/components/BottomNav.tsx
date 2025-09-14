@@ -3,7 +3,7 @@ import { useNavigation } from '@/context/NavigationContext';
 import { useBetSlip } from '@/context/BetSlipContext';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { GameController, House, Receipt, DotsThree, TrendUp } from '@phosphor-icons/react';
+import { GameController, House, Receipt, DotsThree, Wrench } from '@phosphor-icons/react';
 
 export function BottomNav() {
   const location = useLocation();
@@ -11,6 +11,11 @@ export function BottomNav() {
   const { navigation, setMobilePanel } = useNavigation();
   const { betSlip } = useBetSlip();
   const isMobile = useIsMobile();
+
+  const handleBetsClick = () => {
+    setMobilePanel(null);
+    navigate('/my-bets');
+  };
 
   const handleSportsClick = () => {
     if (isMobile) {
@@ -27,34 +32,14 @@ export function BottomNav() {
     }
   };
 
-  const handleBetsClick = () => {
-    setMobilePanel(null);
-    navigate('/my-bets');
-  };
-
-  const handleOtherClick = () => {
+  const handleBuilderClick = () => {
     setMobilePanel(null);
     navigate('/other');
   };
 
   return (
     <nav className="bg-card/95 backdrop-blur-sm border-t border-border h-16 flex items-center justify-around px-2 w-full">
-      {/* Sports - Far Left */}
-      <motion.button
-        onClick={handleSportsClick}
-        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          (location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation'
-            ? 'bg-accent text-accent-foreground scale-105' 
-            : 'text-muted-foreground hover:text-foreground'
-        }`}
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <GameController size={20} weight={(location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation' ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Sports</span>
-      </motion.button>
-
-      {/* My Bets - Left Center */}
+      {/* Bets - Far Left (swapped position) */}
       <motion.button
         onClick={handleBetsClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] relative ${
@@ -67,6 +52,26 @@ export function BottomNav() {
       >
         <Receipt size={20} weight={location.pathname === '/my-bets' ? 'fill' : 'regular'} />
         <span className="text-xs font-medium">Bets</span>
+        {betSlip.bets.length > 0 && (
+          <div className="absolute -top-1 -right-1 min-w-[16px] h-[16px] rounded-full flex items-center justify-center bg-primary text-primary-foreground text-[10px] font-medium">
+            {betSlip.bets.length}
+          </div>
+        )}
+      </motion.button>
+
+      {/* Builder - Left Center */}
+      <motion.button
+        onClick={handleBuilderClick}
+        className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
+          location.pathname === '/other'
+            ? 'bg-accent text-accent-foreground scale-105' 
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        whileHover={{ scale: 1.05, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Wrench size={20} weight={location.pathname === '/other' ? 'fill' : 'regular'} />
+        <span className="text-xs font-medium">Builder</span>
       </motion.button>
 
       {/* Home - Center (Elevated) */}
@@ -88,24 +93,24 @@ export function BottomNav() {
         </Link>
       </motion.div>
 
-      {/* Live Odds - Right Center */}
+      {/* Sports - Right Center (swapped position) */}
       <motion.button
-        onClick={() => navigate('/games')}
+        onClick={handleSportsClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
-          location.pathname === '/games'
+          (location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation'
             ? 'bg-accent text-accent-foreground scale-105' 
             : 'text-muted-foreground hover:text-foreground'
         }`}
         whileHover={{ scale: 1.05, y: -2 }}
         whileTap={{ scale: 0.95 }}
       >
-        <TrendUp size={20} weight={location.pathname === '/games' ? 'fill' : 'regular'} />
-        <span className="text-xs font-medium">Live</span>
+        <GameController size={20} weight={(location.pathname === '/games' && !isMobile) || navigation.mobilePanel === 'navigation' ? 'fill' : 'regular'} />
+        <span className="text-xs font-medium">Sports</span>
       </motion.button>
 
       {/* Other - Far Right */}
       <motion.button
-        onClick={handleOtherClick}
+        onClick={handleBuilderClick}
         className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-all duration-300 min-w-[60px] ${
           location.pathname === '/other'
             ? 'bg-accent text-accent-foreground scale-105' 

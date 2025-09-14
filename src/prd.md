@@ -1,177 +1,56 @@
-# NorthStarSports Wagering Studio - Product Requirements Document
+# NSSPORTSCLUB - Professional Sports Betting Platform
 
 ## Core Purpose & Success
-
-**Mission Statement**: Create a professional, state-of-the-art wagering studio that provides seamless sports betting experiences across all devices with real-time synchronization and intuitive navigation.
-
-**Success Indicators**: 
-- Smooth transitions between desktop three-panel layout and mobile sequential flow
-- Zero-friction bet placement and management
-- High user engagement with betting tools and analytics
-- Installable PWA with offline capabilities
-
-**Experience Qualities**: Professional, Responsive, Intuitive
+- **Mission Statement**: Create the definitive professional sports betting studio with unified desktop and mobile experiences that feel like industry-leading applications.
+- **Success Indicators**: Seamless cross-device experience, smooth interactions, professional UI polish, and intuitive betting workflows.
+- **Experience Qualities**: Professional, Fluid, Intuitive
 
 ## Project Classification & Approach
-
-**Complexity Level**: Complex Application (advanced functionality, multi-panel interface, real-time state management)
-
-**Primary User Activity**: Acting (placing bets, managing wagers, analyzing odds)
-
-## Thought Process for Feature Selection
-
-**Core Problem Analysis**: Sports bettors need a professional platform that works seamlessly across devices, providing comprehensive betting tools, real-time odds, and bet management in an intuitive interface.
-
-**User Context**: Users will engage during live sports events, need quick access to betting slips, want to track their wagers, and require responsive performance on mobile devices.
-
-**Critical Path**: Navigation → Game/Event Selection → Odds Analysis → Bet Placement → Bet Management → Results Tracking
-
-**Key Moments**: 
-1. Initial navigation to find desired betting markets
-2. Odds comparison and bet slip construction
-3. Bet confirmation and submission
+- **Complexity Level**: Complex Application (advanced functionality, synchronized state)
+- **Primary User Activity**: Creating (building bet slips), Acting (placing bets), Interacting (with live odds)
 
 ## Essential Features
-
-### Navigation System
-- **Functionality**: Three-panel desktop layout with collapsible mobile navigation
-- **Purpose**: Efficient access to all betting markets and user tools
-- **Success Criteria**: Smooth transitions, intuitive organization, responsive design
-
-### Live Odds Display
-- **Functionality**: Real-time odds updates with visual indicators for changes
-- **Purpose**: Provide accurate, up-to-date betting information
-- **Success Criteria**: Sub-second updates, clear visual hierarchy, mobile-optimized
-
-### Bet Slip Management
-- **Functionality**: Add/remove bets, calculate payouts, place wagers
-- **Purpose**: Centralized bet construction and management
-- **Success Criteria**: Real-time calculations, error prevention, seamless submission
-
-### Responsive Layout System
-- **Functionality**: Autonomous fluid layout engine with synchronized card positioning and animations
-- **Purpose**: Provide seamless, performant game card display across all device sizes
-- **Success Criteria**: Smooth 60fps animations, sub-100ms layout calculations, intuitive card interactions
-
-### Fluid Game Card System  
-- **Functionality**: Self-contained game cards with autonomous expand/collapse, betting integration, and state persistence
-- **Purpose**: Present comprehensive game information with progressive disclosure and quick betting access
-- **Success Criteria**: Instant state changes, persistent user preferences, accessible interactions
-
-### Progressive Web App
-- **Functionality**: Installable app with offline capabilities
-- **Purpose**: Native-like experience with enhanced performance
-- **Success Criteria**: Installable on devices, fast loading, offline functionality
+- **Unified Bet Slip Builder**: Single workflow for straight bets, parlays, and player props
+- **Responsive Game Cards**: Space-efficient cards with expandable player props
+- **Floating Bet Slip Button**: Mobile-only draggable access to current bet slip
+- **Synchronized Navigation**: Seamless desktop 3-panel and mobile sequential experience
+- **Virtual Scrolling**: Smooth, infinite scroll for all panels without page-level scrolling
 
 ## Design Direction
 
 ### Visual Tone & Identity
-**Emotional Response**: Confidence, professionalism, excitement, trust
-**Design Personality**: Sophisticated, modern, data-focused, reliable
-**Visual Metaphors**: Financial trading platforms, professional sports analysis tools
-**Simplicity Spectrum**: Rich interface with organized complexity - comprehensive tools presented clearly
+- **Emotional Response**: Confidence, professionalism, and control
+- **Design Personality**: Sleek, modern, industry-standard
+- **Visual Metaphors**: Financial dashboard meets sports analytics
+- **Simplicity Spectrum**: Minimal interface that prioritizes content and actions
 
 ### Color Strategy
-**Color Scheme Type**: Monochromatic slate with accent colors
-**Primary Color**: Deep slate (oklch(0.37 0.05 225)) - conveys professionalism and reliability
-**Secondary Colors**: Lighter slate tones for hierarchy and depth
-**Accent Color**: Vibrant green (oklch(0.70 0.14 160)) - for positive actions, wins, confirmations
-**Color Psychology**: Dark backgrounds reduce eye strain during extended sessions, green suggests success and positive outcomes
-**Color Accessibility**: WCAG AA compliant contrast ratios throughout
-**Foreground/Background Pairings**:
-- Background (oklch(0.09 0.02 225)) with Foreground (oklch(0.98 0.01 225)) - 15.2:1 contrast ratio
-- Card (oklch(0.13 0.02 225)) with Card Foreground (oklch(0.93 0.01 225)) - 12.8:1 contrast ratio
-- Primary (oklch(0.37 0.05 225)) with Primary Foreground (oklch(0.98 0.01 225)) - 7.2:1 contrast ratio
-- Accent (oklch(0.70 0.14 160)) with Accent Foreground (oklch(0.98 0.01 225)) - 4.8:1 contrast ratio
+- **Color Scheme Type**: Refined dark theme with subtle blue accents
+- **Primary Color**: Professional blue (#7C3AED) for actions and highlights  
+- **Secondary Colors**: Dark grays and subtle borders for structure
+- **Accent Color**: Blue for CTAs and active states
+- **Background**: Deep dark gray/black (#0f172a) for main areas
+- **Card backgrounds**: Subtle dark gray (#1e293b) with transparency
 
 ### Typography System
-**Font Pairing Strategy**: Single font family (Inter) with varied weights for hierarchy
-**Typographic Hierarchy**: 
-- Headers: Inter 600-700 weight
-- Body: Inter 400 weight
-- Captions: Inter 300 weight
-**Font Personality**: Modern, clean, highly legible, professional
-**Readability Focus**: Generous line spacing (1.5x), optimal line lengths, sufficient font sizes
-**Typography Consistency**: Consistent scale based on modular ratio
-**Which fonts**: Inter from Google Fonts - comprehensive weight range, excellent screen legibility
-**Legibility Check**: Inter is specifically designed for digital interfaces with excellent legibility at all sizes
-
-### Visual Hierarchy & Layout
-**Attention Direction**: Primary actions use accent colors, secondary actions use muted tones
-**White Space Philosophy**: Generous spacing to create visual breathing room and focus
-**Grid System**: CSS Grid for main layout, Flexbox for components, consistent spacing scale
-**Responsive Approach**: Mobile-first design with progressive enhancement for larger screens
-**Content Density**: Balanced - comprehensive information without overwhelming users
-
-### Animations
-**Purposeful Meaning**: Smooth transitions communicate spatial relationships and state changes
-**Hierarchy of Movement**: Navigation transitions are prominent, micro-interactions are subtle
-**Contextual Appropriateness**: Professional, smooth animations that enhance usability without distraction
+- **Font Pairing Strategy**: Inter for all text (clean, professional)
+- **Typographic Hierarchy**: Clear size relationships for different content levels
+- **Font Personality**: Clean, modern, highly legible
+- **Which fonts**: Inter from Google Fonts
+- **Legibility Check**: Excellent legibility across all sizes
 
 ### UI Elements & Component Selection
-**Component Usage**:
-- Cards for game/event display and bet containers
-- Sheets for mobile overlays and slide-in panels  
-- Buttons for primary actions with clear hierarchy
-- Tabs for organizing content within panels
-- Dialogs for confirmations and detailed views
-- Accordions for collapsible sections
-
-**Component Customization**: shadcn/ui components styled with custom CSS variables for brand alignment
-**Component States**: Comprehensive hover, active, focus, and disabled states for all interactive elements
-**Icon Selection**: Phosphor Icons for consistency and comprehensive coverage
-**Component Hierarchy**: 
-- Primary: Accent color buttons for key actions
-- Secondary: Muted color buttons for supporting actions
-- Tertiary: Text-only buttons for minor actions
-**Spacing System**: Tailwind's spacing scale (4px base) for consistent rhythm
-**Mobile Adaptation**: Touch-friendly sizes (min 44px), sheet overlays for detailed views
-
-### Visual Consistency Framework
-**Design System Approach**: Component-based design with centralized theming
-**Style Guide Elements**: Color variables, spacing scale, typography scale, component variants
-**Visual Rhythm**: Consistent spacing, alignment, and proportions throughout
-**Brand Alignment**: Professional sports betting aesthetic with modern web app polish
-
-### Accessibility & Readability
-**Contrast Goal**: WCAG AA compliance minimum, AAA where possible
-**Focus Management**: Clear focus indicators, logical tab order
-**Screen Reader Support**: Proper semantic markup, aria labels where needed
-**Motor Accessibility**: Generous touch targets, easy navigation
-
-## Edge Cases & Problem Scenarios
-**Potential Obstacles**: Network connectivity issues, rapid odds changes, bet placement failures
-**Edge Case Handling**: Optimistic UI updates with rollback, clear error messaging, offline functionality
-**Technical Constraints**: Real-time data requirements, mobile performance, battery usage
+- **Component Usage**: shadcn/ui components styled for dark theme
+- **Game Cards**: Compact, expandable cards with betting options
+- **Navigation**: Collapsible desktop panels, slide-out mobile panels
+- **Bet Slip**: Modal overlay on mobile, sidebar panel on desktop
+- **Floating Button**: Draggable bet slip access on mobile only
 
 ## Implementation Considerations
-**Scalability Needs**: 
-- Modular component architecture with autonomous layout engine
-- Efficient state management with persistent user preferences
-- Virtual scrolling for large game lists (1000+ games)
-- Hardware-accelerated animations and transforms
+- **Responsive Design**: Tailwind's responsive utilities for breakpoint-specific layouts
+- **Virtual Scrolling**: Smooth panel scrolling without page-level scroll
+- **State Synchronization**: React Context for navigation and bet slip state
+- **Performance**: Optimized re-renders and smooth animations
 
-**Testing Focus**: 
-- Cross-device layout consistency and performance
-- State synchronization between expanded/collapsed cards
-- Touch interaction responsiveness on mobile devices
-- Memory usage optimization during long scrolling sessions
-
-**Critical Questions**: 
-- How to handle rapid odds changes with minimal re-renders?
-- How to ensure bet accuracy with optimistic UI updates?
-- How to optimize mobile performance while maintaining visual quality?
-- How to scale the layout engine for different content types?
-
-## Reflection
-This approach creates a professional, comprehensive wagering platform that scales from mobile to desktop while maintaining a cohesive user experience. The monochromatic slate theme with green accents creates a professional, trustworthy appearance appropriate for financial transactions. 
-
-The **autonomous fluid layout system** represents a significant advancement in responsive design, providing:
-- **True synchronization** between desktop and mobile experiences through shared layout algorithms
-- **Performance optimization** via virtual scrolling and hardware acceleration  
-- **User-centric design** with persistent preferences and intuitive interactions
-- **Scalable architecture** that adapts to different content types and screen sizes
-
-The component-based architecture ensures maintainability and consistency while the progressive enhancement approach ensures accessibility across devices. The PWA capabilities extend this accessibility by providing native-like experiences on mobile devices.
-
-The **autonomous card system** eliminates the traditional responsive breakpoint approach in favor of content-driven, fluid adaptations that respond to user behavior and device capabilities in real-time. This creates a more natural, intuitive experience that feels custom-tailored to each user's context.
+## Current Status
+Application rebuilt with Vite + React + TypeScript + shadcn/ui stack. Now optimizing both desktop and mobile experiences for professional polish and functionality.
