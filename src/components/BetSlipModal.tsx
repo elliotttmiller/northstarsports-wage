@@ -126,20 +126,20 @@ export const BetSlipModal = () => {
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <div className="mobile-betslip-modal">
         <DialogContent 
-          className="fixed inset-0 z-[60] w-screen h-screen max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden p-0 m-0 md:max-w-none"
+          className="fixed inset-0 z-[60] w-full h-full max-w-none bg-background/96 backdrop-blur-2xl border-0 rounded-none flex flex-col overflow-hidden"
           style={{
             position: 'fixed',
-            top: '0',
-            left: '0',
-            right: '0',
-            bottom: '0',
-            width: '100vw',
-            height: '100vh',
-            maxWidth: '100vw',
-            maxHeight: '100vh',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            height: '100%',
+            maxWidth: '100%',
+            maxHeight: '100%',
             transform: 'none',
-            margin: '0',
-            padding: '0'
+            margin: 0,
+            padding: 0
           }}
           onInteractOutside={(e) => {
             if (!isPlacing) handleClose();

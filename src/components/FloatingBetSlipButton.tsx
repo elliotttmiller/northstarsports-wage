@@ -37,9 +37,11 @@ export const FloatingBetSlipButton = () => {
   const getDefaultPosition = useCallback((): Position => {
     const buttonSize = 48; // Smaller button
     const margin = 16;
+    const safeWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
+    const safeHeight = typeof window !== 'undefined' ? window.innerHeight : 667;
     return {
-      x: window.innerWidth - buttonSize - margin,
-      y: window.innerHeight - buttonSize - margin - 80 // Account for bottom nav
+      x: safeWidth - buttonSize - margin,
+      y: safeHeight - buttonSize - margin - 80 // Account for bottom nav
     };
   }, []);
 
@@ -59,6 +61,8 @@ export const FloatingBetSlipButton = () => {
     if (!isInitialized) return;
 
     const handleResize = () => {
+      if (typeof window === 'undefined') return;
+      
       const currentX = x.get();
       const currentY = y.get();
       const buttonSize = 48;
@@ -172,10 +176,10 @@ export const FloatingBetSlipButton = () => {
       dragElastic={0.05}
       dragPropagation={false}
       dragConstraints={{
-        left: 12,
-        right: window.innerWidth - 60,
-        top: 12,
-        bottom: window.innerHeight - 140
+        left: 16,
+        right: typeof window !== 'undefined' ? window.innerWidth - 64 : 300,
+        top: 16,
+        bottom: typeof window !== 'undefined' ? window.innerHeight - 160 : 600
       }}
       onDragStart={handleDragStart}
       onDrag={handleDrag}

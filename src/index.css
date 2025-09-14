@@ -271,14 +271,14 @@ html, body {
   --popover: oklch(0.12 0.015 240); /* Popover background */
   --popover-foreground: oklch(0.88 0.005 240); /* Popover text */
   
-  /* Action colors - Subtle and professional */
-  --primary: oklch(0.45 0.08 240); /* Refined blue primary */
+  /* Action colors - Consistent blue theme */
+  --primary: oklch(0.45 0.12 260); /* Professional blue primary */
   --primary-foreground: oklch(0.98 0.005 240); /* White on primary */
   
   --secondary: oklch(0.16 0.02 240); /* Secondary background */
   --secondary-foreground: oklch(0.82 0.01 240); /* Secondary text */
   
-  --accent: oklch(0.45 0.08 240); /* Blue accent - matches primary */
+  --accent: oklch(0.45 0.12 260); /* Blue accent - matches primary */
   --accent-foreground: oklch(0.98 0.005 240); /* White on accent */
   
   --destructive: oklch(0.55 0.15 15); /* Refined red */
@@ -290,12 +290,12 @@ html, body {
   
   --border: oklch(0.18 0.02 240); /* Border color */
   --input: oklch(0.18 0.02 240); /* Input border */
-  --ring: oklch(0.45 0.08 240); /* Focus ring */
+  --ring: oklch(0.45 0.12 260); /* Focus ring - blue */
   
-  /* Custom betting colors */
-  --color-win: oklch(0.55 0.10 140); /* Subtle green for wins */
-  --color-loss: oklch(0.55 0.12 20); /* Subtle red for losses */
-  --color-info: oklch(0.45 0.08 240); /* Blue for info */
+  /* Custom betting colors - refined */
+  --color-win: oklch(0.55 0.08 140); /* Subtle green for wins */
+  --color-loss: oklch(0.55 0.10 20); /* Subtle red for losses */
+  --color-info: oklch(0.45 0.12 260); /* Blue for info */
   
   /* Border radius */
   --radius: 0.5rem;
