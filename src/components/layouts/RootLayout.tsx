@@ -12,7 +12,11 @@ import { SidebarToggle } from '../SidebarToggle'
 import { motion, AnimatePresence } from 'framer-motion'
 
 function LayoutContent() {
-  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub } = useNavigation()
+  const { navigation, setMobilePanel, toggleSideNav, toggleActionHub, setIsBetSlipOpen } = useNavigation()
+
+  const handleBetSlipToggle = () => {
+    setIsBetSlipOpen(!navigation.isBetSlipOpen)
+  }
 
   return (
     <div className="h-screen bg-background text-foreground flex flex-col overflow-hidden">
@@ -99,7 +103,7 @@ function LayoutContent() {
       
       {/* Mobile Floating Bet Slip Button */}
       <div className="lg:hidden fixed inset-0 pointer-events-none z-50">
-        <FloatingBetSlipButton />
+        <FloatingBetSlipButton onToggle={handleBetSlipToggle} />
       </div>
 
       {/* Mobile Bet Slip Modal */}
