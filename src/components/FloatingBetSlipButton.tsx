@@ -1,9 +1,9 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, useMotionValue, useAnimation, PanInfo } from 'framer-motion'
-import { useKV } from '@github/spark/hooks'
 import { useNavigation } from '@/context/NavigationContext'
 import { useBetSlip } from '@/context/BetSlipContext'
 import { Receipt } from '@phosphor-icons/react'
+import { useKV } from '@github/spark/hooks'
 
 interface Position {
   x: number
@@ -11,24 +11,21 @@ interface Position {
 }
 
 export function FloatingBetSlipButton() {
-  const { navigation, setMobilePanel } = useNavigation()
+  const { setMobilePanel } = useNavigation()
+  const { betSlip } = useBetSlip()
+  const [savedPosition, setSavedPosition] = useKV<Position>("floating-button-position", { x: 0, y: 0 })
   const [isInitialized, setIsInitialized] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const [savedPosition, setSavedPosition] = useKV<Position>('floating-button-position', { x: 0, y: 0 })
   
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const controls = useAnimation()
-  const dragStartTime = useRef(0)
-  const initialPosition = useRef<Position>({ x: 0, y: 0 })
-  const hasMoved = useRef(false)
   
-  const { betSlip } = useBetSlip()
-  const isModalOpen = navigation.mobilePanel === 'betslip'
+  const hasMoved = useRef(false)
+  const initialPosition = useRef({ x: 0, y: 0 })
+  const dragStartTime = useRef(0)
 
-  const getDefaultPosition = useCallback((): Position => {
-    if (typeof window === 'undefined') return { x: 0, y: 0 }
-    
+  const getDefaultPosition = useCallback(() => {
     const buttonSize = 48
     const margin = 16
     const safeWidth = window.innerWidth
@@ -42,7 +39,9 @@ export function FloatingBetSlipButton() {
 
   // Initialize position on mount
   useEffect(() => {
-    const initPosition = !savedPosition || (savedPosition.x === 0 && savedPosition.y === 0)
+    if (!savedPosition) return
+    
+    const initPosition = savedPosition.x === 0 && savedPosition.y === 0 
       ? getDefaultPosition() 
       : savedPosition
     
@@ -100,35 +99,34 @@ export function FloatingBetSlipButton() {
       setSavedPosition({ x: currentX, y: currentY })
     } else {
       // Handle tap - open bet slip modal
-      setMobilePanel(isModalOpen ? null : 'betslip')
+      setMobilePanel('betslip')
     }
 
     // Reset all states
     setIsDragging(false)
     hasMoved.current = false
-  }, [x, y, setSavedPosition, setMobilePanel, isModalOpen])
+  }, [x, y, setSavedPosition, setMobilePanel])
 
   if (!isInitialized) return null
 
   const itemCount = betSlip.bets.length
 
   return (
-    <div className="pointer-events-auto">
+    <div className="fixed inset-0 pointer-events-none z-50">
       <motion.div
-        drag
-        style={{
+        style={{ 
           x, 
           y, 
           position: 'absolute',
-          zIndex: 9999
+          pointerEvents: 'auto'
         }}
-        animate={controls}
+        drag
         initial={false}
         dragMomentum={false}
         dragElastic={0.1}
         dragConstraints={{
-          left: 16,
           top: 16,
+          left: 16,
           right: typeof window !== 'undefined' ? window.innerWidth - 64 : 300,
           bottom: typeof window !== 'undefined' ? window.innerHeight - 144 : 500
         }}
@@ -137,14 +135,14 @@ export function FloatingBetSlipButton() {
         onDragEnd={handleDragEnd}
         whileHover={!isDragging ? { scale: 1.05 } : {}}
         whileTap={!isDragging ? { scale: 0.95 } : {}}
-        className="relative"
+        className="relative cursor-pointer"
       >
         <div className="
           w-12 h-12 rounded-full 
-          bg-accent text-accent-foreground
+          bg-accent/80 backdrop-blur-sm text-accent-foreground
           flex items-center justify-center
-          shadow-lg border border-border
-          cursor-pointer select-none
+          shadow-lg border border-border/50
+          hover:bg-accent/90
           transition-colors duration-200
         ">
           <Receipt weight="fill" size={20} />
@@ -158,7 +156,7 @@ export function FloatingBetSlipButton() {
               text-xs font-medium
               border-2 border-background
             ">
-              {itemCount > 9 ? '9+' : itemCount}
+              {itemCount}
             </div>
           )}
         </div>
