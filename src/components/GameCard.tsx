@@ -218,107 +218,98 @@ export function GameCard({ game, compact = false }: GameCardProps) {
                     </div>
                   </Button>
                   <Button
-                    variant="outline"
+                    size="sm"
                     size="sm"
                     className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
                     onClick={(e) => {
-                      e.stopPropagation()
                       handleBetClick(
-                        e, 'total', 'under',
+                      handleBetClick(
                         game.odds.total.under?.odds || -110,
-                        game.odds.total.under?.line
                       )
-                    }}
+                        game.odds.total.under?.line
                   >
                     <div className="text-center">
                       <div className="text-xs font-bold text-foreground leading-3">UNDER</div>
-                      <div className="font-semibold leading-3">
+                    <div className="text-center">
                         {formatTotalLine(game.odds.total.under?.line || 45.5)}
-                      </div>
+                      <div className="font-semibold leading-3">
                       <div className="text-xs text-muted-foreground leading-3">
                         {formatOdds(game.odds.total.under?.odds || -110)}
                       </div>
-                    </div>
                   </Button>
                 </div>
-              </div>
+                    </div>
 
-              {/* Moneyline */}
+                </div>
               <div className="col-span-2">
                 <div className="text-xs text-muted-foreground text-center mb-1 font-medium">
-                  MONEYLINE
                 </div>
-                <div className="grid grid-cols-2 gap-0.5">
+              <div className="col-span-2">
                   <Button
-                    variant="outline"
+                  MONEYLINE
                     size="sm"
                     className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
-                    onClick={(e) => {
+                  <Button
                       e.stopPropagation()
                       handleBetClick(
-                        e, 'moneyline', 'away',
                         game.odds.moneyline.away.odds
-                      )
+                    onClick={(e) => {
                     }}
                   >
                     <div className="text-center">
                       <div className="text-xs font-bold text-foreground leading-3">{game.awayTeam.shortName}</div>
                       <div className="text-xs font-semibold leading-3">
-                        {formatOdds(game.odds.moneyline.away.odds)}
+                    }}y.odds)}
                       </div>
-                    </div>
-                  </Button>
+                    <div className="text-center">
                   <Button
                     variant="outline"
                     size="sm"
                     className="h-10 p-0.5 text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleBetClick(
+                    </div>
+                  </Button>
+                  <Button
                         e, 'moneyline', 'home',
                         game.odds.moneyline.home.odds
                       )
-                    }}
-                  >
+                    onClick={(e) => {
                     <div className="text-center">
                       <div className="text-xs font-bold text-foreground leading-3">{game.homeTeam.shortName}</div>
                       <div className="text-xs font-semibold leading-3">
                         {formatOdds(game.odds.moneyline.home.odds)}
-                      </div>
+                      )
                     </div>
-                  </Button>
+                  >
                 </div>
-              </div>
             </div>
 
             {/* Expand indicator */}
-            <div className="flex items-center justify-center">
+                      </div>fy-center">
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                {isExpanded ? (
+                  </Button>
                   <>
                     <CaretUp className="w-3 h-3" />
-                    <span>Tap to collapse</span>
-                  </>
+            </div>  <span>Tap to collapse</span>
+
                 ) : (
                   <>
                     <CaretDown className="w-3 h-3" />
                     <span>Tap for player props</span>
-                  </>
                 )}
               </div>
             </div>
 
-            {/* Expanded Player Props for Mobile */}
+                ) : (
             <AnimatePresence>
               {isExpanded && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
+                )}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
                   className="overflow-hidden"
                 >
-                  <Separator className="my-3" />
+            <AnimatePresence>
                   
                   {propsLoading ? (
                     <div className="text-center py-4">
